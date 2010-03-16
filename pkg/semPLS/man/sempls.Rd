@@ -1,0 +1,209 @@
+\name{sempls}
+\Rdversion{1.1}
+\alias{sempls}
+\alias{sempls.plsm}
+\alias{print.sempls}
+
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{
+Structural Equation Modeling by Partial Least Squares
+}
+\description{
+  %%  ~~ A concise (1-5 lines) description of what the function does. ~~
+  \code{sempls} fits structural equation models by the patial least
+  squares (PLS) method. The estimation is based on the raw data and
+  requires no distributional assumptions.
+}
+\usage{
+sempls(model, ...)
+
+\method{sempls}{plsm}(model, data, maxit=100, tol=1e-7, scaled=TRUE,sum1=TRUE, E="A",
+    pairwise=FALSE, method=c("pearson", "kendall", "spearman"), \ldots)
+
+\method{print}{sempls}(x, \ldots)
+}
+\arguments{
+  \item{model}{
+    %%     ~~Describe \code{model} here~~
+     An object of class \code{splsm} as returned from \code{read.splsm}.
+  }
+  \item{\dots}{
+    %%     ~~Describe \code{\dots} here~~
+    Arguments to be passed down.
+  } 
+  \item{data}{
+    %%     ~~Describe \code{data} here~~
+     A \code{data.frame} containing the the observed variables (MVs). The storage mode for all the MVs included in the model must be \code{numeric}.
+}
+  \item{maxit}{A \code{numeric} value, which determines the maximum number of
+    iterations performed by the PLS algorithm. The default is \eqn{20}
+    iterations.}
+  \item{tol}{A \code{numeric} value, specifying the tolerance for the maximum relative
+    differences in the outer weights. The default value is \eqn{10^{-7}}.}
+  \item{scaled}{A \code{logical} value indicating, whether the observed
+    data shall be scaled to zero mean and unit variance. The default is
+    \code{TRUE}.}
+  \item{sum1}{A \code{logical} value indicating, whether the outer
+    weights foreach latent variable (LV) shall be standardized to sum up
+    to one. The default is \code{TRUE}. Since the factor scores are
+    scaled in each step of the PLS algorithm, changing this value to
+    \code{FALSE} does not affect the results.}
+
+  \item{E}{A \code{character} naming the weighting scheme to
+    use. Possible values are:
+    \itemize{
+      \item \code{"A"} for the centroid scheme, the default,
+      \item \code{"B"} for the factorial scheme and
+      \item \code{"C"} for the path weighting scheme.
+    }
+  }
+
+  \item{pairwise}{A \code{logical} value indicating, whether
+    correlations shall be calculated pairwise. If the observed data
+    does not contain missing values, the results are not affected.
+    The default is \code{FALSE}. For more details the R help,
+    \code{?cor}, can be consulted.}
+  \item{method}{A \code{character} naming the method to calculate
+    the correlations. Possible values are:
+     \itemize{
+       \item \code{"pearson"} , the default,
+       \item \code{"kendall"},
+       \item \code{"spearman"}.
+     }
+    For more details on the method, the R help, \code{?cor}, can be
+    consulted. Note, that despite of the \code{method} argument, pearson
+    correlations are always used for the inner approximation (step 2).
+  }
+  \item{x}{An object of class \code{sempls} returned by the \code{sempls} function.}
+}
+% \details{
+% %%  ~~ If necessary, more details than the description above ~~
+% }
+\value{
+  %%  ~Describe the value returned
+  \code{sempls} returns an object of class \code{sempls}, with the following elements:
+%%  If it is a LIST, use
+  \item{coefficients}{A \code{data.frame} containing the estimates for all the arcs in the path model, those are the cross loadings for the arcs of the measurement model and path coefficients for those belonging to the structural model.}
+  \item{path_coefficient}{The \code{matrix} of path coefficients.}
+  \item{outer_loadings}{The \code{matrix} of outer loadings.}
+  \item{cross_loadings}{The \code{matrix} of cross loadings.}
+  \item{total_effects}{The \code{matrix} of total effects.}
+  \item{inner_weights}{The \code{matrix} of inner weights.}
+  \item{outer_weights}{The \code{matrix} of outer weights.}
+  \item{factor_scores}{A \code{data.frame} containing the estimated factor scores for the LVs.}
+  \item{data}{A \code{data.frame} containing the preprocessed obseravtions of the MVs.}
+  \item{incomplete}{The index of the incomplete observations.}
+  \item{...}{All the other values are just storing information used in
+    the \code{call}.}
+}
+% \references{
+% %% ~put references to the literature/web site here ~
+% }
+% \author{
+%   %%  ~~who you are~~
+%   Armin Graf \email{armin.monecke@gmx.de}
+% }
+% \note{
+% %%  ~~further notes~~
+% }
+
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
+\seealso{
+%   %% ~~objects to See Also as \code{\link{help}}, ~~~
+   \code{\link{specifyPLSM}}, \code{\link{read.splsm}},
+   \code{\link{rSquared}}, \code{\link{pathDiagram}},
+   \code{\link{boot.sempls}}, \code{\link{plsm2sem}},
+   \code{\link[sem]{sem}}  
+}
+\examples{
+### Specifying the model
+## A: Using .csv files
+# getting the path to the .csv file representing the inner Model
+ptf_Struc <- system.file("ECSIstrucmod.csv", package="semPLS")
+file.show(ptf_Struc)
+
+# getting the path to the .csv file representing the outer Models
+ptf_Meas <- system.file("ECSImeasuremod.csv", package="semPLS")
+file.show(ptf_Meas)
+
+sm <- as.matrix(read.csv(ptf_Struc))
+mm <- as.matrix(read.csv(ptf_Meas))
+data(mobi)
+
+ECSI <- specifyPLSM(data=mobi, strucmod=sm, measuremod=mm)
+ECSI
+
+## B: Using model representation created my SmartPLS
+# getting the path to file: 'ECSI.splsm' (generated by SmartPLS)
+ptf <- system.file("SmartPLS", "workspace", "ecsi", "ECSI.splsm", package="semPLS")
+file.show(ptf)
+
+# creating the model specification from a SmartPLS model file: 'ECSI.splsm'
+ECSI <- read.splsm(ptf)
+ECSI
+
+
+### Fitting the model and getting results
+data(mobi)
+ecsi <- sempls(model=ECSI, data=mobi)
+ecsi
+
+names(ecsi)
+ecsi$outer_weights
+ecsi$outer_loadings
+ecsi$path_coefficients
+ecsi$total_effects
+
+### R-squared
+rSquared(ecsi)
+
+
+### Create .dot representation of the path diagram and
+### create .pdf file if graphviz is available.
+\dontrun{
+pathDiagram(ecsi, file="ecsiPLS1", edge.labels="both",
+            output.type="graphics", digits=3, graphics.fmt = "pdf")
+
+# include R-squared values
+pathDiagram(ecsi, file="ecsiPLS2", edge.labels="both",
+            output.type="graphics", digits=3, graphics.fmt = "pdf",
+            rSquared=Rsquared)
+
+# only the structural model
+pathDiagram(ecsi, file="ecsiPLS3", edge.labels="both",
+            output.type="graphics", digits=3, graphics.fmt = "pdf",
+            rSquared=Rsquared, full=FALSE)
+}
+
+### Bootstrapping
+set.seed(123)
+ecsiBoot <- boot.sempls(ecsi, nboot=200, start="ones", verbose=TRUE)
+summary(ecsiBoot, type="perc", level=0.95)
+
+## inspectation of bootstrap samples
+library(lattice)
+parallel(ecsiBoot$t, col=rgb(0,0,0, alpha=0.3), common.scale=TRUE,
+         horizontal.axis=FALSE, alpha=0.1, scales=list(x=list(rot = 60)))
+
+# only inspecting the path coefficients
+parallel(ecsiBoot$t[, grep("beta", colnames(ecsiBoot$t))],
+         col=rgb(0,0,0, alpha=0.3), common.scale=TRUE,
+         horizontal.axis=FALSE, alpha=0.1, scales=list(x=list(rot=60)))
+
+# only inspecting the outer loadings
+parallel(ecsiBoot$t[, grep("lam", colnames(ecsiBoot$t))],
+         col=rgb(0,0,0, alpha=0.3), common.scale=TRUE,
+         horizontal.axis=FALSE, alpha=0.1, scales = list(x=list(rot=60)))
+
+# only inspecting the outer loadings for Loyalty
+parallel(ecsiBoot$t[, grep("lam7", colnames(ecsiBoot$t))],
+         col=rgb(0,0,0, alpha=0.3), common.scale=TRUE,
+         horizontal.axis=FALSE, alpha=0.1, scales=list(x=list(rot=60)),
+         main="Loyalty\n200 bootstrapped outer loadings")
+}
+
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+% \keyword{ ~kwd1 }
+% \keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

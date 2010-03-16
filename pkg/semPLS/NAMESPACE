@@ -1,0 +1,17 @@
+# last modified 25 February by Armin Monecke
+
+export(read.splsm, sempls, boot.sempls, pathDiagram, plsm2sem, specifyPLSM, rSquared)
+
+S3method(print, sempls)
+S3method(coef, sempls)
+S3method(sempls, plsm)
+S3method(print, bootsempls)
+S3method(summary, bootsempls)
+S3method(print, summaryBootsempls)
+S3method(pathDiagram, sempls)
+S3method(plsm2sem, plsm)
+S3method(rSquared, sempls)
+
+
+
+

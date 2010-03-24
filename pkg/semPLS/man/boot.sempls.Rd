@@ -54,7 +54,7 @@ boot.sempls(sempls, nboot=200, start=c("ones", "old"), method=
   \item{x, object}{An object of class \code{bootsempls}.}
   \item{digits}{Controls the number of digits to print.}
   \item{type}{Type of bootstrapped confidence intervals to compute; the
-    default is \code{"perc"} (percentile); see 
+    default is \code{"perc"} (percentile); see
     \code{\link[boot]{boot.ci}} for details.}
   \item{level}{Level for confidence intervals; default is \code{0.95}.}
   \item{\ldots}{Arguments to be passed down to other methods.}
@@ -71,12 +71,12 @@ boot.sempls(sempls, nboot=200, start=c("ones", "old"), method=
 \value{
   \code{boot.sempls} returns an object of class \code{bootsempls}, which inherits
     from class \code{boot}, supported by the \code{boot} package. The returned
-    object contains the following components:    
+    object contains the following components:
   \item{t0}{the estimated parameters in the model fit to the original data set.}
   \item{t}{a matrix containing the bootstrapped estimates, one bootstrap
     replication per row.}
   \item{data}{the data frame containing the data to which the model was fit.}
-  \item{seed}{the value of \code{.Random.seed} when \code{boot.sempls} was called.}  
+  \item{seed}{the value of \code{.Random.seed} when \code{boot.sempls} was called.}
   \item{statistic}{the function used to produce the bootstrap replications;
     this is always the local function \code{refit} from \code{boot.sempls}.}
   \item{sim}{always set to \code{"ordinary"}; see the documentation for the
@@ -91,10 +91,10 @@ boot.sempls(sempls, nboot=200, start=c("ones", "old"), method=
 }
 
 % \author{
-%   Armin Graf \email{armin.monecke@gmx.de}
+%   Armin Monecke \email{armin.monecke@gmx.de}
 % }
 
-\seealso{\code{\link[boot]{boot}}, \code{\link[sem]{boot}}}
+\seealso{\code{\link[boot]{boot}}, \code{\link[sem]{boot.sem}}}
 
 \references{
   Tenenhaus, M., V. E. Vinzi, Y.-M. Chatelin, and C. Lauro (2005)

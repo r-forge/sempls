@@ -9,7 +9,8 @@ function(sempls, data, start=c("ones", "old"), method, ...){
   model <- sempls$model
   pairwise <- sempls$pairwise
   method <- sempls$method
-  
+  result <- sempls
+
   ## scale data?
   # Note: scale() changes class(data) to 'matrix'
   if(sempls$scaled) data <- scale(data)
@@ -22,8 +23,7 @@ function(sempls, data, start=c("ones", "old"), method, ...){
     Wold <- sempls$outer_weights
   }
   else if(start=="ones"){
-    # Weights not adding up to 1 (14.08.2009)
-    stp1 <- step1(model, data, sum1=FALSE, pairwise)
+    stp1 <- step1(model, data, sum1=sum1, pairwise)
     factor_scores <- stp1$latent
     Wold <- stp1$outerW
   }
@@ -31,16 +31,16 @@ function(sempls, data, start=c("ones", "old"), method, ...){
   #############################################
   # weighting scheme
   innerWe <- eval(parse(text=sub(" w", "W", sempls$weighting_scheme)))
-  
+
 
   #############################################
   # Iterate over step 2 to 5
-  
+
   i <- 1
   converged <- FALSE
   while(!converged){
-    
-    #############################################    
+
+    #############################################
     # step 2
     innerW <- innerWe(model, fscores=factor_scores, pairwise, method)
     factor_scores <- step2(Latent=factor_scores, innerW, blocks=model$blocks, pairwise)
@@ -49,29 +49,27 @@ function(sempls, data, start=c("ones", "old"), method, ...){
     # step 3
     Wnew <-  outerApprx(Latent=factor_scores, data, blocks=model$blocks,
                         sum1=sum1, pairwise, method)
-    
-    #############################################    
+
+    #############################################
     # step 4
     factor_scores <- step4(data, outerW=Wnew, blocks=model$blocks, pairwise)
-    
-    #############################################    
+
+    #############################################
     # step 5
     st5 <- step5(Wold, Wnew, tol, converged)
     Wold <- st5$Wold
     converged <- st5$converged
 
-  # try-error?  
+  # try-error?
     if(i == maxit && !converged){
       class(result) <- c(class(result), "try-error")
       break
     }
-    
+
     i <- i+1
   }
   #############################################
-  
-  result <- sempls
-  
+
   ### bootstrap method ##################################################
   # Construct level changes
   clcIndex <- NULL
@@ -88,7 +86,7 @@ function(sempls, data, start=c("ones", "old"), method, ...){
     factor_scores <- step4(data, outerW=Wnew, blocks=model$blocks, pairwise)
   }
   #######################################################################
-  
+
   result$cross_loadings <- cor(data, factor_scores)
   result$outer_loadings <- result$cross_loadings
   result$outer_loadings[Wnew==0] <- 0

@@ -10,7 +10,7 @@ Structural Equation Modeling by Partial Least Squares
 }
 \description{
   %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-  \code{sempls} fits structural equation models by the patial least
+  \code{sempls} fits structural equation models by the partial least
   squares (PLS) method. The estimation is based on the raw data and
   requires no distributional assumptions.
 }
@@ -30,7 +30,7 @@ sempls(model, ...)
   \item{\dots}{
     %%     ~~Describe \code{\dots} here~~
     Arguments to be passed down.
-  } 
+  }
   \item{data}{
     %%     ~~Describe \code{data} here~~
      A \code{data.frame} containing the the observed variables (MVs). The storage mode for all the MVs included in the model must be \code{numeric}.
@@ -114,7 +114,7 @@ sempls(model, ...)
    \code{\link{specifyPLSM}}, \code{\link{read.splsm}},
    \code{\link{rSquared}}, \code{\link{pathDiagram}},
    \code{\link{boot.sempls}}, \code{\link{plsm2sem}},
-   \code{\link[sem]{sem}}  
+   \code{\link[sem]{sem}}
 }
 \examples{
 ### Specifying the model

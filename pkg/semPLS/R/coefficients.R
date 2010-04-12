@@ -6,6 +6,7 @@ coef.sempls <- function(object, ...){
   strucmod <- model$strucmod
   pC <- object$path_coefficients
   crossL <- object$cross_loadings
+  W <- object$outer_weights
 
   arrows <- NULL
   coef_names <- NULL
@@ -25,14 +26,17 @@ coef.sempls <- function(object, ...){
 
   ## iterate over all blocks
   for(i in 1:length(blocks)){
-    coef_names <- append(coef_names, paste("lam", i, 1:length(blocks[[i]]), sep=""))
     if(attr(blocks[[i]], "mode")=="A"){
       arrows <- append(arrows, fooA(names(blocks)[i], blocks))
+      # outer loadings for Mode 'A' (reflective)
       estimates <- append(estimates, crossL[blocks[[i]], names(blocks)[i]])
+      coef_names <- append(coef_names, paste("lam", i, 1:length(blocks[[i]]), sep=""))
     }
     if(attr(blocks[[i]], "mode")=="B"){
       arrows <- append(arrows, fooB(names(blocks)[i], blocks))
-      estimates <- append(estimates, crossL[blocks[[i]], names(blocks)[i]])
+      # outer weights for Mode 'B' (formative)
+      estimates <- append(estimates, W[blocks[[i]], names(blocks)[i]])
+      coef_names <- append(coef_names, paste("gam", i, 1:length(blocks[[i]]), sep=""))
     }
   }
   

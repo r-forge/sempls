@@ -4,15 +4,17 @@ sempls <- function(model, ...){
 }
 
 sempls.plsm <-
-function(model, data, maxit=100, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwise=FALSE,
-         method=c("pearson", "kendall", "spearman"), ...){
+function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwise=FALSE,
+         method=c("pearson", "kendall", "spearman"),
+         convCrit=c("relative", "square"), ...){
   method <- match.arg(method)
+  convCrit <- match.arg(convCrit)
   result <- list(coefficients=NULL, path_coefficients=NULL,
                  outer_loadings=NULL ,cross_loadings=NULL,
                  total_effects=NULL,inner_weights=NULL, outer_weights=NULL,
                  blocks=NULL, factor_scores=NULL, data=NULL, scaled=scaled,
                  model=model, weighting_scheme=NULL, sum1=sum1, pairwise=pairwise,
-                 method=method, iterations=NULL,
+                 method=method, iterations=NULL, convCrit=convCrit,
                  tolerance=tol, maxit=maxit, N=NULL, incomplete=NULL)
   class(result) <- "sempls"
   
@@ -51,6 +53,8 @@ function(model, data, maxit=100, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwi
   # Note: scale() changes class(data) to 'matrix'
   if(scaled) data <- scale(data)
 
+  ## compute PLS approximation of LV scores
+  
   #############################################
   # step 1: Initialisation
   stp1 <- step1(model, data, sum1=sum1, pairwise)
@@ -58,54 +62,24 @@ function(model, data, maxit=100, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwi
   Wold <- stp1$outerW
 
   #############################################
-  # Select the weighting scheme
+  # Select the function according to the weighting scheme
   if(E=="A") {
     innerWe <- centroid
     result$weighting_scheme <- "centroid"
   }
-  if(E=="B") {
+  else if(E=="B") {
     innerWe <- factorial
     result$weighting_scheme <- "factorial"
   }
-  if(E=="C") {
+  else if(E=="C") {
     innerWe <- pathWeighting
     result$weighting_scheme <- "path weighting"
   }
+  else {stop("The argument E can only take the values 'A', 'B' or 'C'.\n See ?sempls")}
   
-  #######################################################################
-  # Iterate over step 2 to step 5
-  i <- 1
-  converged <- FALSE
-  while(!converged){
-    
-    #############################################    
-    # step 2
-    innerW <- innerWe(model, fscores=factor_scores, pairwise, method)
-    factor_scores <- step2(Latent=factor_scores, innerW, blocks=model$blocks, pairwise)
-
-    #############################################
-    # step 3
-    Wnew <-  outerApprx(Latent=factor_scores, data, blocks=model$blocks,
-                        sum1=sum1, pairwise, method)
-    
-    #############################################    
-    # step 4
-    factor_scores <- step4(data, outerW=Wnew, blocks=model$blocks, pairwise)
-   
-    #############################################    
-    # step 5
-    st5 <- step5(Wold, Wnew, tol, converged)
-    Wold <- st5$Wold
-    converged <- st5$converged
-    if(i == maxit && !converged){
-      cat(paste("No convergence after ", i, " iterations.\n", sep=""))      
-      break
-    }
-    ############################################# 
-    i <- i+1
-  }
-  ########################################################################
+  eval(plsLoop)
   
+  ## print
   if(converged){
       cat(paste("Converged after ", (i-1), " iterations.\n",
                 "Tolerance: ", tol ,"\n", sep=""))
@@ -114,14 +88,14 @@ function(model, data, maxit=100, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwi
       if (E=="C") cat("Scheme: path weighting\n")
   }
 
-  
+  # create result list
   ifelse(pairwise, use <- "pairwise.complete.obs", use <- "everything")
   result$path_coefficients <- pathCoeff(model=model, factor_scores, method, pairwise)
   result$cross_loadings <- cor(data, factor_scores, use, method)
   result$outer_loadings <- result$cross_loadings
   result$outer_loadings[Wnew==0] <- 0
   result$total_effects <- totalEffects(result$path_coefficients)
-  result$inner_weights <- innerW
+  result$inner_weights <- innerWeights
   result$outer_weights <- Wnew
   result$factor_scores <- factor_scores
   result$data <- data
@@ -136,3 +110,44 @@ print.sempls <- function(x, ...){
   print(x$coefficients)
   invisible(x)
 }
+
+plsLoop <- expression({
+  #######################################################################
+  # Iterate over step 2 to step 5
+  i <- 1
+  converged <- FALSE
+  while(!converged){
+    
+    #############################################    
+    # step 2
+    innerWeights <- innerWe(model, fscores=factor_scores, pairwise, method)
+    factor_scores <- step2(Latent=factor_scores, innerWeights, blocks=model$blocks, pairwise)
+
+    #############################################
+    # step 3
+    Wnew <-  outerApprx(Latent=factor_scores, data, blocks=model$blocks,
+                        sum1=sum1, pairwise, method)
+    
+    #############################################    
+    # step 4
+    factor_scores <- step4(data, outerW=Wnew, blocks=model$blocks, pairwise)
+    
+    
+    #############################################    
+    # step 5
+    st5 <- step5(Wold, Wnew, tol, converged, convCrit)
+    Wold <- st5$Wold
+    converged <- st5$converged
+    
+    #############################################
+
+    
+    if(i == maxit && !converged){
+      # 'try-error' especially for resempls.R
+      class(result) <- c(class(result), "try-error")
+      break
+    }
+    
+    i <- i+1
+  }
+})

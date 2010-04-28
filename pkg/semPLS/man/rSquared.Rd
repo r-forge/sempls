@@ -3,15 +3,17 @@
 \alias{rSquared.sempls}
 \title{R-squared}
 \description{
-  Computes the R-squred values for \code{sempls} objects.
+  Computes the R-squared values for \code{sempls} objects.
 }
 \usage{
 rSquared(object)
 
-\method{rSquared}{sempls}(object)
+\method{rSquared}{sempls}(object, na.rm=FALSE)
 }
 \arguments{
   \item{object}{An object of class \code{sempls}.
+  }
+  \item{na.rm}{logical. Should missing values be removed?
   }
 }
 \value{

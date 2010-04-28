@@ -17,8 +17,9 @@ Structural Equation Modeling by Partial Least Squares
 \usage{
 sempls(model, ...)
 
-\method{sempls}{plsm}(model, data, maxit=100, tol=1e-7, scaled=TRUE,sum1=TRUE, E="A",
-    pairwise=FALSE, method=c("pearson", "kendall", "spearman"), \ldots)
+\method{sempls}{plsm}(model, data, maxit=20, tol=1e-7, scaled=TRUE,sum1=TRUE, E="A",
+    pairwise=FALSE, method=c("pearson", "kendall", "spearman"),
+    convCrit=c("relative", "square"), \ldots)
 
 \method{print}{sempls}(x, \ldots)
 }
@@ -30,7 +31,7 @@ sempls(model, ...)
   \item{\dots}{
     %%     ~~Describe \code{\dots} here~~
     Arguments to be passed down.
-  } 
+  }
   \item{data}{
     %%     ~~Describe \code{data} here~~
      A \code{data.frame} containing the the observed variables (MVs). The storage mode for all the MVs included in the model must be \code{numeric}.
@@ -123,7 +124,7 @@ sempls(model, ...)
    \code{\link{specifyPLSM}}, \code{\link{read.splsm}},
    \code{\link{rSquared}}, \code{\link{pathDiagram}},
    \code{\link{boot.sempls}}, \code{\link{plsm2sem}},
-   \code{\link[sem]{sem}}  
+   \code{\link[sem]{sem}}
 }
 \examples{
 data(ECSImobi)

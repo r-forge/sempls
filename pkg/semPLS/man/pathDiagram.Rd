@@ -43,14 +43,14 @@ pathDiagram(sempls, \ldots)
   \item{same.rank}{A \code{character} string or vector of \code{character} strings of variables
     to be assigned equivalent rank in the graph; names in each string should be
     separated by commas.}
-  \item{edge.labels}{\code{"names"} to label arrows with parameter names; 
+  \item{edge.labels}{\code{"names"} to label arrows with parameter names;
     \code{"values"} to label arrows with parameter estimates, or \code{both}}
   \item{size}{The size of the graph, in inches.}
   \item{node.font}{Font name and point-size for printing variable names.}
   \item{edge.font}{Font name and point-size for printing arrow names or values.}
-  \item{rank.direction}{Draw graph left-to-right, \code{"LR"}, the default, 
+  \item{rank.direction}{Draw graph left-to-right, \code{"LR"}, the default,
     or top-to-bottom, \code{"TB"}.}
-  \item{digits}{Number of digits after the decimal point (default, 2) to which 
+  \item{digits}{Number of digits after the decimal point (default, 2) to which
     to round parameter estimates.}
   \item{output.type}{If \code{"graphics"}, the default, both a \dQuote{.dot} file and
     a graphics file will be created.}
@@ -80,7 +80,7 @@ pathDiagram(sempls, \ldots)
 }
 % \author{
 %   %%  ~~who you are~~
-%   Armin Graf \email{armin.monecke@gmx.de}
+%   Armin Monecke \email{armin.monecke@gmx.de}
 % }
 
 % \note{
@@ -91,11 +91,24 @@ pathDiagram(sempls, \ldots)
 
 \seealso{\code{\link{sempls}}}
 
-% \examples{
-% ##---- Should be DIRECTLY executable !! ----
-% ##-- ==>  Define data, use random,
-% ##--	or do  help(data=index)  for the standard data sets.
-% }
+\examples{
+### create .pdf file for the path diagram
+### Note that graphviz (www.graphviz.org) must be available.
+\dontrun{
+pathDiagram(ecsi, file="ecsiPLS1", edge.labels="both",
+            output.type="graphics", digits=3, graphics.fmt = "pdf")
+
+# include R-squared values
+pathDiagram(ecsi, file="ecsiPLS2", edge.labels="both",
+            output.type="graphics", digits=3, graphics.fmt = "pdf",
+            rSquared=Rsquared)
+
+# only the structural model
+pathDiagram(ecsi, file="ecsiPLS3", edge.labels="both",
+            output.type="graphics", digits=3, graphics.fmt = "pdf",
+            rSquared=Rsquared, full=FALSE)
+}
+}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 % \keyword{ ~kwd1 }

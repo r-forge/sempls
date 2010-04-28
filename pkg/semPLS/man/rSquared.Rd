@@ -6,12 +6,14 @@
   Computes the R-squared values for \code{sempls} objects.
 }
 \usage{
-rSquared(object)
+rSquared(object, \ldots)
 
-\method{rSquared}{sempls}(object, na.rm=FALSE)
+\method{rSquared}{sempls}(object, na.rm=FALSE, \ldots)
 }
 \arguments{
   \item{object}{An object of class \code{sempls}.
+  }
+  \item{\ldots}{Arguments to pass down to other methods
   }
   \item{na.rm}{logical. Should missing values be removed?
   }

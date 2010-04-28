@@ -128,7 +128,7 @@ sempls(model, ...)
 }
 \examples{
 data(ECSImobi)
-ecsi <- sempls(model=ECSI, data=mobi)
+ecsi <- sempls(model=ECSImobi, data=mobi)
 ecsi
 
 names(ecsi)

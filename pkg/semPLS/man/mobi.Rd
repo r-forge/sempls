@@ -55,8 +55,12 @@
   PLS path modeling.
   Computational Statistics \& Data Analysis 48, 159-205.
 }
-% \examples{
-% data(mobi)
-% ## maybe str(mobi) ; plot(mobi) ...
-% }
-% \keyword{datasets}
+
+\examples{
+data(ECSImobi)
+ecsi <- sempls(model=ECSImobi, data=mobi, E="C")
+ecsi
+}
+
+\keyword{datasets}
+

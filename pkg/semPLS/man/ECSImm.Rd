@@ -29,9 +29,9 @@ data(ECSImm)
 \seealso{
   \code{\link{ECSImobi}}, \code{\link{mobi}}, \code{\link{ECSImm}}
 }
-\examples{ 
+\examples{
 data(ECSImobi)
-ecsi <- sempls(model=ECSI, data=mobi, E="C")
+ecsi <- sempls(model=ECSImobi, data=mobi, E="C")
 ecsi
 }
 

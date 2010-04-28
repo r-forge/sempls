@@ -3,7 +3,7 @@ rSquared <- function(object, ...){
   UseMethod("rSquared")
 }
 
-rSquared.sempls <- function(object, na.rm=FALSE){
+rSquared.sempls <- function(object, na.rm=FALSE, ...){
   Y_hat <- object$factor_scores %*% object$path_coefficients
   if(sum(is.na(Y_hat)) > 0 & !na.rm) stop("Use argument 'na.rm=TRUE'!")
   R_squared <- apply(Y_hat, 2, var, na.rm=na.rm) / apply(object$factor_scores, 2, var, na.rm=na.rm)

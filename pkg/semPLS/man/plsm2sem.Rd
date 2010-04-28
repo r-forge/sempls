@@ -39,10 +39,14 @@ plsm2sem(model, \ldots)
 
 \seealso{\code{\link[sem]{specify.model}}}
 
-% \examples{
-%     \dontrun{
-%     }
-% }
+\examples{
+\dontrun{
+data(ECSImobi)
+library(sem)
+ECSIsem <- plsm2sem(ECSImobi)
+ECSIsem
+}
+}
 
 % \keyword{htest}
 % \keyword{models}

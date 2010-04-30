@@ -11,7 +11,7 @@ function(sempls, data, start=c("ones", "old"), method, ...){
   method <- sempls$method
   convCrit <- sempls$convCrit
   result <- sempls
-  
+
   ## scale data?
   # Note: scale() changes class(data) to 'matrix'
   if(sempls$scaled) data <- scale(data)
@@ -34,12 +34,13 @@ function(sempls, data, start=c("ones", "old"), method, ...){
   #############################################
   # weighting scheme
   innerWe <- eval(parse(text=sub(" w", "W", sempls$weighting_scheme)))
-  
+
 
   #############################################
   # Iterate over step 2 to 5
+  i <- c()
   eval(plsLoop)
-  
+
   ### bootstrap method ##################################################
   # Construct level changes
   clcIndex <- NULL
@@ -56,7 +57,7 @@ function(sempls, data, start=c("ones", "old"), method, ...){
     factor_scores <- step4(data, outerW=Wnew, blocks=model$blocks, pairwise)
   }
   #######################################################################
-  
+
   result$cross_loadings <- cor(data, factor_scores)
   result$outer_loadings <- result$cross_loadings
   result$outer_loadings[Wnew==0] <- 0

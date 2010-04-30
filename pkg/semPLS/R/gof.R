@@ -6,7 +6,7 @@ dgrho <- function(object){
     rownames(dgr) <- object$model$latent
     colnames(dgr) <- c("Dillon-Goldstein's rho", "reflective MVs")
     for(i in object$model$latent){
-        if(attr(animPLS1$model$blocks[[i]], "mode")=="B"){
+        if(attr(object$model$blocks[[i]], "mode")=="B"){
             next
         }
         x <- object$outer_loadings[, i]
@@ -29,7 +29,7 @@ comunality <- function(object){
     rownames(com) <- object$model$latent
     colnames(com) <- c("comunality", "reflective MVs")
     for(i in object$model$latent){
-        if(attr(animPLS1$model$blocks[[i]], "mode")=="B"){
+        if(attr(object$model$blocks[[i]], "mode")=="B"){
             next
         }
         x <- object$outer_loadings[, i]
@@ -68,9 +68,19 @@ print.redundancy <- function(object){
     paste("Average redundancy:", round(aveRed, digits=3))
 }
 
+predict <- function(object){
+    Y_hat <- object$factor_scores %*% object$path_coefficients
+    return(Y_hat)
+}
+
+residuals <- function(object){
+    res <- object$factor_scores - predict(object)
+    return(res)
+}
+
 
 rSquared <- function(object, na.rm=FALSE, ...){
-  Y_hat <- object$factor_scores %*% object$path_coefficients
+  Y_hat <- predict(object)
   if(sum(is.na(Y_hat)) > 0 & !na.rm) stop("Use argument 'na.rm=TRUE'!")
   R_squared <- apply(Y_hat, 2, var, na.rm=na.rm) / apply(object$factor_scores, 2, var, na.rm=na.rm)
   R_squared[R_squared==0] <- NA

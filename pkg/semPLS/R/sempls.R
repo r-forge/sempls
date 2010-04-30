@@ -1,4 +1,4 @@
-# Estimates factor scores and parameters for PLS path models 
+# Estimates factor scores and parameters for PLS path models
 sempls <- function(model, ...){
   UseMethod("sempls", model)
 }
@@ -17,7 +17,7 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwis
                  method=method, iterations=NULL, convCrit=convCrit,
                  tolerance=tol, maxit=maxit, N=NULL, incomplete=NULL)
   class(result) <- "sempls"
-  
+
   # checking the data
   data <- data[, model$manifest]
   N <- nrow(data)
@@ -54,7 +54,7 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwis
   if(scaled) data <- scale(data)
 
   ## compute PLS approximation of LV scores
-  
+
   #############################################
   # step 1: Initialisation
   stp1 <- step1(model, data, sum1=sum1, pairwise)
@@ -76,9 +76,13 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwis
     result$weighting_scheme <- "path weighting"
   }
   else {stop("The argument E can only take the values 'A', 'B' or 'C'.\n See ?sempls")}
-  
+
+  converged <- c()
+  i <- c()
+  Wnew <- c()
+  innerWeights <- c()
   eval(plsLoop)
-  
+
   ## print
   if(converged){
       cat(paste("Converged after ", (i-1), " iterations.\n",
@@ -117,8 +121,8 @@ plsLoop <- expression({
   i <- 1
   converged <- FALSE
   while(!converged){
-    
-    #############################################    
+
+    #############################################
     # step 2
     innerWeights <- innerWe(model, fscores=factor_scores, pairwise, method)
     factor_scores <- step2(Latent=factor_scores, innerWeights, blocks=model$blocks, pairwise)
@@ -127,27 +131,27 @@ plsLoop <- expression({
     # step 3
     Wnew <-  outerApprx(Latent=factor_scores, data, blocks=model$blocks,
                         sum1=sum1, pairwise, method)
-    
-    #############################################    
+
+    #############################################
     # step 4
     factor_scores <- step4(data, outerW=Wnew, blocks=model$blocks, pairwise)
-    
-    
-    #############################################    
+
+
+    #############################################
     # step 5
     st5 <- step5(Wold, Wnew, tol, converged, convCrit)
     Wold <- st5$Wold
     converged <- st5$converged
-    
+
     #############################################
 
-    
+
     if(i == maxit && !converged){
       # 'try-error' especially for resempls.R
       class(result) <- c(class(result), "try-error")
       break
     }
-    
+
     i <- i+1
   }
 })

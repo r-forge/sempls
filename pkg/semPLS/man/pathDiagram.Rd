@@ -2,15 +2,11 @@
 \Rdversion{1.1}
 \alias{pathDiagram}
 \alias{pathDiagram.sempls}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
-  %%  ~~function to do ... ~~
-  % DOT - File Generator for \code{sempls} Objects
-  %Graphical Representation for \code{sempls} Objects
   Draw Path Diagram
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
  \code{pathDiagram} creates a description of the path diagram
   for a PLS path model object of class \code{sempls} to be processed by the
   graph-drawing program \emph{dot}; see Gansner, Koutsofios, and North (2006)
@@ -27,12 +23,11 @@ pathDiagram(sempls, \ldots)
             c("graphics", "dot"), graphics.fmt = "pdf", dot.options=NULL,
             rSquared=NULL, full=TRUE, \ldots)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{sempls}{A \code{sempls} object}
   \item{\ldots}{Arguments to be passed down to \code{pathDiagram.sempls}.}
   \item{file}{
-    %%     ~~Describe \code{file} here~~
     A file in which to write the \emph{dot} description of the
     path diagram; if not specified, the description is written to standard
     output (normally the R console).}
@@ -63,33 +58,26 @@ pathDiagram(sempls, \ldots)
     supplied, the R-squared values are printed in the diagram.}
   \item{full}{If \code{FALSE} the .dot file is created only for the structural model.}
 }
-% \details{
-% %%  ~~ If necessary, more details than the description above ~~
-% }
+
 \value{
-  %%  ~Describe the value returned
   \code{NULL}: \code{pathDiagram} is used for its side-effect, producing a
   graph description of the model.
 }
 
 \references{
-  % %% ~put references to the literature/web site here ~
   Gansner, E., E. Koutsofios, and S. North (2006)
   Drawing graphs with \emph{dot}.
   \url{http://www.graphviz.org/Documentation/dotguide.pdf}.
 }
-% \author{
-%   %%  ~~who you are~~
-%   Armin Monecke \email{armin.monecke@gmx.de}
-% }
 
-% \note{
-%   %%  ~~further notes~~
-% }
+\author{
+  Armin Monecke \email{armin.monecke@stat.uni-muenchen.de}
+}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{\code{\link{sempls}}}
+\seealso{
+  \code{\link{sempls}}, \code{\link{rSquared}}
+}
 
 \examples{
 ### create .pdf file for the path diagram
@@ -109,7 +97,3 @@ pathDiagram(ecsi, file="ecsiPLS3", edge.labels="both",
             rSquared=Rsquared, full=FALSE)
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

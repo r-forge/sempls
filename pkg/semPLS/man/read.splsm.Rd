@@ -8,7 +8,7 @@
 }
 \description{
   %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-  Imports the .splsm file, an XML model description, specified in SmartPLS. 
+  Imports the .splsm file, an XML model description, specified in SmartPLS.
 }
 \usage{
 read.splsm(file=character(), order=c("alphabetical","generic"))
@@ -28,7 +28,7 @@ read.splsm(file=character(), order=c("alphabetical","generic"))
                             appearance in the causal chain of the
 			    structural model  (default).
       \item \code{"alphabetical"} the LVs will be ordered
-      alphabetically. 
+      alphabetically.
     }
   }
 }
@@ -55,19 +55,13 @@ read.splsm(file=character(), order=c("alphabetical","generic"))
 \references{
 Ringle, C.M./Wende, S./Will, S.: SmartPLS 2.0 (M3) Beta, Hamburg 2005, \url{http://www.smartpls.de}.
 }
-% \author{
-%   %%  ~~who you are~~
-%   Armin Graf \email{armin.monecke@gmx.de}
-% }
 
-% \note{
-%   %%  ~~further notes~~
-% }
+\author{
+  Armin Monecke \email{armin.monecke@stat.uni-muenchen.de}
+}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-  % %% ~~objects to See Also as \code{\link{help}}, ~~~
   \code{\link{sempls}}
 }
 
@@ -78,9 +72,4 @@ ptf <- system.file("SmartPLS", "workspace", "ecsi", "ECSI.splsm", package="semPL
 # creating the model specification to use with 'sempls()'.
 ECSI <- read.splsm(ptf)
 ECSI
-
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

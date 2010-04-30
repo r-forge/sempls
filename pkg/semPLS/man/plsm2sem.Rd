@@ -3,7 +3,9 @@
 \alias{plsm2sem.plsm}
 
 
-\title{Convert to a RAM Representation}
+\title{
+  Convert to a RAM Representation
+}
 \description{
 Creates a RAM representation from a \code{splsm} object for usage of
 \code{\link[sem]{sem}} method within \pkg{sem} package.
@@ -26,16 +28,14 @@ plsm2sem(model, \ldots)
   \item{fixedLoad}{A \code{character} vector naming the MVs, for which the outer loading should be fixed to one.}
 }
 
-% \details{
-% }
 
 \value{
   If the \code{\link[sem]{sem}} package is available, an object of class \code{mod} (see \code{?specify.model}) is returned, else a text representation of recticular action model (RAM) is written.
 }
 
-% \author{
-%   Armin Monecke \email{armin.monecke@gmx.de}
-% }
+\author{
+  Armin Monecke \email{armin.monecke@stat.uni-muenchen.de}
+}
 
 \seealso{\code{\link[sem]{specify.model}}}
 
@@ -47,6 +47,3 @@ ECSIsem <- plsm2sem(ECSImobi)
 ECSIsem
 }
 }
-
-% \keyword{htest}
-% \keyword{models}

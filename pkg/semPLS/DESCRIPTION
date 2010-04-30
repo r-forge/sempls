@@ -4,7 +4,7 @@ Title: Structural Equation Modeling Using Partial Least Squares
 Version: 0.7-4
 Date: 2010-28-04
 Author: Armin Monecke
-Maintainer: Armin Monecke <armin.monecke@gmx.de>
+Maintainer: Armin Monecke <armin.monecke@stat.uni-muenchen.de>
 Description: Fits structural equation models using partial least squares (PLS). The PLS approach is referred to as 'soft-modeling' technique requiring no distributional assumptions on the observed data.
 License: GPL-2
 Suggests: XML, boot, sem

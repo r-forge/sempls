@@ -22,6 +22,10 @@ rSquared(object, \ldots)
   A matrix containing R-squared values for each endogeneous latent variable.
 }
 
+\author{
+  Armin Monecke \email{armin.monecke@stat.uni-muenchen.de}
+}
+
 \seealso{
   \code{\link{sempls}}, \code{\link{pathDiagram}}
 }

@@ -3,11 +3,9 @@
 \alias{mobi}
 \docType{data}
 \title{
-  %%   ~~ data name/kind ... ~~
   Measurement Instrument for the Mobile Phone Industry
 }
 \description{
-  %%  ~~ A concise (1-5 lines) description of the dataset. ~~
   The data set is used as measurement instrument for the european customer
   satisfaction index (ECSI) adapted to the mobile phone market, see
   Tenenhaus et al. (2005).
@@ -43,17 +41,20 @@
     \item{\code{PERV2}}{Given the fees and prices that you pay for \dQuote{your mobile phone provider} how would you rate the quality of the products and services offered by \dQuote{your mobile phone provider}?}
   }
 }
-% \details{
-% %%  ~~ If necessary, more details than the __description__ above ~~
-% }
-% \source{
-%%  ~~ reference to a publication or URL from which the data were obtained ~~
-% }
+
+
 \references{
-  %%  ~~ possibly secondary sources and usages ~~
   Tenenhaus, M., V. E. Vinzi, Y.-M. Chatelin, and C. Lauro (2005)
   PLS path modeling.
   Computational Statistics \& Data Analysis 48, 159-205.
+}
+
+\author{
+Armin Monecke \email{armin.monecke@stat.uni-muenchen.de}
+}
+
+\seealso{
+  \code{\link{ECSImobi}}, \code{\link{ECSIsm}}, \code{\link{ECSImm}}
 }
 
 \examples{
@@ -63,4 +64,3 @@ ecsi
 }
 
 \keyword{datasets}
-

@@ -106,21 +106,12 @@ sempls(model, ...)
   \item{...}{All the other values are just storing information used in
     the \code{call}.}
 }
-% \references{
-% %% ~put references to the literature/web site here ~
-% }
-% \author{
-%   %%  ~~who you are~~
-%   Armin Graf \email{armin.monecke@gmx.de}
-% }
-% \note{
-% %%  ~~further notes~~
-% }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+\author{
+  Armin Monecke \email{armin.monecke@stat.uni-muenchen.de}
+}
 
 \seealso{
-%   %% ~~objects to See Also as \code{\link{help}}, ~~~
    \code{\link{specifyPLSM}}, \code{\link{read.splsm}},
    \code{\link{rSquared}}, \code{\link{pathDiagram}},
    \code{\link{boot.sempls}}, \code{\link{plsm2sem}},
@@ -184,8 +175,3 @@ parallel(ecsiBoot$t[, grep("lam7", colnames(ecsiBoot$t))],
          horizontal.axis=FALSE, alpha=0.1, scales=list(x=list(rot=60)),
          main="Loyalty\n200 bootstrapped outer loadings")
 }
-
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

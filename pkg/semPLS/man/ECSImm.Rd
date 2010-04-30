@@ -1,7 +1,9 @@
 \name{ECSImm}
 \docType{data}
 \alias{ECSImm}
-\title{ECSI Measurement Model for the Mobile Phone Industry}
+\title{
+  ECSI Measurement Model for the Mobile Phone Industry
+}
 \description{This data provides the measurement model for the european
   customer satisfaction index (ECSI) adapted to the mobile market, see
   Tenenhaus et al. (2005).
@@ -24,6 +26,10 @@ data(ECSImm)
   Tenenhaus, M., V. E. Vinzi, Y.-M. Chatelin, and C. Lauro (2005)
   PLS path modeling.
   Computational Statistics \& Data Analysis 48, 159-205.
+}
+
+\author{
+Armin Monecke \email{armin.monecke@stat.uni-muenchen.de}
 }
 
 \seealso{

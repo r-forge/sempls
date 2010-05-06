@@ -35,7 +35,7 @@ comunality <- function(object){
         x <- object$outer_loadings[, i]
         ind <- which(x!=0)
         if(length(ind)==1){
-            dgr[i,2] <- 1
+            com[i,2] <- 1
             next
         }
         else {

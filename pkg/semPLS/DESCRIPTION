@@ -9,4 +9,4 @@ Description: Fits structural equation models using partial least squares (PLS). 
 License: GPL-2
 Suggests: XML, boot, sem
 LazyLoad: yes
-LazyData: yes
+

@@ -64,7 +64,7 @@ ptf_Meas <- system.file("ECSImeasuremod.csv", package="semPLS")
 
 sm <- as.matrix(read.csv(ptf_Struc))
 mm <- as.matrix(read.csv(ptf_Meas))
-data(mobi)
+data(ECSImobi)
 
 ECSI <- specifyPLSM(data=mobi, strucmod=sm, measuremod=mm)
 ECSI

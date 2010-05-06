@@ -10,7 +10,7 @@
   satisfaction index (ECSI) adapted to the mobile phone market, see
   Tenenhaus et al. (2005).
 }
-\usage{data(mobi)}
+\usage{data(ECSImobi)}
 \format{
   A data frame with 250 observations on the following 24 items. All the
   items are scaled from \eqn{1} to \eqn{10}.

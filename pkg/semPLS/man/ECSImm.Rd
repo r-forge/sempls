@@ -10,7 +10,6 @@
 }
 \usage{
 data(ECSImobi)
-data(ECSImm)
 }
 \format{
   A from-to-matrix (\eqn{24} x \eqn{2}) representing the directed edges connecting the

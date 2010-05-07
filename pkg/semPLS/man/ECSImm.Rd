@@ -9,6 +9,7 @@
   Tenenhaus et al. (2005).
 }
 \usage{
+data(ECSImm)
 data(ECSImobi)
 }
 \format{

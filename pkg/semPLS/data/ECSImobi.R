@@ -1,5 +1,5 @@
-load(system.file("mobi.rda", package="semPLS"))
-load(system.file("ECSIsm.rda", package="semPLS"))
-load(system.file("ECSImm.rda", package="semPLS"))
+if(!exists("mobi")) load("mobi.rda")
+if(!exists("ECSIsm")) load("ECSIsm.rda")
+if(!exists("ECSImm")) load("ECSImm.rda")
 ECSImobi <- semPLS:::specifyPLSM(data=mobi, strucmod=ECSIsm, measuremod=ECSImm, order="generic")
 

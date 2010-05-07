@@ -10,7 +10,10 @@
   satisfaction index (ECSI) adapted to the mobile phone market, see
   Tenenhaus et al. (2005).
 }
-\usage{data(ECSImobi)}
+\usage{
+data(mobi)
+data(ECSImobi)
+}
 \format{
   A data frame with 250 observations on the following 24 items. All the
   items are scaled from \eqn{1} to \eqn{10}.
@@ -58,6 +61,7 @@ Armin Monecke \email{armin.monecke@stat.uni-muenchen.de}
 }
 
 \examples{
+data(mobi)
 data(ECSImobi)
 ecsi <- sempls(model=ECSImobi, data=mobi, E="C")
 ecsi

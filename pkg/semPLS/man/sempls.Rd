@@ -3,13 +3,12 @@
 \alias{sempls}
 \alias{sempls.plsm}
 \alias{print.sempls}
+\alias{densityplot.sempls}
 
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Structural Equation Modeling by Partial Least Squares
 }
 \description{
-  %%  ~~ A concise (1-5 lines) description of what the function does. ~~
   \code{sempls} fits structural equation models by the patial least
   squares (PLS) method. The estimation is based on the raw data and
   requires no distributional assumptions.
@@ -22,19 +21,18 @@ sempls(model, ...)
     convCrit=c("relative", "square"), \ldots)
 
 \method{print}{sempls}(x, \ldots)
+
+\method{densityplot}{sempls}(x, data, use=c("fscores", "prediction",
+            "residuals"), main, sub, \ldots)
 }
 \arguments{
-  \item{model}{
-    %%     ~~Describe \code{model} here~~
-     An object of class \code{splsm} as returned from \code{read.splsm}.
+  \item{model}{An object of class \code{splsm} as returned from \code{read.splsm}.
   }
-  \item{\dots}{
-    %%     ~~Describe \code{\dots} here~~
-    Arguments to be passed down.
+  \item{\dots}{Arguments to be passed down.
   }
-  \item{data}{
-    %%     ~~Describe \code{data} here~~
-     A \code{data.frame} containing the the observed variables (MVs). The storage mode for all the MVs included in the model must be \code{numeric}.
+  \item{data}{A \code{data.frame} containing the the observed variables
+    (MVs). The storage mode for all the MVs included in the model must
+    be \code{numeric}.
 }
   \item{maxit}{A \code{numeric} value, which determines the maximum number of
     iterations performed by the PLS algorithm. The default is \eqn{20}
@@ -81,15 +79,22 @@ sempls(model, ...)
        \item \code{"square"}.
      }
   }
-  \item{x}{An object of class \code{sempls} returned by the \code{sempls} function.}
+  \item{x}{An object of class \code{sempls} returned by the
+    \code{sempls} method.
+  }
+  \item{use}{The values for which the density plots are created. If
+    \itemize{
+      \item \code{"fscores"}: the factor scores are used,
+      \item \code{"prediction"}: the estimated factor scores are used,
+      \item \code{"residuals"}: the residuals are used.
+    }
+  }
+  \item{main, sub}{Graphical parameters.}
 }
-% \details{
-% %%  ~~ If necessary, more details than the description above ~~
-% }
+
 \value{
-  %%  ~Describe the value returned
   \code{sempls} returns an object of class \code{sempls}, with the following elements:
-%%  If it is a LIST, use
+
   \item{coefficients}{A \code{data.frame} containing the estimates for
     all the arcs in the path model, those are the outer loadings for
     mode \sQuote{A} type LVs and outer weights for mode \sQuote{B} type LVs and path
@@ -112,15 +117,19 @@ sempls(model, ...)
 }
 
 \seealso{
-   \code{\link{specifyPLSM}}, \code{\link{read.splsm}},
+   \code{\link{plsm}}, \code{\link{read.splsm}},
    \code{\link{rSquared}}, \code{\link{pathDiagram}},
-   \code{\link{boot.sempls}}, \code{\link{plsm2sem}},
+   \code{\link{bootsempls}}, \code{\link{plsm2sem}},
    \code{\link[sem]{sem}}
 }
 \examples{
 data(ECSImobi)
 ecsi <- sempls(model=ECSImobi, data=mobi)
 ecsi
+
+densityplot(ecsi)
+densityplot(ecsi, use="prediction")
+densityplot(ecsi, use="residuals")
 
 names(ecsi)
 ecsi$outer_weights
@@ -148,30 +157,4 @@ pathDiagram(ecsi, file="ecsiPLS3", edge.labels="both",
             output.type="graphics", digits=3, graphics.fmt = "pdf",
             rSquared=Rsquared, full=FALSE)
 }
-
-### Bootstrapping
-set.seed(123)
-ecsiBoot <- boot.sempls(ecsi, nboot=200, start="ones", verbose=TRUE)
-summary(ecsiBoot, type="perc", level=0.95)
-
-## inspectation of bootstrap samples
-library(lattice)
-parallel(ecsiBoot$t, col=rgb(0,0,0, alpha=0.3), common.scale=TRUE,
-         horizontal.axis=FALSE, alpha=0.1, scales=list(x=list(rot = 60)))
-
-# only inspecting the path coefficients
-parallel(ecsiBoot$t[, grep("beta", colnames(ecsiBoot$t))],
-         col=rgb(0,0,0, alpha=0.3), common.scale=TRUE,
-         horizontal.axis=FALSE, alpha=0.1, scales=list(x=list(rot=60)))
-
-# only inspecting the outer loadings
-parallel(ecsiBoot$t[, grep("lam", colnames(ecsiBoot$t))],
-         col=rgb(0,0,0, alpha=0.3), common.scale=TRUE,
-         horizontal.axis=FALSE, alpha=0.1, scales = list(x=list(rot=60)))
-
-# only inspecting the outer loadings for Loyalty
-parallel(ecsiBoot$t[, grep("lam7", colnames(ecsiBoot$t))],
-         col=rgb(0,0,0, alpha=0.3), common.scale=TRUE,
-         horizontal.axis=FALSE, alpha=0.1, scales=list(x=list(rot=60)),
-         main="Loyalty\n200 bootstrapped outer loadings")
 }

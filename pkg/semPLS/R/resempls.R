@@ -1,4 +1,4 @@
-# Refitting the sempls object for the boot.sempls method.
+# Refitting the sempls object for the bootsempls method.
 resempls <-
 function(sempls, data, start=c("ones", "old"), method, ...){
   start <- match.arg(start)

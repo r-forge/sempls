@@ -5,11 +5,11 @@
 \title{
   Import of XML Model Description Specified in SmartPLS
 }
-\description{Imports the .splsm file, an XML model description,
-  specified in SmartPLS.}
+\description{Imports a .splsm file, an XML model description,
+  specified in SmartPLS (see references).}
 
 \usage{
-read.splsm(file=character(), order=c("alphabetical","generic"))
+read.splsm(file=character(), order=c("generic", "alphabetical"))
 }
 
 \arguments{
@@ -23,7 +23,7 @@ read.splsm(file=character(), order=c("alphabetical","generic"))
     \itemize{
       \item \code{"generic"} the LVs will be ordered according to their
                             appearance in the causal chain of the
-			    structural model  (default).
+			    structural model (default).
       \item \code{"alphabetical"} the LVs will be ordered
       alphabetically.
     }
@@ -61,7 +61,7 @@ Ringle, C.M./Wende, S./Will, S.: SmartPLS 2.0 (M3) Beta, Hamburg 2005, \url{http
 
 
 \seealso{
-  \code{\link{sempls}}
+  \code{\link{sempls}}, \code{\link{plsm}}
 }
 
 \examples{

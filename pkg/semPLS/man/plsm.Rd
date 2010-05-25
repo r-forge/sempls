@@ -1,6 +1,6 @@
-\name{specifyPLSM}
+\name{plsm}
 \Rdversion{1.1}
-\alias{specifyPLSM}
+\alias{plsm}
 \title{
   Specification of Path Model
 }
@@ -12,7 +12,7 @@
   represents the target of each path.
 }
 \usage{
-specifyPLSM(data, strucmod=NULL, measuremod=NULL, order=c("generic", "alphabetical"))
+plsm(data, strucmod=NULL, measuremod=NULL, order=c("generic", "alphabetical"))
 }
 
 \arguments{
@@ -30,7 +30,7 @@ specifyPLSM(data, strucmod=NULL, measuremod=NULL, order=c("generic", "alphabetic
      (LVs). If
     \itemize{
       \item \code{"generic"} the LVs will be ordered according to their
-      appearance in the causal chain of the structural model  (default).
+      appearance in the causal chain of the structural model (default).
       \item \code{"alphabetical"} the LVs will be ordered alphabetically.
     }
   }
@@ -66,11 +66,11 @@ sm <- as.matrix(read.csv(ptf_Struc))
 mm <- as.matrix(read.csv(ptf_Meas))
 data(ECSImobi)
 
-ECSI <- specifyPLSM(data=mobi, strucmod=sm, measuremod=mm)
+ECSI <- plsm(data=mobi, strucmod=sm, measuremod=mm)
 ECSI
 
 ### Interactive mode
 \dontrun{
-ECSI <- specifyPLSM(data=mobi)
+ECSI <- plsm(data=mobi)
 ECSI}
 }

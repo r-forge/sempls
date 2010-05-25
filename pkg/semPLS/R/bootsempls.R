@@ -16,7 +16,7 @@
 ##' @examples
 ##' data(mobi)
 
-boot.sempls <- function(sempls, nboot=200, start=c("ones", "old"),
+bootsempls <- function(object, nboot=200, start=c("ones", "old"),
                 method=c("ConstructLevelChanges", "IndividualSignChanges", "Standard"),
                 verbose=TRUE, ...){
     method <- match.arg(method)
@@ -26,7 +26,7 @@ boot.sempls <- function(sempls, nboot=200, start=c("ones", "old"),
     }
     refit <- function(){
         data <- data[indices,]
-        refitted_model <- resempls(sempls, data, start, method)
+        refitted_model <- resempls(object, data, start, method)
         refitted_model
     }
     if (!require("boot")) stop("package boot not available")
@@ -35,13 +35,13 @@ boot.sempls <- function(sempls, nboot=200, start=c("ones", "old"),
     seed <- get(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
     warn <- options(warn=-2)
     on.exit(options(warn)) # insure restore even in event of error
-    nErrors <- 0  
-    data <- sempls$data
+    nErrors <- 0
+    data <- object$data
     N <- nrow(data)
-    coefficients <- sempls$coefficients[,2]
-    coef_names <- rownames(sempls$coefficients)
+    coefficients <- object$coefficients[,2]
+    coef_names <- rownames(object$coefficients)
     coefs <- matrix(numeric(0), nrow=nboot, ncol=length(coefficients))
-    attr(coefs, "path") <- sempls$coefficients[,1]    
+    attr(coefs, "path") <- object$coefficients[,1]
     colnames(coefs) <- coef_names
     clcIndex <- NULL
     tryErrorIndices <- NULL
@@ -65,7 +65,7 @@ boot.sempls <- function(sempls, nboot=200, start=c("ones", "old"),
         else {
           # for construct level changes
           if(method=="ConstructLevelChanges"){
-            clcIndex[[b]] <- res$clcIndex 
+            clcIndex[[b]] <- res$clcIndex
           }
           # Standard
           coefs[b,] <- res$coefficients[,2]
@@ -74,7 +74,7 @@ boot.sempls <- function(sempls, nboot=200, start=c("ones", "old"),
       }
     }
     options(warn)
-    if (nErrors > 0) warning("There were ", nErrors, 
+    if (nErrors > 0) warning("There were ", nErrors,
                              " apparent convergence failures;\n",
                              "  these are discarded from the ",
                               nboot, " bootstrap replications returned.")
@@ -83,8 +83,8 @@ boot.sempls <- function(sempls, nboot=200, start=c("ones", "old"),
                 tryErrorIndices=tryErrorIndices, clcIndex=clcIndex)
     class(res) <- c("bootsempls", "boot")
     res
-}   
-        
+}
+
 ##' @param x object of class bootsempls
 ##' @param digits number of digits to print
 
@@ -92,7 +92,7 @@ boot.sempls <- function(sempls, nboot=200, start=c("ones", "old"),
 print.bootsempls <- function(x, digits = getOption("digits"), ...){
     t <- x$t
     t0 <- x$t0
-    result <- data.frame("Estimate"=t0, "Bias"=colMeans(t) - t0, 
+    result <- data.frame("Estimate"=t0, "Bias"=colMeans(t) - t0,
         "Std.Error"=apply(t, 2, sd))
     rownames(result) <- attr(t, "path")
     cat("Call: ")
@@ -114,7 +114,7 @@ summary.bootsempls <- function(object,
     t <- object$t
     t0 <- object$t0
     object$R <- object$nboot
-    result <- data.frame("Estimate"=t0, "Bias"=colMeans(t) - t0, 
+    result <- data.frame("Estimate"=t0, "Bias"=colMeans(t) - t0,
         "Std.Error"=apply(t, 2, sd))
     if (type != "none"){
         p <- length(t0)
@@ -128,7 +128,7 @@ summary.bootsempls <- function(object,
             noCi <- append(noCi, i)
           }
           else{
-            ci <- as.vector(boot.ci(object, type=type, index=i, 
+            ci <- as.vector(boot.ci(object, type=type, index=i,
                 conf=level)[[type, exact=FALSE]])
             lower[i] <- ci[low]
             upper[i] <- ci[up]
@@ -140,7 +140,7 @@ summary.bootsempls <- function(object,
     rownames(result) <- colnames(t)
     attr(result, "path") <- attr(t, "path")
     result <- list(table=result, call=object$call, level=level, type=type)
-    class(result) <- "summaryBootsempls"
+    class(result) <- "summary.bootsempls"
     result
 }
 
@@ -148,12 +148,12 @@ summary.bootsempls <- function(object,
 ##' @param digits number ot digits to print
 
 ##' @return Prints the estimate, the bias, the standard error and confidence interval
-print.summaryBootsempls <- function(x, digits = getOption("digits"), ...){
+print.summary.bootsempls <- function(x, digits = getOption("digits"), ...){
     cat("Call: ")
     dput(x$call)
     cat("\n")
     if (x$type != "none") {
-        cat(paste("Lower and upper limits are for the", 100*x$level, 
+        cat(paste("Lower and upper limits are for the", 100*x$level,
             "percent", x$type, "confidence interval\n\n"))
         }
     print(x$table, digits=digits)

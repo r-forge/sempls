@@ -1,9 +1,10 @@
-\name{boot.sempls}
-\alias{boot.sempls}
+\name{bootsempls}
+\alias{bootsempls}
 \alias{print.bootsempls}
 \alias{summary.bootsempls}
-\alias{print.summaryBootsempls}
-
+\alias{print.summary.bootsempls}
+\alias{densityplot.bootsempls}
+\alias{parallel.bootsempls}
 \title{Bootstrap a PLS path model}
 \description{
 Bootstraps a PLS path model in a \code{sempls} object (as returned by
@@ -11,7 +12,7 @@ the \code{\link{sempls}} method).
 }
 
 \usage{
-boot.sempls(sempls, nboot=200, start=c("ones", "old"), method=
+bootsempls(object, nboot=200, start=c("ones", "old"), method=
             c("ConstructLevelChanges", "IndividualSignChanges",
             "Standard"), verbose=TRUE, \ldots)
 
@@ -20,11 +21,18 @@ boot.sempls(sempls, nboot=200, start=c("ones", "old"), method=
 \method{summary}{bootsempls}(object, type=c("perc", "bca", "norm", "basic", "none"),
         level=0.95, \ldots)
 
-\method{print}{summaryBootsempls}(x, digits = getOption("digits"), \ldots)
+\method{print}{summary.bootsempls}(x, digits = getOption("digits"),
+\ldots)
+
+\method{densityplot}{bootsempls}(x, data, pattern="beta", subset=NULL, \ldots)
+
+\method{parallel}{bootsempls}(x, data, pattern="beta", subset=NULL, reflinesAt,
+         col=c("grey", "darkred", "darkred", "black"), lty=c("solid",
+         "solid","dashed", "dotted"), \ldots)
 }
 
 \arguments{
-  \item{sempls}{An object of class \code{sempls} as returned by the method \code{sempls}.}
+  \item{object}{An object of class \code{sempls} as returned by the method \code{sempls}.}
   \item{nboot}{The number of bootstrap replications; the default is \code{200}.}
   \item{start}{A \code{character} value telling, how to initialise the
     outer weights. If
@@ -51,13 +59,28 @@ boot.sempls(sempls, nboot=200, start=c("ones", "old"), method=
   }
   \item{verbose}{A \code{logical} indicating, whether progress of bootstrap shall
   be displayed.}
-  \item{x, object}{An object of class \code{bootsempls}.}
+  \item{x}{An object of class \code{bootsempls} and
+  \code{summary.bootsempls} respectively.}
   \item{digits}{Controls the number of digits to print.}
   \item{type}{Type of bootstrapped confidence intervals to compute; the
     default is \code{"perc"} (percentile); see
     \code{\link[boot]{boot.ci}} for details.}
   \item{level}{Level for confidence intervals; default is \code{0.95}.}
   \item{\ldots}{Arguments to be passed down to other methods.}
+    \item{data}{The \code{data} is not used because the \code{bootsempls}
+    object already contains the required data.}
+  \item{pattern}{A regular expression passed on to
+    \code{\link[base]{grep}}. It is helpful to easily identify a set of
+    coefficients, e.g. \code{pattern="beta"} plots the path coefficients
+    only.}
+  \item{subset}{Index or character vector of coefficients to
+    include. Note, that \code{subset} overrides \code{pattern}.}
+  \item{reflinesAt}{A vector of values at which to plot reference lines
+  into the parallel cooordinates.}
+  \item{col}{Colors for bootstrap statistics, sample statistic,
+    lower and upper bootstrap confidence levels and reference lines.}
+  \item{lty}{Line type for  bootstrap statistics, sample statistic,
+    lower and upper bootstrap confidence levels and reference lines.}
 }
 
 \details{
@@ -87,7 +110,8 @@ boot.sempls(sempls, nboot=200, start=c("ones", "old"), method=
   \item{tryErrorIndices}{Contains the indices for each resample, which
   returned \code{try-error}.}
   \item{clcIndex}{When the method \code{ConstructLevelChanges} is used,
-  it stores the indices of the blocks of MVs for which a sign change occured.}
+  it stores the indices of the blocks of MVs for which a sign change
+  occured.}
 }
 
 \author{
@@ -102,10 +126,27 @@ Armin Monecke \email{armin.monecke@stat.uni-muenchen.de}
   159-205.
 }
 
-% \examples{
-%     \dontrun{
-%     }
-% }
+\examples{
+data(ECSImobi)
+ecsi <- sempls(model=ECSImobi, data=mobi)
 
-% \keyword{htest}
-% \keyword{models}
+### Bootstrapping
+set.seed(123)
+ecsiBoot <- bootsempls(ecsi, nboot=200, start="ones", verbose=TRUE)
+summary(ecsiBoot, type="perc", level=0.95)
+
+
+
+## inspectation of bootstrap samples
+parallel(ecsiBoot)
+
+# only inspecting the path coefficients
+parallel(ecsiBoot, pattern="beta", reflinesAt=c(0,1))
+
+# only inspecting the outer loadings
+parallel(ecsiBoot, pattern="lam")
+
+# only inspecting the outer loadings for Loyalty
+parallel(ecsiBoot, pattern="lam7", type="perc", level=0.90,
+         main="Loyalty\n 200 bootstrapped outer loadings")
+}

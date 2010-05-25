@@ -1,4 +1,4 @@
-specifyPLSM <- function(data, strucmod=NULL, measuremod=NULL, order=c("generic", "alphabetical")){
+plsm <- function(data, strucmod=NULL, measuremod=NULL, order=c("generic", "alphabetical")){
   if(is.null(strucmod)){
     cat("Choose a .csv file for the structural model!\n")
     strucmod <- as.matrix(read.csv(file.choose()))
@@ -21,7 +21,7 @@ specifyPLSM <- function(data, strucmod=NULL, measuremod=NULL, order=c("generic",
 
   if(!all(manifest %in% colnames(data)))
      stop("The manifest variables must be contained in the data.frame")
-     
+
   order <- match.arg(order)
   # Adjacency matrix D for the structural model
   D <- innerW(strucmod, latent)
@@ -41,11 +41,11 @@ specifyPLSM <- function(data, strucmod=NULL, measuremod=NULL, order=c("generic",
 
   # build blocks of manifest variables (including 'measurement mode')
   blocks <- block(latent, manifest, measuremod)
-  
+
   # Ordering of MVs
   MVs <- NULL
   for(i in 1:length(blocks)) MVs <- append(MVs, blocks[[i]])
-  
+
   result <- list()
   result$latent <- latent
   result$manifest <- MVs

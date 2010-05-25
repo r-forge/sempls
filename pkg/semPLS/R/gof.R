@@ -17,7 +17,7 @@ dgrho <- function(object){
         }
         else {
             x <- x[ind]
-            dgr[i,1] <- sum(x)^2 / (sum(x[])^2 + sum(1-x^2))
+            dgr[i,1] <- sum(x)^2 / (sum(x)^2 + sum(1-x^2))
             dgr[i,2] <- length(ind)
         }
     }
@@ -49,7 +49,7 @@ comunality <- function(object){
 
 print.comunality <- function(object){
     print(object, digits=3)
-    aveCom <- sum(object, na.rm=TRUE)^-1 * sum(object[,1] * object[,2], na.rm=TRUE)
+    aveCom <- sum(object[,2], na.rm=TRUE)^-1 * sum(object[,1] * object[,2], na.rm=TRUE)
     paste("Average comunality:", round(aveCom, digits=3))
 }
 
@@ -83,7 +83,7 @@ rSquared <- function(object, na.rm=FALSE, ...){
   Y_hat <- predict(object)
   if(sum(is.na(Y_hat)) > 0 & !na.rm) stop("Use argument 'na.rm=TRUE'!")
   R_squared <- apply(Y_hat, 2, var, na.rm=na.rm) / apply(object$factor_scores, 2, var, na.rm=na.rm)
-  R_squared[R_squared==0] <- NA
+  R_squared[R_squared==0] <- 0
   R_squared <- as.matrix(R_squared)
   R_squared <- cbind(R_squared, colSums(object$model$D))
   colnames(R_squared) <- c("R-squared", "predecessors")
@@ -100,7 +100,7 @@ gof <- function(object){
     rSq <- rSquared(object)
     aveRsq <- nrow(rSq)^-1 * sum(rSq[,1], na.rm=TRUE)
     com <- comunality(object)
-    aveCom <- sum(com, na.rm=TRUE)^-1 * sum(com[,1] * com[,2], na.rm=TRUE)
+    aveCom <- sum(com[,2], na.rm=TRUE)^-1 * sum(com[,1] * com[,2], na.rm=TRUE)
     gof <- sqrt(aveCom * aveRsq)
     return(gof)
 }

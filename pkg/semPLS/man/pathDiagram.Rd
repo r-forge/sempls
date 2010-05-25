@@ -13,10 +13,10 @@
   and \url{http://www.graphviz.org/}.
 }
 \usage{
-pathDiagram(sempls, \ldots)
+pathDiagram(object, \ldots)
 
 
-\method{pathDiagram}{sempls}(sempls, file, min.rank=NULL, max.rank=NULL, same.rank=NULL,
+\method{pathDiagram}{sempls}(object, file, min.rank=NULL, max.rank=NULL, same.rank=NULL,
             edge.labels=c("names", "values", "both"), size=c(8,8),
             node.font=c("Helvetica", 14), edge.font=c("Helvetica", 10),
             rank.direction=c("LR", "TB"), digits=2, output.type =
@@ -25,7 +25,7 @@ pathDiagram(sempls, \ldots)
 }
 
 \arguments{
-  \item{sempls}{A \code{sempls} object}
+  \item{object}{A \code{sempls} object}
   \item{\ldots}{Arguments to be passed down to \code{pathDiagram.sempls}.}
   \item{file}{
     A file in which to write the \emph{dot} description of the
@@ -60,7 +60,7 @@ pathDiagram(sempls, \ldots)
 }
 
 \value{
-  \code{NULL}: \code{pathDiagram} is used for its side-effect, producing a
+  \code{pathDiagram} is used for its side-effect, producing a
   graph description of the model.
 }
 

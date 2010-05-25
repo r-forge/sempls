@@ -7,8 +7,8 @@
   Convert to a RAM Representation
 }
 \description{
-Creates a RAM representation from a \code{splsm} object for usage of
-\code{\link[sem]{sem}} method within \pkg{sem} package.
+  Converts a \code{plsm} object to an object of class \code{mod} for
+  usage of \code{\link[sem]{sem}} method within \pkg{sem} package.
 }
 
 \usage{
@@ -30,7 +30,7 @@ plsm2sem(model, \ldots)
 
 
 \value{
-  If the \code{\link[sem]{sem}} package is available, an object of class \code{mod} (see \code{?specify.model}) is returned, else a text representation of recticular action model (RAM) is written.
+  If the \code{\link[sem]{sem}} package is available, an object of class \code{mod} (see \code{\link[sem]{specify.model}}) is returned, else a text representation of recticular action model (RAM) is written.
 }
 
 \author{
@@ -40,10 +40,9 @@ plsm2sem(model, \ldots)
 \seealso{\code{\link[sem]{specify.model}}}
 
 \examples{
-\dontrun{
 data(ECSImobi)
-library(sem)
-ECSIsem <- plsm2sem(ECSImobi)
-ECSIsem
+if(require(sem)){
+   ECSIsem <- plsm2sem(ECSImobi)
+   ECSIsem
 }
 }

@@ -1,6 +1,13 @@
 \name{plsm}
 \Rdversion{1.1}
 \alias{plsm}
+\alias{exogen}
+\alias{endogen}
+\alias{reflective}
+\alias{formative}
+\alias{indicators}
+\alias{predecessors}
+
 \title{
   Specification of Path Model
 }
@@ -12,7 +19,15 @@
   represents the target of each path.
 }
 \usage{
-plsm(data, strucmod=NULL, measuremod=NULL, order=c("generic", "alphabetical"))
+plsm(data, strucmod=NULL, measuremod=NULL, order=c("generic",
+  "alphabetical"))
+
+exogen(object)
+endogen(object)
+reflective(object)
+formative(object)
+indicators(object, LV)
+predecessors(object)
 }
 
 \arguments{
@@ -34,6 +49,10 @@ plsm(data, strucmod=NULL, measuremod=NULL, order=c("generic", "alphabetical"))
       \item \code{"alphabetical"} the LVs will be ordered alphabetically.
     }
   }
+
+  \item{object}{An object of class \code{plsm}.}
+  \item{LV}{A character value naming a latent variable contained in the
+    model}
 }
 
 \value{
@@ -44,7 +63,26 @@ plsm(data, strucmod=NULL, measuremod=NULL, order=c("generic", "alphabetical"))
 \item{measuremod}{Contains only the subset of \code{path} representing the measurement model.}
 \item{D}{The adjacency matrix \eqn{\bm{D}} for the structural model.}
 \item{M}{The adjacency matrix \eqn{\bm{M}} for the measurement model.}
-\item{blocks}{A \code{list} naming the MVs belonging to each LV's block and telling their measurement mode.}
+\item{blocks}{A \code{list} naming the MVs belonging to each LV's block
+  and telling their measurement mode.}
+
+  \code{exogen} returns the exogenous latent variables contained in a path
+  model.
+
+  \code{endogen} returns the endogenous latent variables contained in a path
+  model.
+
+  \code{reflective} returns the reflectively measured latent variables
+  contained in a path model.
+
+  \code{formative} returns the formatively measured latent variables
+  contained in a path model.
+
+  \code{indicators} returns the index or observed variables related to
+  the given latent variable.
+
+  \code{predecessors} returns a list with the names of predecessors for
+  each latent variable.
 }
 
 \author{
@@ -64,7 +102,7 @@ ptf_Meas <- system.file("ECSImeasuremod.csv", package="semPLS")
 
 sm <- as.matrix(read.csv(ptf_Struc))
 mm <- as.matrix(read.csv(ptf_Meas))
-data(ECSImobi)
+data(mobi)
 
 ECSI <- plsm(data=mobi, strucmod=sm, measuremod=mm)
 ECSI
@@ -73,4 +111,11 @@ ECSI
 \dontrun{
 ECSI <- plsm(data=mobi)
 ECSI}
+
+exogen(ECSI)
+endogen(ECSI)
+reflective(ECSI)
+formative(ECSI)
+indicators(ECSI, "Image")
+predecessors(ECSI)
 }

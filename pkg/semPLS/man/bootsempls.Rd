@@ -138,10 +138,11 @@ summary(ecsiBoot, type="perc", level=0.95)
 
 
 ## inspectation of bootstrap samples
-parallel(ecsiBoot)
+parallel(ecsiBoot, subset=1:ncol(ecsiBoot$t), reflinesAt=0)
 
 # only inspecting the path coefficients
 parallel(ecsiBoot, pattern="beta", reflinesAt=c(0,1))
+densityplot(ecsiBoot, pattern="beta")
 
 # only inspecting the outer loadings
 parallel(ecsiBoot, pattern="lam")

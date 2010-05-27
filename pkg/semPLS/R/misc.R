@@ -29,3 +29,11 @@ indicators <- function(object, LV){
     ret <- object$blocks[[LV]]
     return(ret)
 }
+
+# used in 'pathWeighting'
+predecessors <- function(object){
+    D <- model$D
+    foo <- function(x) names(which(x==1))
+    pred <- apply(D, 2, foo)
+    return(pred)
+}

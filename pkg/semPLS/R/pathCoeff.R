@@ -8,13 +8,13 @@ pathCoeff <- function(model, factor_scores, method, pairwise){
   rownames(pC) <- latent
   colnames(pC) <- latent
 
-  for(i in 1:length(latent)){
-    if (latent[i] %in% strucmod[,2]){
+  for(i in latent){
+    if (i %in% strucmod[,2]){
       # which latents are direct predecessors from latent[i]
       # latent[i] is the dependent variable
-      index <- which(latent[i] == strucmod[,2])
+      index <- which(i == strucmod[,2])
       indpnt <- strucmod[index,1] # the independent LVs
-      
+
       # solving the structural equation for latent[i]
       pC[indpnt, i] <- solve(cor(as.matrix(fscores[,indpnt]), use=use, method=method)) %*%
                        cor(fscores[,indpnt], fscores[,i], use=use, method=method)

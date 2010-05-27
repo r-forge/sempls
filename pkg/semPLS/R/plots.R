@@ -17,7 +17,7 @@ densityplot.sempls <- function(x, data, use=c("fscores", "prediction", "residual
     if(missing(sub)){
         sub=paste("Exogenous LVs:\n", paste(exogenous, collapse=", "))
     }
-    densityplot(~value|name, data=Y, main=main, sub=sub, ...)
+    densityplot(~value|name, data=Y, main=main, sub=sub, as.table=TRUE, ...)
  }
 
 densityplot.bootsempls <- function(x, data, pattern="beta", subset=NULL, ...){
@@ -32,7 +32,7 @@ densityplot.bootsempls <- function(x, data, pattern="beta", subset=NULL, ...){
         tmp <- data.frame(value=x$t[,i], name=i)
         Y <- rbind(Y, tmp)
     }
-    densityplot(~value|name, data=Y, ...)
+    densityplot(~value|name, data=Y, as.table=TRUE, ...)
  }
 
 # lattice:::parallel
@@ -42,8 +42,7 @@ parallel.bootsempls <- function(x, data, pattern="beta", subset=NULL, reflinesAt
     ifelse(is.null(subset), ind <- grep(pattern, colnames(x$t)), ind <- subset)
     lower <- summary(x, ...)$table$Lower
     upper <- summary(x, ...)$table$Upper
-    Y <- rbind(x$t, x$t0, lower, upper)
-    rownames(Y) <- NULL
+    Y <- rbind(x$t, x$t0, lower, upper, deparse.level=0)
     if(!missing(reflinesAt)){
         Y <- rbind(Y, matrix(rep(reflinesAt, each=ncol(x$t)), nrow=length(reflinesAt), byrow=TRUE))
         origin <- c(rep("1resample", x$nboot), "2sample", "3ci", "3ci",

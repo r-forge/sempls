@@ -124,7 +124,7 @@ sempls(model, ...)
 }
 \examples{
 data(ECSImobi)
-ecsi <- sempls(model=ECSImobi, data=mobi)
+ecsi <- sempls(model=ECSImobi, data=mobi, E="C")
 ecsi
 
 densityplot(ecsi)

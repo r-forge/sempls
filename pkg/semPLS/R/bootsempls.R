@@ -2,7 +2,7 @@
 # Uses: resempls.R
 bootsempls <- function(object, nboot=200, start=c("ones", "old"),
                 method=c("ConstructLevelChanges", "IndividualSignChanges", "Standard"),
-                verbose=TRUE, ...){
+                verbose=TRUE, strata, ...){
     method <- match.arg(method)
     if(method=="IndividualSignChanges"){
       stop("Not yet implemented.\n",
@@ -22,6 +22,7 @@ bootsempls <- function(object, nboot=200, start=c("ones", "old"),
     nErrors <- 0
     data <- object$data
     N <- nrow(data)
+    if(missing(strata)) strata <- rep(1, N)
     coefficients <- object$coefficients[,2]
     coef_names <- rownames(object$coefficients)
     coefs <- matrix(numeric(0), nrow=nboot, ncol=length(coefficients))
@@ -64,7 +65,8 @@ bootsempls <- function(object, nboot=200, start=c("ones", "old"),
                               nboot, " bootstrap replications returned.")
     res <- list(t0=coefficients, t=coefs, nboot=nboot, data=data, seed=seed,
                 statistic=refit, sim="ordinary", stype="i", call=match.call(),
-                tryErrorIndices=tryErrorIndices, clcIndex=clcIndex)
+                tryErrorIndices=tryErrorIndices, clcIndex=clcIndex,
+                strata=strata)
     class(res) <- c("bootsempls", "boot")
     res
 }
@@ -85,7 +87,7 @@ print.bootsempls <- function(x, digits = getOption("digits"), ...){
 
 
 summary.bootsempls <- function(object,
-    type=c("perc", "bca", "norm", "basic", "none"), level=0.95, ...){
+    type=c("all", "perc", "bca", "norm", "basic", "none"), level=0.95, ...){
     if ((!require("boot")) && (type != "none")) stop("boot package unavailable")
     type <- match.arg(type)
     t <- object$t
@@ -105,8 +107,11 @@ summary.bootsempls <- function(object,
             noCi <- append(noCi, i)
           }
           else{
-            ci <- as.vector(boot.ci(object, type=type, index=i,
-                conf=level)[[type, exact=FALSE]])
+            ci <- try(as.vector(boot.ci(object, type=type, index=i,
+                      conf=level)[[type, exact=FALSE]]))
+            if(inherits(ci, "try-error")){
+                cat("Try to set 'nboot' to the number of observations!\n")
+            }
             lower[i] <- ci[low]
             upper[i] <- ci[up]
             }

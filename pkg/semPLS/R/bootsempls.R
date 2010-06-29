@@ -1,21 +1,5 @@
-#' @include resempls.R
-#' roxygen()
-
-#' Bootstrapped standard errors and confidence intervals for sempls objects.
-#' The code is adapted from package 'sem' by J. Fox
-#'
-#'
-##' @param sempls an object of class 'sempls'
-##' @param nboot the number of bootstrap samples to be drawn
-##' @param start a character indicating whether to restart the algorithm 'ones' or to reuse the outer weights of sempls 'old'
-##' @param bootMethod a character indicating which method to use for the bootstrap, see details
-##' @return object of class bootsempls inhariting from boot
-##' @export
-##' @callGraph
-##' @seealso \code{\link{sempls}}
-##' @examples
-##' data(mobi)
-
+# The code is adapted from package 'sem' by J. Fox
+# Uses: resempls.R
 bootsempls <- function(object, nboot=200, start=c("ones", "old"),
                 method=c("ConstructLevelChanges", "IndividualSignChanges", "Standard"),
                 verbose=TRUE, ...){
@@ -85,10 +69,7 @@ bootsempls <- function(object, nboot=200, start=c("ones", "old"),
     res
 }
 
-##' @param x object of class bootsempls
-##' @param digits number of digits to print
 
-##' @return Prints the estimate, the bias and the standard error.
 print.bootsempls <- function(x, digits = getOption("digits"), ...){
     t <- x$t
     t0 <- x$t0
@@ -102,11 +83,7 @@ print.bootsempls <- function(x, digits = getOption("digits"), ...){
     invisible(x)
 }
 
-##' @param object an object of class sempls
-##' @param type the type of confidence interval to be computed
-##' @param level the level of the confidence interval
 
-##' @return Calculates confidence intervals for the estimates.
 summary.bootsempls <- function(object,
     type=c("perc", "bca", "norm", "basic", "none"), level=0.95, ...){
     if ((!require("boot")) && (type != "none")) stop("boot package unavailable")
@@ -144,10 +121,7 @@ summary.bootsempls <- function(object,
     result
 }
 
-##' @param x object of summaryBootsempls
-##' @param digits number ot digits to print
 
-##' @return Prints the estimate, the bias, the standard error and confidence interval
 print.summary.bootsempls <- function(x, digits = getOption("digits"), ...){
     cat("Call: ")
     dput(x$call)

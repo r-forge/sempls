@@ -87,7 +87,7 @@ print.bootsempls <- function(x, digits = getOption("digits"), ...){
 
 
 summary.bootsempls <- function(object,
-    type=c("all", "perc", "bca", "norm", "basic", "none"), level=0.95, ...){
+    type=c("perc", "bca", "norm", "basic", "none"), level=0.95, ...){
     if ((!require("boot")) && (type != "none")) stop("boot package unavailable")
     type <- match.arg(type)
     t <- object$t
@@ -109,8 +109,8 @@ summary.bootsempls <- function(object,
           else{
             ci <- try(as.vector(boot.ci(object, type=type, index=i,
                       conf=level)[[type, exact=FALSE]]))
-            if(inherits(ci, "try-error")){
-                cat("Try to set 'nboot' to the number of observations!\n")
+            if(inherits(ci, "try-error") && type=="bca"){
+                stop("Try to set 'nboot' to the number of observations!\n")
             }
             lower[i] <- ci[low]
             upper[i] <- ci[up]

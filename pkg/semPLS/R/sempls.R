@@ -91,6 +91,8 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwis
       if (E=="B") cat("Scheme: factorial\n")
       if (E=="C") cat("Scheme: path weighting\n")
   }
+  else cat(paste("Result did not converge after ", result$maxit, " iterations.\n",
+                 "\nIncrease 'maxit' and rerun.", sep=""))
 
   # create result list
   ifelse(pairwise, use <- "pairwise.complete.obs", use <- "everything")
@@ -149,6 +151,7 @@ plsLoop <- expression({
     if(i == maxit && !converged){
       # 'try-error' especially for resempls.R
       class(result) <- c(class(result), "try-error")
+      i <- i+1
       break
     }
 

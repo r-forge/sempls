@@ -28,8 +28,11 @@ bootsempls <- function(object, nboot=200, start=c("ones", "old"),
     coefs <- matrix(numeric(0), nrow=nboot, ncol=length(coefficients))
     attr(coefs, "path") <- object$coefficients[,1]
     colnames(coefs) <- coef_names
-    clcIndex <- NULL
+    outer_weights <- matrix(NA, nrow=nboot, ncol=ncol(data))
+    colnames(outer_weights) <- rownames(res$outer_weights)
+    clcIndices <- NULL
     tryErrorIndices <- NULL
+    bootIndices <- matrix(NA, nrow=nboot, ncol=nrow(data))
     if (verbose) cat("Resample: ")
     for (b in 1:nboot){
       if (verbose){
@@ -50,10 +53,12 @@ bootsempls <- function(object, nboot=200, start=c("ones", "old"),
         else {
           # for construct level changes
           if(method=="ConstructLevelChanges"){
-            clcIndex[[b]] <- res$clcIndex
+            clcIndices[[b]] <- res$clcIndex
           }
+          bootIndices[b,] <- indices
           # Standard
           coefs[b,] <- res$coefficients[,2]
+          outer_weights[b,] <- res$outer_weights[res$outer_weights!=0]
           break()
         }
       }
@@ -65,8 +70,8 @@ bootsempls <- function(object, nboot=200, start=c("ones", "old"),
                               nboot, " bootstrap replications returned.")
     res <- list(t0=coefficients, t=coefs, nboot=nboot, data=data, seed=seed,
                 statistic=refit, sim="ordinary", stype="i", call=match.call(),
-                tryErrorIndices=tryErrorIndices, clcIndex=clcIndex,
-                strata=strata)
+                tryErrorIndices=tryErrorIndices,  clcIndices= clcIndices,
+                bootIndices=bootIndices, outer_weights=outer_weights, strata=strata)
     class(res) <- c("bootsempls", "boot")
     res
 }

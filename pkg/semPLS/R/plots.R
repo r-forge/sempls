@@ -15,7 +15,7 @@ densityplot.sempls <- function(x, data, use=c("fscores", "prediction", "residual
     }
     if(missing(main)) main=paste(deparse(substitute(x)), "\n", ifelse(use=="fscores", "factor scores", use))
     if(missing(sub)){
-        sub=paste("Exogenous LVs:\n", paste(exogenous, collapse=", "))
+        sub=paste("Exogenous LVs: ", paste(exogenous, collapse=", "))
     }
     densityplot(~value|name, data=Y, main=main, sub=sub, as.table=TRUE, ...)
  }

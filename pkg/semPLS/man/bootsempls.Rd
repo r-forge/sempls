@@ -112,9 +112,11 @@ bootsempls(object, nboot=200, start=c("ones", "old"), method=
   \item{call}{the call of the \code{boot.sem} function.}
   \item{tryErrorIndices}{Contains the indices for each resample, which
   returned \code{try-error}.}
-  \item{clcIndex}{When the method \code{ConstructLevelChanges} is used,
+  \item{clcIndices}{When the method \code{ConstructLevelChanges} is used,
   it stores the indices of the blocks of MVs for which a sign change
   occured.}
+  \item{bootIndices}{A matrix containing the indices of the converged
+  bootstrap samples as rows.}
   \item{strata}{The strata used. This is the vector passed to boot, if
     it was supplied or a vector of ones if there were no strata.}
 }
@@ -127,7 +129,7 @@ Armin Monecke \email{armin.monecke@stat.uni-muenchen.de}
 
 \references{
   Tenenhaus, M., V. E. Vinzi, Y.-M. Chatelin, and C. Lauro (2005)
-  PLS path modeling. Computational Statistics \& Data Analysis 48,
+  PLS path modeling. Computational Statistics & Data Analysis 48,
   159-205.
 }
 

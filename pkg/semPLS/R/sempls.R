@@ -6,7 +6,7 @@ sempls <- function(model, ...){
 sempls.plsm <-
 function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwise=FALSE,
          method=c("pearson", "kendall", "spearman"),
-         convCrit=c("relative", "square"), ...){
+         convCrit=c("relative", "square"), plot=TRUE, ...){
   method <- match.arg(method)
   convCrit <- match.arg(convCrit)
   result <- list(coefficients=NULL, path_coefficients=NULL,
@@ -60,6 +60,15 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwis
   stp1 <- step1(model, data, sum1=sum1, pairwise)
   factor_scores <- stp1$latent
   Wold <- stp1$outerW
+  Wwatch <- reshape(as.data.frame(Wold),
+                    v.names="weights",
+                    ids=rownames(Wold),
+                    idvar="MVs",
+                    times=colnames(Wold),
+                    timevar="LVs",
+                    varying=list(colnames(Wold)),
+                    direction="long")
+  Wwatch <- cbind(Wwatch, Iteration=0)
 
   #############################################
   # Select the function according to the weighting scheme
@@ -93,6 +102,12 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwis
   }
   else cat(paste("Result did not converge after ", result$maxit, " iterations.\n",
                  "\nIncrease 'maxit' and rerun.", sep=""))
+
+  # Plot evolution of weights
+  if(plot){print(barchart(xtabs(weights ~ Iteration + LVs + MVs ,data=Wwatch),
+                          as.table=TRUE,
+                          main="Evolution of outer weights",
+                          xlab="Outer Weights"))}
 
   # create result list
   ifelse(pairwise, use <- "pairwise.complete.obs", use <- "everything")
@@ -133,6 +148,16 @@ plsLoop <- expression({
     # step 3
     Wnew <-  outerApprx(Latent=factor_scores, data, blocks=model$blocks,
                         sum1=sum1, pairwise, method)
+    WwatchTmp <- reshape(as.data.frame(Wnew),
+                         v.names="weights",
+                         ids=rownames(Wnew),
+                         idvar="MVs",
+                         times=colnames(Wnew),
+                         timevar="LVs",
+                         varying=list(colnames(Wnew)),
+                         direction="long")
+    WwatchTmp <- cbind(WwatchTmp, Iteration=i)
+    Wwatch <- rbind(Wwatch, WwatchTmp)
 
     #############################################
     # step 4

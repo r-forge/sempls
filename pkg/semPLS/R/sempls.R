@@ -60,15 +60,15 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwis
   stp1 <- step1(model, data, sum1=sum1, pairwise)
   factor_scores <- stp1$latent
   Wold <- stp1$outerW
-  Wwatch <- reshape(as.data.frame(Wold),
-                    v.names="weights",
-                    ids=rownames(Wold),
-                    idvar="MVs",
-                    times=colnames(Wold),
-                    timevar="LVs",
-                    varying=list(colnames(Wold)),
-                    direction="long")
-  Wwatch <- cbind(Wwatch, Iteration=0)
+  weights_evolution <- reshape(as.data.frame(Wold),
+                               v.names="weights",
+                               ids=rownames(Wold),
+                               idvar="MVs",
+                               times=colnames(Wold),
+                               timevar="LVs",
+                               varying=list(colnames(Wold)),
+                               direction="long")
+  weights_evolution <- cbind(weights_evolution, Iteration=0)
 
   #############################################
   # Select the function according to the weighting scheme
@@ -103,11 +103,12 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwis
   else cat(paste("Result did not converge after ", result$maxit, " iterations.\n",
                  "\nIncrease 'maxit' and rerun.", sep=""))
 
+  weights_evolution <- xtabs(weights ~ Iteration + LVs + MVs ,
+                             data=weights_evolution)
   # Plot evolution of weights
-  if(plot){print(barchart(xtabs(weights ~ Iteration + LVs + MVs ,data=Wwatch),
-                          as.table=TRUE,
+  if(plot){print(barchart(weights_evolution,
                           main="Evolution of outer weights",
-                          xlab="Outer Weights"))}
+                          xlab="Outer Weights", ...))}
 
   # create result list
   ifelse(pairwise, use <- "pairwise.complete.obs", use <- "everything")
@@ -118,6 +119,7 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwis
   result$total_effects <- totalEffects(result$path_coefficients)
   result$inner_weights <- innerWeights
   result$outer_weights <- Wnew
+  result$weights_evolution <- weights_evolution
   result$factor_scores <- factor_scores
   result$data <- data
   result$N <- N
@@ -148,16 +150,16 @@ plsLoop <- expression({
     # step 3
     Wnew <-  outerApprx(Latent=factor_scores, data, blocks=model$blocks,
                         sum1=sum1, pairwise, method)
-    WwatchTmp <- reshape(as.data.frame(Wnew),
-                         v.names="weights",
-                         ids=rownames(Wnew),
-                         idvar="MVs",
-                         times=colnames(Wnew),
-                         timevar="LVs",
-                         varying=list(colnames(Wnew)),
-                         direction="long")
-    WwatchTmp <- cbind(WwatchTmp, Iteration=i)
-    Wwatch <- rbind(Wwatch, WwatchTmp)
+    weights_evolution_tmp <- reshape(as.data.frame(Wnew),
+                                     v.names="weights",
+                                     ids=rownames(Wnew),
+                                     idvar="MVs",
+                                     times=colnames(Wnew),
+                                     timevar="LVs",
+                                     varying=list(colnames(Wnew)),
+                                     direction="long")
+    weights_evolution_tmp <- cbind(weights_evolution_tmp, Iteration=i)
+    weights_evolution <- rbind(weights_evolution, weights_evolution_tmp)
 
     #############################################
     # step 4

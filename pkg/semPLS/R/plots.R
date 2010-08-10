@@ -1,4 +1,20 @@
-# lattice:::densityplot
+plot.sempls <- function(x, ...){
+    color <- try(assign("color", col), silent=TRUE)
+    if(require(colorspace)){
+        col <- NULL
+        for(i in 1:length(x$model$latent)){
+            n <- sapply(x$model$blocks, lenght)
+            col_tmp <- rainbow_hcl(n[i+1], start = 90+(i*777), end = -30+(i*777))
+            col <- append(col, col_tmp)
+        }
+    }
+    print(barchart(x$weights_evolution,
+                   main="Evolution of outer weights",
+                   xlab="Outer Weights", ...))
+}
+
+
+### lattice:::densityplot
 densityplot.sempls <- function(x, data, use=c("fscores", "prediction", "residuals"),
                                main, sub, ...){
     use <- match.arg(use)

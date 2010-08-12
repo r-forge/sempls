@@ -8,7 +8,7 @@ plot.sempls <- function(x, ...){
         }
     }
     if(!is.null(col)){
-        old_col <- trellis.par.set("superpose.polygon")$col
+        old_col <- trellis.par.get("superpose.polygon")$col
         trellis.par.set(superpose.polygon=list(col=col))
     }
     print(barchart(Iteration ~ weights | LVs,

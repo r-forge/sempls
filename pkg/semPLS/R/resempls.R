@@ -66,6 +66,7 @@ function(sempls, data, start=c("ones", "old"), method, ...){
   result$total_effects <- totalEffects(result$path_coefficients)
   result$inner_weights <- innerW
   result$outer_weights <- Wnew
+  result$weights_evolution <- weights_evolution
   result$factor_scores <- factor_scores
   result$data <- data
   result$iterations <- (i-1)

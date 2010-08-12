@@ -22,6 +22,8 @@ sempls(model, ...)
 
 \method{print}{sempls}(x, \ldots)
 
+\method{plot}{sempls}(x, \ldots)
+
 \method{densityplot}{sempls}(x, data, use=c("fscores", "prediction",
             "residuals"), main, sub, \ldots)
 }

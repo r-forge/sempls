@@ -116,7 +116,9 @@ bootsempls(object, nboot=200, start=c("ones", "old"), method=
   it stores the indices of the blocks of MVs for which a sign change
   occured.}
   \item{bootIndices}{A matrix containing the indices of the converged
-  bootstrap samples as rows.}
+    bootstrap samples as rows.}
+  \item{outer_weights}{A martrix containing, as rows, the outer weights
+  for each bootsrap sample.}
   \item{strata}{The strata used. This is the vector passed to boot, if
     it was supplied or a vector of ones if there were no strata.}
 }

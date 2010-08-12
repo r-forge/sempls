@@ -29,7 +29,7 @@ bootsempls <- function(object, nboot=200, start=c("ones", "old"),
     attr(coefs, "path") <- object$coefficients[,1]
     colnames(coefs) <- coef_names
     outer_weights <- matrix(NA, nrow=nboot, ncol=ncol(data))
-    colnames(outer_weights) <- rownames(res$outer_weights)
+    colnames(outer_weights) <- rownames(object$outer_weights)
     clcIndices <- NULL
     tryErrorIndices <- NULL
     bootIndices <- matrix(NA, nrow=nboot, ncol=nrow(data))

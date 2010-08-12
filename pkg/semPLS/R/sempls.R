@@ -6,16 +6,17 @@ sempls <- function(model, ...){
 sempls.plsm <-
 function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwise=FALSE,
          method=c("pearson", "kendall", "spearman"),
-         convCrit=c("relative", "square"), plot=TRUE, ...){
+         convCrit=c("relative", "square"), ...){
   method <- match.arg(method)
   convCrit <- match.arg(convCrit)
   result <- list(coefficients=NULL, path_coefficients=NULL,
                  outer_loadings=NULL ,cross_loadings=NULL,
                  total_effects=NULL,inner_weights=NULL, outer_weights=NULL,
                  blocks=NULL, factor_scores=NULL, data=NULL, scaled=scaled,
-                 model=model, weighting_scheme=NULL, sum1=sum1, pairwise=pairwise,
-                 method=method, iterations=NULL, convCrit=convCrit,
-                 tolerance=tol, maxit=maxit, N=NULL, incomplete=NULL)
+                 model=model, weighting_scheme=NULL, weights_evolution=NULL,
+                 sum1=sum1, pairwise=pairwise, method=method, iterations=NULL,
+                 convCrit=convCrit, tolerance=tol, maxit=maxit, N=NULL,
+                 incomplete=NULL)
   class(result) <- "sempls"
 
   # checking the data
@@ -103,12 +104,6 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwis
   else cat(paste("Result did not converge after ", result$maxit, " iterations.\n",
                  "\nIncrease 'maxit' and rerun.", sep=""))
 
-  weights_evolution <- xtabs(weights ~ Iteration + LVs + MVs ,
-                             data=weights_evolution)
-  # Plot evolution of weights
-  if(plot){print(barchart(weights_evolution,
-                          main="Evolution of outer weights",
-                          xlab="Outer Weights", ...))}
 
   # create result list
   ifelse(pairwise, use <- "pairwise.complete.obs", use <- "everything")

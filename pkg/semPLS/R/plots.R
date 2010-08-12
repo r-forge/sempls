@@ -1,16 +1,31 @@
 plot.sempls <- function(x, ...){
-    color <- try(assign("color", col), silent=TRUE)
-    if(require(colorspace)){
-        col <- NULL
-        for(i in 1:length(x$model$latent)){
-            n <- sapply(x$model$blocks, lenght)
+    col <- list(...)$col
+    if(is.null(col) && require(colorspace)){
+        for(i in 0:(length(x$model$latent)-1)){
+            n <- sapply(x$model$blocks, length)
             col_tmp <- rainbow_hcl(n[i+1], start = 90+(i*777), end = -30+(i*777))
             col <- append(col, col_tmp)
         }
     }
-    print(barchart(x$weights_evolution,
+    if(!is.null(col)){
+        old_col <- trellis.par.set("superpose.polygon")$col
+        trellis.par.set(superpose.polygon=list(col=col))
+    }
+    print(barchart(Iteration ~ weights | LVs,
+                   groups=MVs, stack=TRUE, horizontal=TRUE,
+                   data=vhb1$weights_evolution,
+                   as.table=TRUE,
+                   auto.key=list(rectangles=TRUE,
+                                 space="right",
+                                 title="MVs",
+                                 ...),
                    main="Evolution of outer weights",
-                   xlab="Outer Weights", ...))
+                   xlab="Outer Weights",
+                   ylab="Iteration",
+                   ...))
+    if(!is.null(col)){
+        trellis.par.set(superpose.polygon=list(col=old_col))
+    }
 }
 
 

@@ -39,6 +39,7 @@ function(sempls, data, start=c("ones", "old"), method, ...){
   #############################################
   # Iterate over step 2 to 5
   i <- c()
+  weights_evolution <- NULL
   eval(plsLoop)
 
   ### bootstrap method ##################################################

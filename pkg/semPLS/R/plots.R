@@ -13,7 +13,7 @@ plot.sempls <- function(x, ...){
     }
     print(barchart(Iteration ~ weights | LVs,
                    groups=MVs, stack=TRUE, horizontal=TRUE,
-                   data=vhb1$weights_evolution,
+                   data=x$weights_evolution,
                    as.table=TRUE,
                    auto.key=list(rectangles=TRUE,
                                  space="right",

@@ -22,6 +22,8 @@ function(sempls, data, start=c("ones", "old"), method, ...){
   if(start=="old"){
     factor_scores <- sempls$factor_scores
     Wold <- sempls$outer_weights
+    index <- sempls$weights_evolution$Iteration==0
+    weights_evolution <- sempls$weights_evolution[index,]
   }
   else if(start=="ones"){
     # Weights not adding up to 1 (14.08.2009)
@@ -29,6 +31,9 @@ function(sempls, data, start=c("ones", "old"), method, ...){
     stp1 <- step1(model, data, sum1=sum1, pairwise)
     factor_scores <- stp1$latent
     Wold <- stp1$outerW
+    i <- sempls$iterations
+    index <- sempls$weights_evolution$Iteration==i
+    weights_evolution <- sempls$weights_evolution[index,]
   }
 
   #############################################
@@ -39,7 +44,6 @@ function(sempls, data, start=c("ones", "old"), method, ...){
   #############################################
   # Iterate over step 2 to 5
   i <- c()
-  weights_evolution <- NULL
   eval(plsLoop)
 
   ### bootstrap method ##################################################

@@ -2,6 +2,7 @@
 \Rdversion{1.1}
 \alias{sempls}
 \alias{sempls.plsm}
+\alias{plot.sempls}
 \alias{print.sempls}
 \alias{densityplot.sempls}
 

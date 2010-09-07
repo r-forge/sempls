@@ -26,6 +26,7 @@ plot.sempls <- function(x, ...){
     if(!is.null(col)){
         trellis.par.set(superpose.polygon=list(col=old_col))
     }
+    invisible(x$weights_evolution)
 }
 
 

@@ -69,7 +69,7 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwis
                                timevar="LVs",
                                varying=list(colnames(Wold)),
                                direction="long")
-  weights_evolution <- cbind(weights_evolution, Iteration=0)
+  weights_evolution <- cbind(weights_evolution, iteration=0)
 
   #############################################
   # Select the function according to the weighting scheme
@@ -153,7 +153,7 @@ plsLoop <- expression({
                                      timevar="LVs",
                                      varying=list(colnames(Wnew)),
                                      direction="long")
-    weights_evolution_tmp <- cbind(weights_evolution_tmp, Iteration=i)
+    weights_evolution_tmp <- cbind(weights_evolution_tmp, iteration=i)
     weights_evolution <- rbind(weights_evolution, weights_evolution_tmp)
 
     #############################################

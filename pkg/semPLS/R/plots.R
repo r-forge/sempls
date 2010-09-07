@@ -11,7 +11,8 @@ plot.sempls <- function(x, ...){
         old_col <- trellis.par.get("superpose.polygon")$col
         trellis.par.set(superpose.polygon=list(col=col))
     }
-    print(barchart(Iteration ~ weights | LVs,
+    MVs <- NULL
+    print(barchart(iteration ~ weights | LVs,
                    groups=MVs, stack=TRUE, horizontal=TRUE,
                    data=x$weights_evolution,
                    as.table=TRUE,

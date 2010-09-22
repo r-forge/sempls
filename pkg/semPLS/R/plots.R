@@ -12,6 +12,8 @@ plot.sempls <- function(x, ...){
         trellis.par.set(superpose.polygon=list(col=col))
     }
     MVs <- NULL
+    ymin <- min(x$weights_evolution$iteration)
+    ymax <- max(x$weights_evolution$iteration)
     print(barchart(iteration ~ weights | LVs,
                    groups=MVs, stack=TRUE, horizontal=TRUE,
                    data=x$weights_evolution,
@@ -23,6 +25,7 @@ plot.sempls <- function(x, ...){
                    main="Evolution of outer weights",
                    xlab="Outer Weights",
                    ylab="Iteration",
+                   ylim=ymin:ymax,
                    ...))
     if(!is.null(col)){
         trellis.par.set(superpose.polygon=list(col=old_col))

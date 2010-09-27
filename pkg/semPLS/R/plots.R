@@ -33,6 +33,13 @@ plot.sempls <- function(x, ...){
     invisible(x$weights_evolution)
 }
 
+### Alternatives:
+#xyplot(weights ~ iteration|LVs, data=tmp2, groups=MVs, type = "a", auto.key =list(space = "right", points = FALSE, lines = TRUE), ylim=c(0.00001,1))
+#tmp <- tmp[tmp$weights!=0,]
+#tmp4$LVs <- factor(tmp4$LVs, levels=ecsi$model$latent)
+#xyplot(weights ~ iteration|LVs, data=tmp4, groups=MVs, as.table=TRUE, type="b", auto.key =list(space = "right", points = FALSE, lines = TRUE))
+#xyplot(weights ~ iteration, data=tmp4, groups=MVs, as.table=TRUE, type="l", col=1)
+
 
 ### lattice:::densityplot
 densityplot.sempls <- function(x, data, use=c("fscores", "prediction", "residuals"),

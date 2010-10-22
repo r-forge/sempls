@@ -104,7 +104,8 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwis
   else cat(paste("Result did not converge after ", result$maxit, " iterations.\n",
                  "\nIncrease 'maxit' and rerun.", sep=""))
 
-
+  weights_evolution <- weights_evolution[weights_evolution!=0,]
+  weights_evolution$LVs <- factor(weights_evolution$LVs,  levels=model$latent)
   # create result list
   ifelse(pairwise, use <- "pairwise.complete.obs", use <- "everything")
   result$path_coefficients <- pathCoeff(model=model, factor_scores, method, pairwise)

@@ -80,8 +80,8 @@ bootsempls <- function(object, nboot=200, start=c("ones", "old"),
 print.bootsempls <- function(x, digits = getOption("digits"), ...){
     t <- x$t
     t0 <- x$t0
-    result <- data.frame("Estimate"=t0, "Bias"=colMeans(t) - t0,
-        "Std.Error"=apply(t, 2, sd))
+    result <- data.frame("Estimate"=t0, "Bias"=colMeans(t, ...) - t0,
+        "Std.Error"=apply(t, 2, sd, ...))
     rownames(result) <- attr(t, "path")
     cat("Call: ")
     dput(x$call)
@@ -107,7 +107,9 @@ summary.bootsempls <- function(object,
         up  <- if (type == "norm") 3 else 5
         noCi <- NULL
         for (i in 1:p){
-          if (boot:::const(t[,i], min(1e-08, mean(t[,i], na.rm = TRUE)/1e+06))){
+          ti <- t[!is.na(t[,i]),i] # 14.10.2010
+          #if (boot:::const(t[,i], min(1e-08, mean(t[,i], na.rm = TRUE)/1e+06))){
+          if (boot:::const(ti, min(1e-08, mean(ti, na.rm = TRUE)/1e+06))){
             lower[i] <- upper[i] <- NA
             noCi <- append(noCi, i)
           }

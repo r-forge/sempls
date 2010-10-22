@@ -7,6 +7,7 @@
 \alias{formative}
 \alias{indicators}
 \alias{predecessors}
+\alias{mvplot}
 
 \title{
   Specification of Path Model
@@ -28,6 +29,9 @@ reflective(object)
 formative(object)
 indicators(object, LV)
 predecessors(object)
+
+mvplot(model, data, ...)
+\method{mvplot}{plsm}(model, data, ask=TRUE, ...)
 }
 
 \arguments{
@@ -53,6 +57,7 @@ predecessors(object)
   \item{object}{An object of class \code{plsm}.}
   \item{LV}{A character value naming a latent variable contained in the
     model}
+  \item{...}{Arguments to pass down to other methods, e.g. \code{par}}
 }
 
 \value{

@@ -31,7 +31,7 @@ function(Latent, data, model, root, sum1, pairwise, method){
     #     Least Squares, p.32-33.
     # Note: cholesky decomposition for a block does not change -> put outside loop!!!
     w <- solve(chol(cor(mf * rep(w, each=N), y=NULL, use, method))) %*%
-         (w/norm(w, "F"))                                                # new
+         t(w/norm(w, "F"))                                                # new
     W[blocks[[i]],i] <- w                                                # new
   }
 

@@ -15,7 +15,7 @@ function(Latent, data, model, root, sum1, pairwise, method){
   for (i in model$latent){
     if(length(blocks[[i]])==1) next                      # new
     mf <- as.matrix(subset(data, select=blocks[[i]]))
-    fscores <- as.matrix(Latent[,colnames(Latent)[i]])
+    fscores <- as.matrix(Latent[,i])
     ## Mode A: reflective
     if (attr(blocks[[i]], "mode") == "A") {
       w <- cor(fscores, mf, use, method)                 # new

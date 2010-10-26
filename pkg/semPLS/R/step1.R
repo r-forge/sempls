@@ -5,14 +5,15 @@ function(model, data, pairwise, method, ...){
   M <- model$M
   blocks <- model$blocks
   nl <- length(model$latent) # number of LVs
-  w <- 1
   root <- vector(mode="list", length=nl)
   names(root) <- model$latent
   Latent <- matrix(NA, nrow=nrow(data), ncol=nl)
   colnames(Latent) <- model$latent
   for(i in model$latent){
     if(length(blocks[[i]])==1){
-        root[[i]] <- 1; next
+        root[[i]] <- 1
+        Latent[,i] <- as.matrix(data[ , blocks[[i]] ])
+        next
     }
     mf <- as.matrix(data[ , blocks[[i]] ])        # MVs in i-th LVs block
     root[[i]] <- solve(chol(cor(mf,y=NULL, use, method)))

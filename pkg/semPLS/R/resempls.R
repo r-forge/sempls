@@ -62,7 +62,7 @@ function(sempls, data, start=c("ones", "old"), method, ...){
     Wnew[, clcIndex] <- ifelse(sum1, -apply(as.matrix(Wnew[, clcIndex]), 2, sum1),
                                      -Wnew[, clcIndex])
     # repeat step4
-    factor_scores <- step4(data, outerW=Wnew, blocks=model$blocks, pairwise)
+    factor_scores <- step4(data, outerW=Wnew, model, pairwise)
   }
   #######################################################################
 

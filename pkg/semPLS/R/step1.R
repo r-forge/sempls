@@ -24,6 +24,6 @@ function(model, data, pairwise, method, ...){
   }
   #else {Latent <- scale(as.matrix(data)%*% M)}
   # the attributes for the scale are meaningless
-  attributes(Latent)[c(3,4)] <- NULL
+  #attributes(Latent)[c(3,4)] <- NULL
   return(list(latent=Latent, outerW=M, root=root))
 }

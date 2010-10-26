@@ -7,13 +7,9 @@ function(Latent, data, model, root, sum1, pairwise, method){
   ifelse(pairwise, use <- "pairwise.complete.obs", use <- "everything")
   blocks <- model$blocks
   nl <- ncol(Latent)                      # number of latent variables
-  W <- matrix(0, ncol=nl, nrow=ncol(data))
-  w <- 1
-  colnames(W) <- colnames(Latent)
-  rownames(W) <- colnames(data)
-
+  W <- model$M
   for (i in model$latent){
-    if(length(blocks[[i]])==1) next                      # new
+    if(length(blocks[[i]])==1) next
     mf <- as.matrix(subset(data, select=blocks[[i]]))
     fscores <- as.matrix(Latent[,i])
     ## Mode A: reflective
@@ -22,7 +18,7 @@ function(Latent, data, model, root, sum1, pairwise, method){
       #W[blocks[[i]],i] <- cor(fscores, mf, use, method) # old
     }
     ## Mode B: formative
-    if (attr(blocks[[i]], "mode") == "B") {
+    else if (attr(blocks[[i]], "mode") == "B") {
       w <- t(solve(cor(mf, mf, use, method)) %*%                 # new
            cor(mf, fscores, use, method))                       #new
       #W[blocks[[i]],i] <- solve(cor(mf, mf, use, method)) %*% # old

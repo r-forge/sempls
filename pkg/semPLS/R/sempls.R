@@ -4,7 +4,7 @@ sempls <- function(model, ...){
 }
 
 sempls.plsm <-
-function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, E="A", pairwise=FALSE,
+function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwise=FALSE,
          method=c("pearson", "kendall", "spearman"),
          convCrit=c("relative", "square"), ...){
   method <- match.arg(method)
@@ -61,7 +61,6 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, E="A", pairwi
   stp1 <- step1(model, data, pairwise, method)
   factor_scores <- stp1$latent
   Wold <- stp1$outerW
-  root <- stp1$root
   weights_evolution <- reshape(as.data.frame(Wold),
                                v.names="weights",
                                ids=rownames(Wold),
@@ -145,7 +144,7 @@ plsLoop <- expression({
 
     #############################################
     # step 3
-    Wnew <-  outerApprx(Latent=factor_scores, data, model, root,
+    Wnew <-  outerApprx(Latent=factor_scores, data, model,
                         sum1=sum1, pairwise, method)
     weights_evolution_tmp <- reshape(as.data.frame(Wnew),
                                      v.names="weights",

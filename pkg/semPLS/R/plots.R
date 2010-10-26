@@ -15,7 +15,7 @@ plot.sempls <- function(x, ...){
     #ymin <- min(x$weights_evolution$iteration)
     #ymax <- max(x$weights_evolution$iteration)
     print(xyplot(weights ~ iteration | LVs,
-                   groups=MVs, type="b",
+                   groups=MVs, type="a",
                    data=x$weights_evolution,
                    as.table=TRUE,
                    auto.key=list(lines=TRUE,
@@ -28,7 +28,7 @@ plot.sempls <- function(x, ...){
                    #ylim=ymin:ymax,
                    ...))
     if(!is.null(col)){
-        trellis.par.set(superpose.polygon=list(col=old_col))
+        trellis.par.set(superpose.line=list(col=old_col))
     }
     invisible(x$weights_evolution)
 }
@@ -122,74 +122,6 @@ mvplot.plsm <- function(model, data, ask=TRUE, ...){
     invisible(charts)
 }
 
-mvpairs <- function(model, data, ...){
-  UseMethod("mvpairs", model)
-}
-
-mvpairs.plsm <- function(model, data, ask=TRUE, ...){
-    opar <- par(no.readonly=TRUE)
-    on.exit(par(opar))
-    par(ask=TRUE)
-    for(i in model$latent){
-        if(length(model$blocks[[i]])==1) next
-        pairs(data[,model$blocks[[i]]],
-              lower.panel=panel.jitter,
-              diag.panel=panel.bars,
-              upper.panel=panel.cor,
-              cex.labels=2, font.labels=1, main=i,
-              ...)
-    }
-
-}
-
-panel.bars <- function(x, offset=0.02, ...){
-    dots <- list(...)
-    barcol <- dots$barcol
-    dots$col <- NULL
-    if(is.null(barcol)) barcol <- "lightgrey"
-    col <- barcol
-    usr <- par("usr"); on.exit(par(usr))
-    par(usr = c(usr[1:2], 0, 1.5) )
-    tab <- table(x)
-    b <- barplot(tab, plot=FALSE)
-    breaks <- as.numeric(names(tab))
-    nB <- length(breaks)
-    y <- tab/max(tab)
-    rect(xleft=(breaks - 0.43), ybottom=offset, xright=(breaks + 0.43),
-         ytop=(y + offset), col=barcol, ...)
-}
-
-#col = par("col")
-panel.jitter <- function (x, y, col = par("col"), bg = NA, pch = par("pch"),
-    cex = 1, col.smooth = "red", span = 3/3, iter = 3, ...){
-    if(is.ordered(x)) x <- as.numeric(x)
-    if(is.ordered(y)) x <- as.numeric(y)
-    points(jitter(x), jitter(y), pch = pch, bg = bg, cex = cex, ...)
-    ok <- is.finite(x) & is.finite(y)
-    if (any(ok))
-        lines(stats::lowess(x[ok], y[ok], f = span, iter = iter),
-            col = col.smooth, ...)
-}
-
-panel.cor <- function(x, y, digits=2, postfix="", cex.cor, ...){
-    usr <- par("usr"); on.exit(par(usr))
-    par(usr = c(0, 1, 0, 1))
-    xyData <- data.frame(x=x, y=y)
-    r <- abs(cor(x, y, use="pairwise.complete.obs", ...))
-    txt1 <- format(r, digits=digits)
-    txt1 <- paste("r = ", txt1, "\n\n", sep="")
-    compl <- sum(complete.cases(xyData))
-    n <- nrow(xyData)
-    perc <- 100*compl/n
-    perc <- format(perc, digits=1)
-    txt2 <- paste("N = ", compl, " (", perc, "%)", sep="")
-    #if(nchar(postfix)==0) postfix <- "pairwise complete"
-    txt <- paste(txt1, txt2, postfix, sep="")
-    #if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
-    if(missing(cex.cor)) cex.cor <- strwidth(txt)
-    #text(0.5, 0.5, txt2, cex = cex.cor * r)
-    text(0.5, 0.5, txt)
-}
 
 
 

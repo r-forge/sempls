@@ -29,7 +29,8 @@ function(Latent, data, model, root, sum1, pairwise, method){
     #     Basic Design and Partial Least Squares, Handbook of Partial
     #     Least Squares, p.32-33.
     # Note: cholesky decomposition for a block does not change -> put outside loop!!!
-    w <- root[[i]] %*% t(w/norm(w, "F"))                                    # new
+    w <- solve(chol(cor(mf %*% w, y=NULL, use, method))) %*%
+         t(w/norm(w, "F"))                                    # new
     W[blocks[[i]],i] <- w                                               # new
   }
 

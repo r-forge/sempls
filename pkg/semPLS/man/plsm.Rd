@@ -9,6 +9,8 @@
 \alias{predecessors}
 \alias{mvplot}
 \alias{mvpairs}
+\alias{mvplot.plsm}
+\alias{mvpairs.plsm}
 
 \title{
   Specification of Path Model

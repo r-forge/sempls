@@ -41,7 +41,7 @@ stopifnot(all.equal(ecsi$cross_loadings, ecsiSmart$crossL))
 
 
 
-# scheme: centroid
+# scheme: factorial
 # Results match with those from SmartPLS (Version: 2.0.M3)
 ecsi <- sempls(ECSImobi, mobi, E="B")
 

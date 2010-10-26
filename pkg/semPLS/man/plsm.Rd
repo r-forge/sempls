@@ -8,6 +8,7 @@
 \alias{indicators}
 \alias{predecessors}
 \alias{mvplot}
+\alias{mvpairs}
 
 \title{
   Specification of Path Model
@@ -23,15 +24,18 @@
 plsm(data, strucmod=NULL, measuremod=NULL, order=c("generic",
   "alphabetical"))
 
-exogen(object)
-endogen(object)
-reflective(object)
-formative(object)
-indicators(object, LV)
-predecessors(object)
+exogen(model)
+endogen(model)
+reflective(model)
+formative(model)
+indicators(model, LV)
+predecessors(model)
 
-mvplot(model, data, ...)
-\method{mvplot}{plsm}(model, data, ask=TRUE, ...)
+mvplot(model, data, \ldots)
+\method{mvplot}{plsm}(model, data, ask=TRUE, \ldots)
+
+mvpairs(model, data, \ldots)
+\method{mvpairs}{plsm}(model, data, ask=TRUE, \ldots)
 }
 
 \arguments{
@@ -54,9 +58,10 @@ mvplot(model, data, ...)
     }
   }
 
-  \item{object}{An object of class \code{plsm}.}
+  \item{model}{An object of class \code{plsm}.}
   \item{LV}{A character value naming a latent variable contained in the
     model}
+  \item{ask}{See \code{?par}}
   \item{...}{Arguments to pass down to other methods, e.g. \code{par}}
 }
 

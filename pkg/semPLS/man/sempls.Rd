@@ -26,7 +26,7 @@ sempls(model, ...)
 \method{plot}{sempls}(x, \ldots)
 
 \method{densityplot}{sempls}(x, data, use=c("fscores", "prediction",
-            "residuals"), main, sub, \ldots)
+            "residuals"), \ldots)
 }
 \arguments{
   \item{model}{An object of class \code{splsm} as returned from \code{read.splsm}.

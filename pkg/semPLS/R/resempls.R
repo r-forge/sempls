@@ -25,6 +25,8 @@ function(sempls, data, start=c("ones", "old"), method, ...){
     i <- sempls$iterations
     index <- sempls$weights_evolution$iteration==i
     weights_evolution <- sempls$weights_evolution[index,]
+    stp1 <- step1(model, data, sum1=sum1, pairwise)
+    root <- stp1$root
   }
   else if(start=="ones"){
     # Weights not adding up to 1 (14.08.2009)
@@ -32,6 +34,7 @@ function(sempls, data, start=c("ones", "old"), method, ...){
     stp1 <- step1(model, data, sum1=sum1, pairwise)
     factor_scores <- stp1$latent
     Wold <- stp1$outerW
+    root <- stp1$root
     index <- sempls$weights_evolution$iteration==0
     weights_evolution <- sempls$weights_evolution[index,]
   }

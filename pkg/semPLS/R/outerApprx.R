@@ -3,15 +3,17 @@
 # uses: sum1 - function to normalize the weights to sum up to 1.
 # last modified: 21.10.2010 (Armin Monecke)
 outerApprx <-
-function(Latent, data, blocks, sum1=TRUE, pairwise, method){
+function(Latent, data, model, root, sum1, pairwise, method){
   ifelse(pairwise, use <- "pairwise.complete.obs", use <- "everything")
+  blocks <- model$blocks
   nl <- ncol(Latent)                      # number of latent variables
   W <- matrix(0, ncol=nl, nrow=ncol(data))
-  w <- NULL
+  w <- 1
   colnames(W) <- colnames(Latent)
   rownames(W) <- colnames(data)
 
-  for (i in 1:nl){
+  for (i in model$latent){
+    if(length(blocks[[i]])==1) next                      # new
     mf <- as.matrix(subset(data, select=blocks[[i]]))
     fscores <- as.matrix(Latent[,colnames(Latent)[i]])
     ## Mode A: reflective
@@ -30,7 +32,8 @@ function(Latent, data, blocks, sum1=TRUE, pairwise, method){
     # see T.K. Dijkstra, Latent Variables and Indices: Herman Wold's
     #     Basic Design and Partial Least Squares, Handbook of Partial
     #     Least Squares, p.32-33.
-    if(length(w)!=1) w <- w %*% solve(cor(mf, use=use, method=method))  # new
+    # Note: cholesky decomposition for a block does not change -> put outside loop!!!
+    w <- root[[i]] %*% t(w/norm(w, "F"))                                    # new
     W[blocks[[i]],i] <- w                                               # new
   }
 

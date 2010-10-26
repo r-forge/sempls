@@ -15,7 +15,7 @@ function(model, data, pairwise, method, ...){
         root[[i]] <- 1; next
     }
     mf <- as.matrix(data[ , blocks[[i]] ])        # MVs in i-th LVs block
-    root[[i]] <- solve(chol(cor(mf, use, method)))
+    root[[i]] <- solve(chol(cor(mf,y=NULL, use, method)))
     w <- M[blocks[[i]], i]
     w <- root[[i]] %*% w/norm(w, "F")
     M[blocks[[i]], i] <- w

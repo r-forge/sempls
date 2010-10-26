@@ -2,8 +2,8 @@
 step1 <-
 function(model, data, sum1, pairwise, method, ...){
   ifelse(pairwise, use <- "pairwise.complete.obs", use <- "everything")
-  if(sum1) M <- apply(model$M, 2, sum1)
-  else M <- model$M
+  M <- model$M
+  if(sum1) M <- apply(M, 2, sum1)
   if(pairwise){
     blocks <- model$blocks
     nl <- length(model$latent) # number of LVs

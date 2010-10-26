@@ -6,6 +6,7 @@ outerApprx <-
 function(Latent, data, model, root, sum1, pairwise, method){
   ifelse(pairwise, use <- "pairwise.complete.obs", use <- "everything")
   blocks <- model$blocks
+  N <- nrow(data)
   nl <- ncol(Latent)                      # number of latent variables
   W <- model$M
   for (i in model$latent){
@@ -29,9 +30,9 @@ function(Latent, data, model, root, sum1, pairwise, method){
     #     Basic Design and Partial Least Squares, Handbook of Partial
     #     Least Squares, p.32-33.
     # Note: cholesky decomposition for a block does not change -> put outside loop!!!
-    w <- solve(chol(cor(mf * as.vector(w), y=NULL, use, method))) %*%
-         t(w/norm(w, "F"))                                    # new
-    W[blocks[[i]],i] <- w                                               # new
+    w <- solve(chol(cor(mf * rep(w, each=N), y=NULL, use, method))) %*%
+         (w/norm(w, "F"))                                                # new
+    W[blocks[[i]],i] <- w                                                # new
   }
 
   ## Normalize weights to colwise sum up to 1?

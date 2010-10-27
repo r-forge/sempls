@@ -58,7 +58,7 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwis
 
   #############################################
   # step 1: Initialisation
-  stp1 <- step1(model, data, sum1, pairwise, method)
+  stp1 <- step1(model, data, sum1=sum1, pairwise, method)
   factor_scores <- stp1$latent
   Wold <- stp1$outerW
   weights_evolution <- reshape(as.data.frame(Wold),

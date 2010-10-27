@@ -11,9 +11,9 @@ function(data, outerW, model, pairwise){
     }
     #Latent <- scale(Latent)
   }
-  #else {Latent <- scale(as.matrix(data) %*% outerW)}  # old
+  else {Latent <- scale(as.matrix(data) %*% outerW)}  # old
   # the attributes for the scale are meaningless
-  #attributes(Latent)[c(3,4)] <- NULL
-  else {Latent <- as.matrix(data) %*% outerW}          # new
+  attributes(Latent)[c(3,4)] <- NULL
+  #else {Latent <- as.matrix(data) %*% outerW}          # new
   return(Latent)
 }

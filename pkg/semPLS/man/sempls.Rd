@@ -92,7 +92,7 @@ sempls(model, ...)
       \item \code{"residuals"}: the residuals are used.
     }
   }
-  \item{main, sub}{Graphical parameters.}
+%  \item{main, sub}{Graphical parameters.}
 }
 
 \value{

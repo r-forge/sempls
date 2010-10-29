@@ -4,7 +4,7 @@ sempls <- function(model, ...){
 }
 
 sempls.plsm <-
-function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwise=FALSE,
+function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, E="A", pairwise=FALSE,
          method=c("pearson", "kendall", "spearman"),
          convCrit=c("relative", "square"), ...){
   method <- match.arg(method)

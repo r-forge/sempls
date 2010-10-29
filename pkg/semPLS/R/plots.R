@@ -12,17 +12,19 @@ plot.sempls <- function(x, ...){
         trellis.par.set(superpose.line=list(col=col))
     }
     MVs <- NULL
+    wghtev <- x$weights_evolution[!x$weights_evolution$weights %in% c(0, NA),]
     #ymin <- min(x$weights_evolution$iteration)
     #ymax <- max(x$weights_evolution$iteration)
     print(xyplot(weights ~ iteration | LVs,
                    groups=MVs, type="a",
-                   data=x$weights_evolution,
+                   data=wghtev,
                    as.table=TRUE,
                    auto.key=list(lines=TRUE,
+                                 points=FALSE, # new
                                  space="right",
                                  title="MVs",
                                  ...),
-                   main="Evolution of outer weights",
+                   main="Evolution of Outer Weights",
                    xlab="Iteration",
                    ylab="Outer Weights",
                    #ylim=ymin:ymax,
@@ -30,7 +32,7 @@ plot.sempls <- function(x, ...){
     if(!is.null(col)){
         trellis.par.set(superpose.line=list(col=old_col))
     }
-    invisible(x$weights_evolution)
+    invisible(wghtev)
 }
 
 ### Alternatives:

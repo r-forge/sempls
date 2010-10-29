@@ -60,7 +60,13 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=TRUE, E="A", pairwis
   # step 1: Initialisation
   stp1 <- step1(model, data, sum1=sum1, pairwise, method)
   factor_scores <- stp1$latent
-  Wold <- stp1$outerW
+  if(!sum1){
+      # to ensure: w'Sw=1
+      sdYs <- rep(attr(factor_scores, "scaled:scale"),
+                  each=length(model$manifest))
+      Wold <- stp1$outerW / sdYs
+  }
+  else Wold <- stp1$outerW
   weights_evolution <- reshape(as.data.frame(Wold),
                                v.names="weights",
                                ids=rownames(Wold),
@@ -146,6 +152,16 @@ plsLoop <- expression({
     # step 3
     Wnew <-  outerApprx(Latent=factor_scores, data, model,
                         sum1=sum1, pairwise, method)
+
+    #############################################
+    # step 4
+    factor_scores <- step4(data, outerW=Wnew, model, pairwise)
+    if(!sum1){
+      # to ensure: w'Sw=1
+      sdYs <- rep(attr(factor_scores, "scaled:scale"),
+                  each=length(model$manifest))
+      Wnew <- Wnew / sdYs
+    }
     weights_evolution_tmp <- reshape(as.data.frame(Wnew),
                                      v.names="weights",
                                      ids=rownames(Wnew),
@@ -156,11 +172,6 @@ plsLoop <- expression({
                                      direction="long")
     weights_evolution_tmp <- cbind(weights_evolution_tmp, iteration=i)
     weights_evolution <- rbind(weights_evolution, weights_evolution_tmp)
-
-    #############################################
-    # step 4
-    factor_scores <- step4(data, outerW=Wnew, model, pairwise)
-
 
     #############################################
     # step 5

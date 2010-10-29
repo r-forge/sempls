@@ -31,7 +31,13 @@ function(sempls, data, start=c("ones", "old"), method, ...){
     # changed (30.03.2010)
     stp1 <- step1(model, data, sum1=sum1, pairwise, method)
     factor_scores <- stp1$latent
-    Wold <- stp1$outerW
+    if(!sum1){
+      # to ensure: w'Sw=1
+      sdYs <- rep(attr(factor_scores, "scaled:scale"),
+                  each=length(model$manifest))
+      Wold <- stp1$outerW / sdYs
+    }
+    else Wold <- stp1$outerW
     index <- sempls$weights_evolution$iteration==0
     weights_evolution <- sempls$weights_evolution[index,]
   }

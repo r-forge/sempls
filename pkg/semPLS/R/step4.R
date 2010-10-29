@@ -9,11 +9,11 @@ function(data, outerW, model, pairwise){
       mf <- as.matrix(data[ , blocks[[i]] ])
       Latent[,i] <- mf %*% as.matrix(outerW[blocks[[i]], i])
     }
-    #Latent <- scale(Latent)                          # old
+    Latent <- scale(Latent)
   }
-  #else {Latent <- scale(as.matrix(data) %*% outerW)}  # old
+  else {Latent <- scale(as.matrix(data) %*% outerW)}  # old
   # the attributes for the scale are meaningless
+  # No, they are meaningfull: w'Sw=1
   #attributes(Latent)[c(3,4)] <- NULL
-  else {Latent <- as.matrix(data) %*% outerW}          # new
   return(Latent)
 }

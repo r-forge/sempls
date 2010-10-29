@@ -17,7 +17,7 @@ Structural Equation Modeling by Partial Least Squares
 \usage{
 sempls(model, ...)
 
-\method{sempls}{plsm}(model, data, maxit=20, tol=1e-7, scaled=TRUE,sum1=TRUE, E="A",
+\method{sempls}{plsm}(model, data, maxit=20, tol=1e-7, scaled=TRUE,sum1=FALSE, E="A",
     pairwise=FALSE, method=c("pearson", "kendall", "spearman"),
     convCrit=c("relative", "square"), \ldots)
 
@@ -47,9 +47,9 @@ sempls(model, ...)
     \code{TRUE}.}
   \item{sum1}{A \code{logical} value indicating, whether the outer
     weights foreach latent variable (LV) shall be standardized to sum up
-    to one. The default is \code{TRUE}. Since the factor scores are
+    to one. The default is \code{FALSE}. Since the factor scores are
     scaled in each step of the PLS algorithm, changing this value to
-    \code{FALSE} does not affect the results.}
+    \code{TRUE} does not affect the results.}
 
   \item{E}{A \code{character} naming the weighting scheme to
     use. Possible values are:

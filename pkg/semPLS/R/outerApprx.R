@@ -9,6 +9,8 @@ function(Latent, data, model, sum1, pairwise, method){
   N <- nrow(data)
   nl <- ncol(Latent)                      # number of latent variables
   W <- model$M
+  root <- vector(mode="list", length=nl) # new
+  names(root) <- model$latent            # new
   for (i in model$latent){
     if(length(blocks[[i]])==1) next
     mf <- as.matrix(subset(data, select=blocks[[i]]))

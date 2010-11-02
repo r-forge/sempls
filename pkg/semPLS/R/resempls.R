@@ -67,6 +67,12 @@ function(sempls, data, start=c("ones", "old"), method, ...){
                                      -Wnew[, clcIndex])
     # repeat step4
     factor_scores <- step4(data, outerW=Wnew, model, pairwise)
+    if(!sum1){
+      # to ensure: w'Sw=1
+      sdYs <- rep(attr(factor_scores, "scaled:scale"),
+                  each=length(model$manifest))
+      Wnew <- Wnew / sdYs
+    }
   }
   #######################################################################
   result$cross_loadings <- cor(data, factor_scores, use=use, method=method)

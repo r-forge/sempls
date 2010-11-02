@@ -1,25 +1,42 @@
-mvpairs <- function(model, data, ...){
+mvpairs <- function(model, ...){
   UseMethod("mvpairs", model)
 }
 
-mvpairs.plsm <- function(model, data, ask=TRUE, ...){
+mvpairs.plsm <- function(model, data, ask=TRUE, ...,
+                         lower.panel=panel.jitter,
+                         diag.panel=panel.bars,
+                         upper.panel=panel.cor,
+                         mvpairs.main=NULL){
+    dots <- list(...)
+    if(!is.null(dots$smooth)){
+        smooth <- dots$smooth
+        dots$smooth <- NULL
+    }
     opar <- par(no.readonly=TRUE)
     on.exit(par(opar))
-    par(ask=TRUE)
+    par(ask=ask)
+    MVblocks <- vector(mode="list", length=length(model$latent))
+    names(MVblocks) <- model$latent
     for(i in model$latent){
-        if(length(model$blocks[[i]])==1) next
-        pairs(data[,model$blocks[[i]]],
-              lower.panel=panel.jitter,
-              diag.panel=panel.bars,
-              upper.panel=panel.cor,
-              cex.labels=2, font.labels=1, main=i,
-              ...)
+        if(length(model$blocks[[i]])==1){
+            MVblocks[[i]] <- data[,model$blocks[[i]]]
+            next
+        }
+        pairs(data[,model$blocks[[i]]], dots,
+              lower.panel=lower.panel,
+              diag.panel=diag.panel,
+              upper.panel=upper.panel,
+              cex.labels=2, font.labels=1,
+              main=ifelse(is.null(mvpairs.main), i, mvpairs[i])
+              )
+        MVblocks[[i]] <- data[,model$blocks[[i]]]
     }
-
+    invisible(MVblocks)
 }
 
 panel.bars <- function(x, offset=0.02, ...){
     dots <- list(...)
+    #if(!is.null(dots$main)) main <- NULL
     barcol <- dots$barcol
     dots$col <- NULL
     if(is.null(barcol)) barcol <- "lightgrey"
@@ -37,14 +54,21 @@ panel.bars <- function(x, offset=0.02, ...){
 
 #col = par("col")
 panel.jitter <- function (x, y, col = par("col"), bg = NA, pch = par("pch"),
-    cex = 1, col.smooth = "red", span = 3/3, iter = 3, ...){
+                          cex = 1, col.line = "red", span = 1/3,
+                          iter = 3, ...){
+    #if(!is.null(list(...)$main)) main <- NULL
     if(is.ordered(x)) x <- as.numeric(x)
     if(is.ordered(y)) x <- as.numeric(y)
     points(jitter(x), jitter(y), pch = pch, bg = bg, cex = cex, ...)
     ok <- is.finite(x) & is.finite(y)
-    if (any(ok))
+    if (any(ok) & smooth){
         lines(stats::lowess(x[ok], y[ok], f = span, iter = iter),
-            col = col.smooth, ...)
+            col = col.line, ...)
+    }
+    if (any(ok) & !smooth){
+        abline(stats::lm(x[ok] ~ y[ok]),
+            col = col.line, ...)
+    }
 }
 
 panel.cor <- function(x, y, digits=2, postfix="", cex.cor, ...){
@@ -72,8 +96,9 @@ panel.cor <- function(x, y, digits=2, postfix="", cex.cor, ...){
 pairs <- function (x, labels, panel = points, ..., lower.panel = panel,
     upper.panel = panel, diag.panel = NULL, text.panel = textPanel,
     label.pos = 0.5 + has.diag/3, cex.labels = NULL, font.labels = 1,
-    row1attop = TRUE, gap = 1)
-{
+    row1attop = TRUE, gap = 1){
+    #dots <- list(...)                          # Armin
+    #if(!is.null(dots$main)) main <- NULL       # Armin
     textPanel <- function(x = 0.5, y = 0.5, txt, cex, font) text(x,
         y, txt, cex = cex, font = font)
     localAxis <- function(side, x, y, xpd, bg, col = NULL, main,

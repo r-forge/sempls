@@ -113,7 +113,7 @@ mvplot.plsm <- function(model, data, ask=TRUE, ...){
                     direction="long")
     opar <- par(no.readonly=TRUE)
     on.exit(par(opar))
-    par(ask=TRUE)
+    par(ask=ask)
     charts <- list()
     for(i in model$latent){
         tab <- as.data.frame(xtabs(~ value + MV ,

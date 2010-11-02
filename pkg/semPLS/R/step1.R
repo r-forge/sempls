@@ -24,6 +24,7 @@ function(model, data, sum1, pairwise, method, ...){
       M[blocks[[i]], i] <- w
       Latent[,i] <- mf %*% w
     }
+    Latent <- scale(Latent)
   }
   else {Latent <- scale(as.matrix(data) %*% M)}
   # the attributes for the scale are meaningless

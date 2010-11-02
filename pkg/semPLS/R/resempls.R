@@ -68,8 +68,8 @@ function(sempls, data, start=c("ones", "old"), method, ...){
     factor_scores <- step4(data, outerW=Wnew, model, pairwise)
   }
   #######################################################################
-
-  result$cross_loadings <- cor(data, factor_scores)
+  ifelse(pairwise, use <- "pairwise.complete.obs", use <- "everything")
+  result$cross_loadings <- cor(data, factor_scores, method, use)
   result$outer_loadings <- result$cross_loadings
   result$outer_loadings[Wnew==0] <- 0
   result$path_coefficients <- pathCoeff(model=model, factor_scores, method, pairwise)

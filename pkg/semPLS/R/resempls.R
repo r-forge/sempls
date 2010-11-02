@@ -52,11 +52,12 @@ function(sempls, data, start=c("ones", "old"), method, ...){
   i <- c()
   eval(plsLoop)
 
+  ifelse(pairwise, use <- "pairwise.complete.obs", use <- "everything")
   ### bootstrap method ##################################################
   # Construct level changes
   clcIndex <- NULL
   if(bootMethod=="ConstructLevelChanges"){
-    result$cross_loadings <- cor(data, factor_scores)
+    result$cross_loadings <- cor(data, factor_scores, use=use, method=method)
     result$outer_loadings <- result$cross_loadings
     result$outer_loadings[Wnew==0] <- 0
     clcIndex <- which(abs(colSums(sempls$outer_loadings - result$outer_loadings)) >
@@ -68,8 +69,7 @@ function(sempls, data, start=c("ones", "old"), method, ...){
     factor_scores <- step4(data, outerW=Wnew, model, pairwise)
   }
   #######################################################################
-  ifelse(pairwise, use <- "pairwise.complete.obs", use <- "everything")
-  result$cross_loadings <- cor(data, factor_scores, method, use)
+  result$cross_loadings <- cor(data, factor_scores, use=use, method=method)
   result$outer_loadings <- result$cross_loadings
   result$outer_loadings[Wnew==0] <- 0
   result$path_coefficients <- pathCoeff(model=model, factor_scores, method, pairwise)

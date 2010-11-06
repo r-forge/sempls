@@ -33,10 +33,10 @@ formative(model)
 indicators(model, LV)
 predecessors(model)
 
-mvplot(model, data, \ldots)
+mvplot(model, \ldots)
 \method{mvplot}{plsm}(model, data, ask=TRUE, \ldots)
 
-mvpairs(model, data, \ldots)
+mvpairs(model, \ldots)
 \method{mvpairs}{plsm}(model, data, ask=TRUE, \ldots)
 }
 

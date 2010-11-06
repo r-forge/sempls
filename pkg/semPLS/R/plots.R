@@ -58,13 +58,18 @@ densityplot.sempls <- function(x, data, use=c("fscores", "prediction", "residual
         Y <- rbind(Y, tmp)
     }
     Y$name <- factor(Y$name, levels=x$model$latent)
+    #dots <- list(...)
     if(is.null(list(...)$main)){
-        main=paste(deparse(substitute(x)), "\n", ifelse(use=="fscores", "factor scores", use))
+        main=paste(deparse(substitute(x)), "\n",
+                  ifelse(use=="fscores", "factor scores", use))
     }
     if(is.null(list(...)$sub)){
         sub=paste("Exogenous LVs: ", paste(exogenous, collapse=", "))
     }
     densityplot(~value|name, data=Y, main=main, sub=sub, as.table=TRUE, ...)
+    #densityplot(~value|name, data=Y, main=main, sub=sub, as.table=TRUE,
+    #            font.sub=1, cex.font=0.5,...)
+
  }
 
 densityplot.bootsempls <- function(x, data, pattern="beta", subset=NULL, ...){
@@ -98,6 +103,7 @@ parallel.bootsempls <- function(x, data, pattern="beta", subset=NULL, reflinesAt
     }
     else Y <- data.frame(Y, origin=c(rep("1resample", x$nboot), "2sample", "3ci", "3ci"))
     parallel(~Y[ind], data=Y, groups=origin, common.scale=TRUE, col=col, lty=lty, ...)
+    #parallel(~Y[ind], data=Y, groups=origin, col=col, lty=lty, ...)
  }
 
 mvplot <- function(model, data, ...){

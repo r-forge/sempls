@@ -106,7 +106,7 @@ parallel.bootsempls <- function(x, data, pattern="beta", subset=NULL, reflinesAt
     #parallel(~Y[ind], data=Y, groups=origin, col=col, lty=lty, ...)
  }
 
-mvplot <- function(model, data, ...){
+mvplot <- function(model, ...){
   UseMethod("mvplot", model)
 }
 

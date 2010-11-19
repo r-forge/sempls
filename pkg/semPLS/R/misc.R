@@ -18,7 +18,7 @@ formative <- function(model){
 }
 
 reflective <- function(model){
-    if(class(model)!="plsm") stop("Model must be of class 'plsm'!")
+    if(!inherits(model, "plsm")) stop("Model must be of class 'plsm'!")
     ret <- names(which(lapply(model$blocks, function(x){attr(x, "mode")})=="A"))
     return(ret)
 }

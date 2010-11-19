@@ -19,7 +19,7 @@ sempls(model, ...)
 
 \method{sempls}{plsm}(model, data, maxit=20, tol=1e-7, scaled=TRUE,sum1=FALSE, E="A",
     pairwise=FALSE, method=c("pearson", "kendall", "spearman"),
-    convCrit=c("relative", "square"), \ldots)
+    convCrit=c("relative", "square"), silent=FALSE, \ldots)
 
 \method{print}{sempls}(x, \ldots)
 
@@ -81,7 +81,8 @@ sempls(model, ...)
        \item \code{"relative"} , the default,
        \item \code{"square"}.
      }
-  }
+   }
+  \item{silent}{Logical: If \code{TRUE} no status messages are printed.}
   \item{x}{An object of class \code{sempls} returned by the
     \code{sempls} method.
   }

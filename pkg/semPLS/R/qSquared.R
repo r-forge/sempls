@@ -2,15 +2,16 @@
 # Input: sempls-Object
 # d: ommision distance
 # dlines: TRUE => leaving out the same observation for the MV-Blocks
-qSquared <- function(object, d=NULL, impfun, dlines=TRUE, ...){
-    if(!exists("impfun", mode="function")) impfun <- function(data) return(data)
+qSquared <- function(object, d=NULL, impfun, dlines=TRUE, total=FALSE, ...){
+    #if(!exists("impfun", mode="function")) impfun <- function(data) return(data)
+    if(missing(impfun)) impfun <- function(data) return(data)
     data <- object$data
     model <- object$model
     endrefl<- intersect(reflective(model), endogen(model))
     qSquared <- matrix(NA, nrow=length(model$latent), ncol=1)
     colnames(qSquared) <- "Q-Squared"
     rownames(qSquared) <- model$latent
-    sse <- function(model, data, dblind, i, impfun, ...){
+    sse <- function(model, data, dblind, i, impfun, total, ...){
         plsm <- sempls(model, impfun(dblind), pairwise=TRUE, silent=TRUE, ...)
         #m <- length(model$blocks[[i]])
         #sse <- vector("numeric", length=m)
@@ -18,15 +19,26 @@ qSquared <- function(object, d=NULL, impfun, dlines=TRUE, ...){
         s <- attr(plsm$data, "scaled:scale")[model$blocks[[i]]]
         sse <- vector("numeric", length=length(m))
         for(l in 1:length(m)){
-            yind <- which(i==model$latent)
-            ind <- is.na(dblind[, model$blocks[[i]][l]])
-            indf <- complete.cases(plsm$factor_scores[, -yind])
-            #print(table(ind, indf))
-            ind <- as.logical(ind*indf)
             # Estimation
-            e <- plsm$factor_scores[ind, -yind] %*%
-                 plsm$path_coefficients[-yind, i] *
-                 plsm$outer_loadings[model$blocks[[i]][l],i]
+            if(total){
+                exogen <- exogen(model)
+                yind <- which(i==model$latent)
+                ind <- is.na(dblind[, model$blocks[[i]][l]])
+                indf <- complete.cases(plsm$factor_scores[, exogen])
+                ind <- as.logical(ind*indf)
+                e <- plsm$factor_scores[ind, exogen, drop=FALSE] %*%
+                     plsm$total_effects[exogen, i, drop=FALSE] *
+                     plsm$outer_loadings[model$blocks[[i]][l],i]
+            }
+            else{
+                yind <- which(i==model$latent)
+                ind <- is.na(dblind[, model$blocks[[i]][l]])
+                indf <- complete.cases(plsm$factor_scores[, -yind])
+                ind <- as.logical(ind*indf)
+                e <- plsm$factor_scores[ind, -yind, drop=FALSE] %*%
+                     plsm$path_coefficients[-yind, i, drop=FALSE] *
+                     plsm$outer_loadings[model$blocks[[i]][l],i]
+            }
             # Rescaling
             e <- e * s[l] + m[l]
             #print(table(is.na(e)))
@@ -68,7 +80,7 @@ qSquared <- function(object, d=NULL, impfun, dlines=TRUE, ...){
                 blind <- seq(j, nobs, by=d)
                 dblind[,object$model$blocks[[i]]][blind] <- NA
             }
-            E[j] <- sse(model, data, dblind, i, impfun, ...)
+            E[j] <- sse(model, data, dblind, i, impfun, total, ...)
             O[j] <- sso(model, data, dblind, i)
         }
         qSquared[i,] <- 1 - sum(E)/sum(O)

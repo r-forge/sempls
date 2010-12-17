@@ -211,14 +211,19 @@ predict <- function(object, what=c("LVs", "MVs"), scale=c("original", "scaled"),
 
 
 
-residuals <- function(object){
-    res <- object$factor_scores - predict(object)
+residuals <- function(object, what=c("LVs", "MVs"), scale=c("original", "scaled"), total=FALSE){
+    if(what="LVs"){
+        res <- object$factor_scores - predict(object, ...)
+    }
+    else{
+        if(sacle="scaled"){
+            res <- object$data
     return(res)
 }
 
 
 rSquared <- function(object, na.rm=FALSE, ...){
-  Y_hat <- predict(object)
+  Y_hat <- predict(object, ...)
   if(sum(is.na(Y_hat)) > 0 & !na.rm) stop("Use argument 'na.rm=TRUE'!")
   R_squared <- apply(Y_hat, 2, var, na.rm=na.rm) / apply(object$factor_scores, 2, var, na.rm=na.rm)
   R_squared[R_squared==0] <- 0

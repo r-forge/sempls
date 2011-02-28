@@ -1,4 +1,5 @@
 # Calculates the total effects
+
 totalEffects <- function(pathCoeff){
   ret <- pathCoeff
   step <- pathCoeff
@@ -8,3 +9,4 @@ totalEffects <- function(pathCoeff){
   }
   return(ret)
 }
+

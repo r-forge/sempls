@@ -212,11 +212,11 @@ predict <- function(object, what=c("LVs", "MVs"), scale=c("original", "scaled"),
 
 
 residuals <- function(object, what=c("LVs", "MVs"), scale=c("original", "scaled"), total=FALSE){
-    if(what="LVs"){
+    if(what=="LVs"){
         res <- object$factor_scores - predict(object, ...)
     }
     else{
-        if(sacle="scaled"){
+        if(scale=="scaled"){
             res <- object$data
     return(res)
 }

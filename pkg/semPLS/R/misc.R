@@ -38,3 +38,11 @@ predecessors <- function(model){
     pred <- apply(D, 2, foo)
     return(pred)
 }
+
+successors <- function(model){
+    if(!inherits(model, "plsm")) stop("Model must be of class 'plsm'!")
+    D <- model$D
+    foo <- function(x) names(which(x==1))
+    succ <- apply(D, 1, foo)
+    return(succ)
+}

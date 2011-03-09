@@ -130,7 +130,3 @@ mvplot.plsm <- function(model, data, ask=TRUE, ...){
     invisible(charts)
 }
 
-
-
-
-

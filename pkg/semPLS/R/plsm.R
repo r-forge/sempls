@@ -1,12 +1,27 @@
-plsm <- function(data, strucmod=NULL, measuremod=NULL, order=c("generic", "alphabetical")){
-  if(is.null(strucmod)){
+plsm <- function(data, strucmod=NULL, measuremod=NULL, order=c("generic", "alphabetical"), interactive=FALSE)
+{
+  if(is.null(strucmod) & !interactive){
     cat("Choose a .csv file for the structural model!\n")
     strucmod <- as.matrix(read.csv(file.choose()))
   }
-  if(is.null(measuremod)){
+  if(is.null(measuremod) & !interactive){
     cat("Choose a .csv file for the measurement model!\n")
     measuremod <- as.matrix(read.csv(file.choose()))
   }
+  # interactive: using 'edit'
+  if(is.null(strucmod) & interactive){
+    cat("Edit the structural model!\n")
+    strucmod <- matrix(ncol=2)
+    colnames(strucmod) <- c("source", "target")
+    strucmod <- edit(strucmod, title="Edit the structural model!")
+  }
+  if(is.null(measuremod) & interactive){
+    cat("Edit the measurement model!\n")
+    measuremod <- matrix(ncol=2)
+    colnames(measuremod) <- c("source", "target")
+    measuremod <- edit(measuremod, title="Edit the measurement model!")
+  }
+  
   if(ncol(strucmod)!=2 || mode(strucmod)!="character" || class(strucmod)!="matrix")
     stop("The argument 'strucmod' must be a two column character matrix!")
   if(ncol(measuremod)!=2 || mode(measuremod)!="character" || class(measuremod)!="matrix")

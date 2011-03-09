@@ -24,7 +24,7 @@
 }
 \usage{
 plsm(data, strucmod=NULL, measuremod=NULL, order=c("generic",
-  "alphabetical"))
+  "alphabetical"), interactive=FALSE)
 
 exogen(model)
 endogen(model)
@@ -59,7 +59,8 @@ mvpairs(model, \ldots)
       \item \code{"alphabetical"} the LVs will be ordered alphabetically.
     }
   }
-
+  \item{interactive}{Logical indicating whether to specify the model
+  interactively using \code{edit}. The default is \code{FALSE}}
   \item{model}{An object of class \code{plsm}.}
   \item{LV}{A character value naming a latent variable contained in the
     model}

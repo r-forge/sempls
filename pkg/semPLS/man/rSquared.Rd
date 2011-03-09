@@ -19,7 +19,8 @@ rSquared(object, \ldots)
   }
 }
 \value{
-  A matrix containing R-squared values for each endogeneous latent variable.
+  A matrix containing R-squared and corrected R-squared values and the
+  number of predecessors for each endogeneous latent variable.
 }
 
 \author{

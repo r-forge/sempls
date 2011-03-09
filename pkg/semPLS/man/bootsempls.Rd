@@ -118,7 +118,8 @@ bootsempls(object, nboot=200, start=c("ones", "old"), method=
   \item{bootIndices}{A matrix containing the indices of the converged
     bootstrap samples as rows.}
   \item{outer_weights}{A martrix containing, as rows, the outer weights
-  for each bootsrap sample.}
+    for each bootsrap sample.}
+  \item{fitted_model}{The fitted sempls model returned from \code{\link{sempls}}.}
   \item{strata}{The strata used. This is the vector passed to boot, if
     it was supplied or a vector of ones if there were no strata.}
 }

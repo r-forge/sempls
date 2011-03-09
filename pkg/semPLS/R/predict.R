@@ -1,5 +1,7 @@
 # 01.03.2011
 predict <- function(object, what=c("LVs", "MVs"), scale=c("original", "scaled"), total=FALSE){
+    # total: only for MVs. Include exogenous and endogenous MVs
+    #        Exogenous MVs are treated as if they were all reflective.
     what <- match.arg(what)
     scale <- match.arg(scale)
     model <- object$model
@@ -14,7 +16,7 @@ predict <- function(object, what=c("LVs", "MVs"), scale=c("original", "scaled"),
             (prod(dim(data)) - ncol(object$coeff) - sum(is.na(mvPrediction)))
         }
     }
-
+    # MVs
     if(total & what=="MVs"){
         mv_hat <- matrix(NA, nrow=nrow(data), ncol=ncol(data))
         colnames(mv_hat) <- colnames(data)
@@ -54,10 +56,12 @@ predict <- function(object, what=c("LVs", "MVs"), scale=c("original", "scaled"),
 
 
     # situation A: complete data
+    # LVs
     if(what=="LVs" & length(fsMissing)==0){
         Y_hat <- object$factor_scores %*% object$path_coefficients
         return(Y_hat)
     }
+    # MVs
     if(what=="MVs" & length(fsMissing)==0){
         if(length(mvMissing)==0){
             mv_hat <- object$factor_scores %*%
@@ -93,6 +97,7 @@ predict <- function(object, what=c("LVs", "MVs"), scale=c("original", "scaled"),
     }
 
     # situation B: with missing observations
+    # LVs
     if(what=="LVs" & length(fsMissing)>0){
         Y_hat <- matrix(0, dim(object$factor_scores))
         for(i in endogen(model)){
@@ -102,7 +107,7 @@ predict <- function(object, what=c("LVs", "MVs"), scale=c("original", "scaled"),
         }
         return(Y_hat)
     }
-
+    # MVs
     if(what=="MVs" & length(fsMissing)>0){
         mv_hat <- matrix(NA, nrow=nrow(data), ncol=ncol(data))
         colnames(mv_hat) <- colnames(data)

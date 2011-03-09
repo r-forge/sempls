@@ -71,7 +71,8 @@ bootsempls <- function(object, nboot=200, start=c("ones", "old"),
     res <- list(t0=coefficients, t=coefs, nboot=nboot, data=data, seed=seed,
                 statistic=refit, sim="ordinary", stype="i", call=match.call(),
                 tryErrorIndices=tryErrorIndices,  clcIndices= clcIndices,
-                bootIndices=bootIndices, outer_weights=outer_weights, strata=strata)
+                bootIndices=bootIndices, outer_weights=outer_weights,
+                fitted_model=object, strata=strata)
     class(res) <- c("bootsempls", "boot")
     res
 }

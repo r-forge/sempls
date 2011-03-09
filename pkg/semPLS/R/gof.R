@@ -1,4 +1,5 @@
 # Dillon-Goldstein's rho (Composite Reliability in SmartPLS)
+# requires: outer loadings (factor scores), model
 dgrho <- function(object){
     dgr <- matrix(NA, nrow=length(object$model$latent), ncol=2)
     rownames(dgr) <- object$model$latent
@@ -22,6 +23,7 @@ dgrho <- function(object){
     return(dgr)
 }
 
+# requires: outer loadings (factor scores), model
 comunality <- function(object){
     com <- matrix(NA, nrow=length(object$model$latent), ncol=2)
     rownames(com) <- object$model$latent
@@ -54,6 +56,7 @@ print.comunality <- function(object){
 
 
 # Redundancy Example:
+# requires: rSquared(predict, factor scores), communality(outer loadings (factor scores), model)
 redundancy <- function(object){
     red <- as.matrix(comunality(object)[,1] * rSquared(object)[,1])
     colnames(red) <- "redundancy"
@@ -66,15 +69,20 @@ print.redundancy <- function(object){
     paste("Average redundancy:", round(aveRed, digits=3))
 }
 
-
+# requires: rSquared(predict, factor scores), communality(outer loadings (factor scores), model)
 rSquared <- function(object, na.rm=FALSE, ...){
-  Y_hat <- predict(object, ...)
+  Y_hat <- predict(object, what="LVs", ...)
   if(sum(is.na(Y_hat)) > 0 & !na.rm) stop("Use argument 'na.rm=TRUE'!")
   R_squared <- apply(Y_hat, 2, var, na.rm=na.rm) / apply(object$factor_scores, 2, var, na.rm=na.rm)
-  R_squared[R_squared==0] <- 0
   R_squared <- as.matrix(R_squared)
-  R_squared <- cbind(R_squared, colSums(object$model$D))
-  colnames(R_squared) <- c("R-squared", "predecessors")
+  R_squared <- cbind(R_squared, NA,colSums(object$model$D))
+  colnames(R_squared) <- c("R-squared", "R-squared-corrected", "predecessors")
+  R_squared[R_squared[,"predecessors"]==0, "R-squared"] <- NA
+  # correction
+  correct <- function(rSqrd, J, N) {rSqrd - J*(1-rSqrd)/(N-J-1)}
+  N <- object$N
+  J <- R_squared[, "predecessors"]
+  R_squared[, "R-squared-corrected"] <- correct(R_squared[, "R-squared"], J, N)
   return(R_squared)
 }
 
@@ -84,6 +92,7 @@ print.rSquared <- function(object){
     paste("Average R-squared:", round(aveRsquared, digits=3))
 }
 
+# requires: rSquared, communality
 gof <- function(object){
     rSq <- rSquared(object)
     aveRsq <- nrow(rSq)^-1 * sum(rSq[,1], na.rm=TRUE)

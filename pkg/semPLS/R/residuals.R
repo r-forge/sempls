@@ -4,10 +4,11 @@ residuals <- function(object, what=c("LVs", "MVs"), scale=c("original", "scaled"
     scale <- match.arg(scale)
     model <- object$model
     data <- object$data
-    
+    # LVs
     if(what=="LVs"){
         res <- object$factor_scores - predict(object, what, scale, total)
     }
+    # MVs
     else{
       if(scale=="scaled"){
         pdata <- predict(object, what, scale, total)$mv_prediction

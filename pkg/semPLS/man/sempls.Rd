@@ -29,7 +29,8 @@ sempls(model, ...)
             "residuals"), \ldots)
 }
 \arguments{
-  \item{model}{An object of class \code{splsm} as returned from \code{read.splsm}.
+  \item{model}{An object inheriting from class \code{plsm} as returned
+            from \code{\link{plsm}} or \code{\link{read.splsm}}.
   }
   \item{\dots}{Arguments to be passed down.
   }

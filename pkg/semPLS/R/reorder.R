@@ -1,7 +1,7 @@
 # Reorders the latent variables to build a chain.
 # The input is the adjacency matrix D from the inner model.
-reorder <- function(D, ...){
-  if(exists("n")) n <- min(n, ncol(D), nrow(D))
+reorder <- function(D, n){
+  if(!missing(n)) n <- min(n, ncol(D), nrow(D))
   else n <- min( ncol(D), nrow(D))
   chain <- NULL
   Dn <- D

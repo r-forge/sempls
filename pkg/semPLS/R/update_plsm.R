@@ -1,20 +1,40 @@
 # Method to update a PLS path model of class 'plsm'
-plsmEdit <- function(model, data, order=c("generic", "alphabetical"))
+plsmEdit <- function(model, data)
 {
-  order <- match.arg(order)
+  sm <- model$strucmod
   cat("Edit the structural model!")
-  sm <- edit(ECSImobi$strucmod, title="Edit the structural model!")
+  sm <- edit(sm, title="Edit the structural model!")
   cat(" Done.\n")
   cat("Edit the measurement model!")
-  mm <- edit(ECSImobi$measuremod, title="Edit the measurement model!")
+  mm <- edit(model$measuremod, title="Edit the measurement model!")
   cat(" Done.\n")
-  model <- plsm(data, strucmod=sm, measuremod=mm, order=order)
+  model <- plsm(data, strucmod=sm, measuremod=mm, order=model$order)
+  return(model)
 }
 
-addPath <- function(model){}
+addPath <- function(model, from=char(), to=char()){
+  if(!c(from,to) %in% model$latent){
+    stop("LVs without indicators.")
+  }
+  sm <- model$strucmod
+  sm <- rbind(sm, cbind(from, to))
+  dummy <- as.data.frame(matrix(NA, nrow=1, ncol=length(model$manifest)))
+  attr(dummy, "names") <- model$manifest
+  mm <- model$measuremod
+  model <- plsm(data=dummy, strucmod=sm, measuremod=mm, order=model$order)
+  return(model)
+}
 
-removePath <- function(model){
- stop("Chain is broken!")
+removePath <- function(model, from=character(), to=character()){
+  sm <- model$strucmod
+  ind <- which(sm[,1] %in% from & sm[,2] %in% to)
+  if(length(ind)==0) stop("Path not in model.")
+  else sm <- sm[-ind,]
+  dummy <- as.data.frame(matrix(NA, nrow=1, ncol=length(model$manifest)))
+  attr(dummy, "names") <- model$manifest
+  mm <- model$measuremod
+  model <- plsm(data=dummy, strucmod=sm, measuremod=mm, order=model$order)
+  return(model)
 }
 
 addIndicator <- function(model, data){}
@@ -26,7 +46,6 @@ invertLV <- function(model){}
 addLV <- function(model, data,  name=char(), mvs, pred, succ){
   sm <- model$strucmod
   mm <- model$measuremod
-  
 }
 
 removeLV <- function(model, which){
@@ -34,11 +53,27 @@ removeLV <- function(model, which){
   ind1 <- which(sm[,1] %in% which)
   ind2 <- which(sm[,2] %in% which)
   ind <- unique(c(ind1, ind2))
+  # remove LVs in structural model
+  smv1 <- unique(sm[1:(2*nrow(sm))])
+  sm <- sm[-ind,]
+  smv2 <- unique(sm[1:(2*nrow(sm))])
+  lost <- setdiff(smv1, c(smv2,which))
+  if(length(lost) > 0){
+    warning(paste("Lost variables: ",
+                  paste(lost, collapse=", "),
+                  ".\n", sep=""))
+    which <- c(which, lost)
+  }
+
   mm <- model$measuremod
-  pred <- predecessors(model)
-  succ <- successors(model)
-  for(i in model$latent){
-    if(length(pred[[i]])==0 & length(succ[[i]])==0){
-      stop("Chain is broken!")
-    }
+  ind1 <- which(mm[,1] %in% which)
+  ind2 <- which(mm[,2] %in% which)
+  ind <- unique(c(ind1, ind2))
+  # remove LVs in measurement model
+  mm <- mm[-ind, ]
+  dummy <- as.data.frame(matrix(NA, nrow=1, ncol=length(model$manifest)))
+  attr(dummy, "names") <- model$manifest
+  model <- plsm(data=dummy, strucmod=sm, measuremod=mm, order=model$order)
+  return(model)
 }
+

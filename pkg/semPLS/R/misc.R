@@ -32,7 +32,7 @@ indicators <- function(model, LV){
 
 # used in 'pathWeighting'
 predecessors <- function(model){
-    if(!inherits(model, "plsm")) stop("Model must be of class 'plsm'!")
+    if(!inherits(model, "plsm")) stop("Model must inherit from class 'plsm'!")
     D <- model$D
     foo <- function(x) names(which(x==1))
     pred <- apply(D, 2, foo)
@@ -40,7 +40,7 @@ predecessors <- function(model){
 }
 
 successors <- function(model){
-    if(!inherits(model, "plsm")) stop("Model must be of class 'plsm'!")
+    if(!inherits(model, "plsm")) stop("Model must inherit from class 'plsm'!")
     D <- model$D
     foo <- function(x) names(which(x==1))
     succ <- apply(D, 1, foo)

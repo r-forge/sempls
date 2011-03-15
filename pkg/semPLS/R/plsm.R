@@ -21,7 +21,7 @@ plsm <- function(data, strucmod=NULL, measuremod=NULL, order=c("generic", "alpha
     colnames(measuremod) <- c("source", "target")
     measuremod <- edit(measuremod, title="Edit the measurement model!")
   }
-  
+
   if(ncol(strucmod)!=2 || mode(strucmod)!="character" || class(strucmod)!="matrix")
     stop("The argument 'strucmod' must be a two column character matrix!")
   if(ncol(measuremod)!=2 || mode(measuremod)!="character" || class(measuremod)!="matrix")
@@ -69,6 +69,29 @@ plsm <- function(data, strucmod=NULL, measuremod=NULL, order=c("generic", "alpha
   result$D <- D
   result$M <- initM1(model=result)
   result$blocks <- blocks
+  result$order <- order
   class(result) <- "plsm"
+  if(!connected(model=result)) stop("Structural model must be connected!")
+  if(!acyclic(model=result)) stop("Structural model must be acyclic!")
   return(result)
+}
+
+
+connected <- function(model){
+    pred <- predecessors(model)
+    succ <- successors(model)
+    for(i in model$latent){
+    if(length(pred[[i]])==0 & length(succ[[i]])==0){
+      message(paste("Broken chain at ", i, ".", sep=""))
+      return(FALSE)
+    }
+    else {return(TRUE)}
+  }
+}
+
+acyclic <- function(model){
+    if(sum(diag(reorder(model$D)$Dn))!=0){
+      return(FALSE)
+    }
+    else {return(TRUE)}
 }

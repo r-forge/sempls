@@ -12,7 +12,7 @@ plsmEdit <- function(model, data)
   return(model)
 }
 
-addPath <- function(model, from=char(), to=char()){
+addPath <- function(model, from=character(), to=character()){
   if(!c(from,to) %in% model$latent){
     stop("LVs without indicators.")
   }
@@ -37,13 +37,21 @@ removePath <- function(model, from=character(), to=character()){
   return(model)
 }
 
-addIndicator <- function(model, data){}
+addIndicator <- function(model, data, LV=character(), MVs=character()){
+  if(!LV %in% model$latent){
+    stop(paste("You can not add indicators to non existent LV '", LV, "'!\n",
+               "Try to use the method 'addLV'.", sep=""))
+  }
+  mm <- model$measuremod
+  block <- model
+}
 
 removeIndicator <- function(model){}
 
 invertLV <- function(model){}
 
-addLV <- function(model, data,  name=char(), mvs, pred, succ){
+addLV <- function(model, data,  LV=character(), MVs=character(), pred=character(), succ=character())
+{
   sm <- model$strucmod
   mm <- model$measuremod
 }

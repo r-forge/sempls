@@ -35,7 +35,7 @@ plsm <- function(data, strucmod=NULL, measuremod=NULL, order=c("generic", "alpha
   manifest <- sort(setdiff(as.vector(measuremod), latent))
 
   if(!all(manifest %in% colnames(data)))
-     stop("The manifest variables must be contained in the data.frame")
+     stop("The manifest variables must be contained in the data.")
 
   order <- match.arg(order)
   # Adjacency matrix D for the structural model

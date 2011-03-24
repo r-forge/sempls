@@ -47,7 +47,7 @@ addMVs <- function(model, data, LV=character(), MVs=character()){
   # mode A (reflective)
   if(LV %in% mm[, 1]) mm <- rbind(mm, cbind(LV, MVs))
   # mode B (formative)
-  else mm <- rbind(mm, cbind(MV, LV))
+  else mm <- rbind(mm, cbind(MVs, LV))
   model <- plsm(data, strucmod=model$strucmod, measuremod=mm, order=model$order)
   return(model)
 }

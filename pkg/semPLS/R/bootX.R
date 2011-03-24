@@ -11,6 +11,7 @@ bootX <- function(object, measure)
     FSboot <- vector("list", length=nboot)
     # boot object has to supply the model
     model <- object$fitted_model$model
+    pairwise <- object$pairwise
     bootIndices <- object$bootIndices
     for(i in 1:nboot){
         Wboot[[i]] <- matrix(ifelse(model$M, object$outer_weights[i,], 0), dim(model$M))

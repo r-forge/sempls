@@ -42,14 +42,18 @@ mvpairs(model, \ldots)
 
 \arguments{
   \item{data}{
-    A \code{data.frame} intendend to use for the fitting method, \code{sempls}
+    A \code{data.frame} intendend to use for the fitting method, \code{sempls}.
   }
-  \item{strucmod}{A from-to-matrix representing the structural model. If
+  \item{strucmod}{
+    A from-to-matrix representing the structural model. If
     \code{NULL} the path to an .csv file representing the structural
-    model can be entered interactively.}
-  \item{measuremod}{A from-to-matrix representing the measurement models. If
-    \code{NULL} the path to an .csv file representing the the measurement
-    models can be entered interactively.}
+    model can be entered interactively.
+  }
+  \item{measuremod}{
+    A from-to-matrix representing the measurement models. If
+    \code{NULL} the path to an .csv file representing the measurement
+    models can be entered interactively.
+  }
   \item{order}{
      A \code{character} describing how to order the latent variables
      (LVs). If
@@ -59,25 +63,51 @@ mvpairs(model, \ldots)
       \item \code{"alphabetical"} the LVs will be ordered alphabetically.
     }
   }
-  \item{interactive}{Logical indicating whether to specify the model
-  interactively using \code{edit}. The default is \code{FALSE}}
-  \item{model}{An object of class \code{plsm}.}
-  \item{LV}{A character value naming a latent variable contained in the
-    model}
-  \item{ask}{See \code{?par}}
-  \item{...}{Arguments to pass down to other methods, e.g. \code{par}}
+  \item{interactive}{
+    Logical indicating whether to specify the model
+    interactively using \code{edit}. The default is \code{FALSE}
+  }
+  \item{model}{
+    An object of class \code{plsm}.
+  }
+  \item{LV}{
+    A character value naming a latent variable contained in the
+    model
+  }
+  \item{ask}{
+    See \code{?par}
+  }
+  \item{...}{
+    Arguments to pass down to other methods, e.g. \code{par}
+  }
 }
 
 \value{
   The object returned is of class \code{plsm} with the elements:
-\item{latent}{A \code{character} vector naming the latent variables.}
-\item{manifest}{A \code{character} vector naming the manifest variables.}
-\item{strucmod}{Contains only the subset of \code{path} representing the structural model.}
-\item{measuremod}{Contains only the subset of \code{path} representing the measurement model.}
-\item{D}{The adjacency matrix \eqn{\bm{D}} for the structural model.}
-\item{M}{The adjacency matrix \eqn{\bm{M}} for the measurement model.}
-\item{blocks}{A \code{list} naming the MVs belonging to each LV's block
-  and telling their measurement mode.}
+  \item{latent}{
+    A \code{character} vector naming the latent variables.
+  }
+  \item{manifest}{
+    A \code{character} vector naming the manifest variables.
+  }
+  \item{strucmod}{
+    Contains only the subset of \code{path} representing the structural
+    model.
+  }
+  \item{measuremod}{
+    Contains only the subset of \code{path} representing the measurement
+    model.
+  }
+  \item{D}{
+    The adjacency matrix \eqn{\bm{D}} for the structural model.
+  }
+  \item{M}{
+    The adjacency matrix \eqn{\bm{M}} for the measurement model.
+  }
+  \item{blocks}{
+    A \code{list} naming the MVs belonging to each LV's block
+    and telling their measurement mode.
+  }
 
   \code{exogen} returns the exogenous latent variables contained in a path
   model.
@@ -103,7 +133,7 @@ mvpairs(model, \ldots)
 }
 
 \seealso{
-\code{\link{sempls}}, \code{\link{read.splsm}},
+  \code{\link{sempls}}, \code{\link{read.splsm}}
 }
 
 \examples{

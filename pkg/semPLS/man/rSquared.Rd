@@ -10,6 +10,7 @@ rSquared(object, \ldots)
 
 \method{rSquared}{sempls}(object, na.rm=FALSE, \ldots)
 }
+
 \arguments{
   \item{object}{An object of class \code{sempls}.
   }
@@ -18,9 +19,10 @@ rSquared(object, \ldots)
   \item{na.rm}{logical. Should missing values be removed?
   }
 }
+
 \value{
   A matrix containing R-squared and corrected R-squared values and the
-  number of predecessors for each endogeneous latent variable.
+  number of direct predecessors for each endogeneous latent variable.
 }
 
 \author{

@@ -49,7 +49,7 @@ data(ECSImobi)
 \references{
   Tenenhaus, M., V. E. Vinzi, Y.-M. Chatelin, and C. Lauro (2005)
   PLS path modeling.
-  Computational Statistics \& Data Analysis 48, 159-205.
+  Computational Statistics & Data Analysis 48, 159-205.
 }
 
 \author{

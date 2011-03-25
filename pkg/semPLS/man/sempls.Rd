@@ -17,9 +17,10 @@ Structural Equation Modeling by Partial Least Squares
 \usage{
 sempls(model, ...)
 
-\method{sempls}{plsm}(model, data, maxit=20, tol=1e-7, scaled=TRUE,sum1=FALSE, E="A",
-    pairwise=FALSE, method=c("pearson", "kendall", "spearman"),
-    convCrit=c("relative", "square"), silent=FALSE, \ldots)
+\method{sempls}{plsm}(model, data, maxit=20, tol=1e-7,
+         scaled=TRUE,sum1=FALSE, E="A", pairwise=FALSE, method=c("pearson",
+         "kendall", "spearman"), convCrit=c("relative", "square"), silent=FALSE,
+         \ldots)
 
 \method{print}{sempls}(x, \ldots)
 

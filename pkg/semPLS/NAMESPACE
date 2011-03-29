@@ -4,7 +4,7 @@ importFrom(lattice, densityplot, parallel, barchart)
 export(read.splsm, sempls, bootsempls, pathDiagram, plsm2sem, plsm, rSquared,
        densityplot.sempls, densityplot.bootsempls, parallel.bootsempls,
        exogen, endogen, reflective, formative, indicators, predecessors,
-       mvplot, mvpairs, loadings)
+       mvplot, mvpairs)
 
 S3method(print, sempls)
 S3method(plot, sempls)
@@ -21,7 +21,7 @@ S3method(densityplot, bootsempls)
 S3method(parallel, bootsempls)
 S3method(mvplot, plsm)
 S3method(mvpairs, plsm)
-S3method(loadings, sempls)
+
 
 
 

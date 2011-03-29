@@ -5,8 +5,12 @@
 \title{
   Import of XML Model Description Specified in SmartPLS
 }
-\description{Imports a .splsm file, an XML model description,
-  specified in SmartPLS (see references).}
+\description{
+  Imports a .splsm file, an XML model description,
+  specified in SmartPLS (see references). Note, that moderator effects
+  specified within SmartPLS are not yet supported. Nevertheless
+  moderating effects can be specified manually.
+}
 
 \usage{
 read.splsm(file=character(), order=c("generic", "alphabetical"))

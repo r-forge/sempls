@@ -22,7 +22,10 @@ sempls(model, ...)
          "kendall", "spearman"), convCrit=c("relative", "square"), silent=FALSE,
          \ldots)
 
-\method{print}{sempls}(x, \ldots)
+\method{print}{sempls}(x, what=c("coefficients", "loadings", "weights",
+    "path_coefficients", "total_effects"),
+    type=c("outer", "cross", "discriminant"),
+    cutoff=NULL, reldiff=0, na.print=".", \ldots)
 
 \method{plot}{sempls}(x, \ldots)
 
@@ -94,16 +97,58 @@ sempls(model, ...)
   \item{convCrit}{
     The convergence criteria to use:
     \itemize{
-       \item \code{"relative"} , the default,
-       \item \code{"square"}.
-     }
-   }
-   \item{silent}{
-     Logical: If \code{TRUE} no status messages are printed.
-   }
-   \item{x}{
-     An object of class \code{sempls} returned by the
+      \item \code{"relative"}, the default,
+      \item \code{"square"}.
+    }
+  }
+  \item{silent}{
+    Logical: If \code{TRUE} no status messages are printed.
+  }
+  \item{x}{
+    An object of class \code{sempls} returned by the
     \code{sempls} method.
+  }
+  \item{what}{
+    A \code{character} telling which results to print. Possible options
+    are:
+    \itemize{
+      \item \code{"coefficients"}, the default, prints all the model
+      coefficients, outer loadings (for reflective MVs), outer weights
+      (for formative MVs) and the path coefficients into one table.
+      \item \code{"loadings"}, prints only the loadings into a tabualar
+      layout with different options specified in the arguments:
+      \code{type}, \code{cutoff}, \code{reldiff} and \code{na.print}.
+      \item \code{"weights"}, prints only the weihtss into a tabualar
+      layout.
+      \item \code{"path_coefficients"}, prints only the path
+      coefficients into a tabualar layout.
+      \item \code{"total_effects"}, prints only the total effects into a
+      tabualar layout.
+    }
+  }
+  \item{type}{
+    If the argument \code{what="loadings"}, \code{type} describes the
+    loadings to be extracted -- those are:
+    \itemize{
+      \item \code{"outer"} for the outer loadings, the default,
+      \item \code{"cross"} for the cross loadings and
+      \item \code{"discriminant"} contrasts outer against cross
+      loadings to check for discrimant validity of the measurement model.
+    }
+  }
+  \item{cutoff}{
+    A numerical value at which to cutoff the loadings -- this means
+    loadings smaller than the cutoff value will not be printed. This
+    argument is only effective if \code{what="loadings"}.
+  }
+  \item{reldiff}{
+    The argument is only effectiv when \code{type="discriminant"}. It is
+    a \code{numeric} value, specifying the relative difference between
+    outer and cross loadings at which cross loadings will still be
+    printed. This argument is only effective if \code{what="loadings"}.
+  }
+  \item{na.print}{
+    A \code{character} substituting values not to be printed.
   }
   \item{use}{
     The values for which the density plots are created. If
@@ -184,6 +229,22 @@ ecsi$outer_weights
 ecsi$outer_loadings
 ecsi$path_coefficients
 ecsi$total_effects
+
+### using the print method
+# outer weights
+print(ecsi, what="weights", digits=2)
+# outer loadings greater than 0.5
+print(ecsi, what="loadings", type="outer", cutoff=0.5, digits=2)
+# cross loadings greater than 0.5
+print(ecsi, what="loadings", type="cross", cutoff=0.5, digits=2)
+# check for discriminant validity
+print(ecsi, what="loadings", type="discriminant", cutoff=0.5, reldiff=0.2,
+digits=2)
+# path coefficients
+print(ecsi, what="path_coefficients", digits=2)
+# total effects
+print(ecsi, what="total_effects", digits=2)
+
 
 ### R-squared
 rSquared(ecsi)

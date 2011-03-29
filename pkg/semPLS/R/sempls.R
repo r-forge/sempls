@@ -133,11 +133,6 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, E="A", pairwi
   return(result)
 }
 
-print.sempls <- function(x, ...){
-  print(x$coefficients)
-  invisible(x)
-}
-
 plsLoop <- expression({
   #######################################################################
   # Iterate over step 2 to step 5

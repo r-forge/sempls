@@ -44,13 +44,18 @@ comunality <- function(object){
             com[i,2] <- length(ind)
         }
     }
+    com <- as.data.frame(com)
+    storage.mode(com[,2]) <- "integer"
+    #class(com) <- "comunality"
+    #class(com) <- c("comunality", class(com))
     return(com)
 }
 
-print.comunality <- function(object){
-    print(object, digits=3)
-    aveCom <- sum(object[,2], na.rm=TRUE)^-1 * sum(object[,1] * object[,2], na.rm=TRUE)
-    paste("Average comunality:", round(aveCom, digits=3))
+print.comunality <- function(x, na.print=".", ...){
+  aveCom <- sum(x[,2], na.rm=TRUE)^-1 * sum(x[,1] * x[,2], na.rm=TRUE)
+  cat(paste("\tAverage comunality:", signif(aveCom, ...), "\n\n"))
+  print.table(x, na.print=na.print, ...)
+  invisible(x) 
 }
 
 

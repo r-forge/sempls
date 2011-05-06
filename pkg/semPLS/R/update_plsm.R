@@ -1,5 +1,9 @@
 # Method to update a PLS path model of class 'plsm'
-plsmEdit <- function(model, data)
+plsmEdit <- function(model, ...){
+  UseMethod("plsmEdit", model)
+}
+
+plsmEdit.plsm <- function(model, data)
 {
   sm <- model$strucmod
   cat("Edit the structural model!")
@@ -12,7 +16,11 @@ plsmEdit <- function(model, data)
   return(model)
 }
 
-addPath <- function(model, from=character(), to=character()){
+addPath <- function(model, ...){
+  UseMethod("addPath", model)
+}
+
+addPath.plsm <- function(model, from=character(), to=character()){
   if(!c(from,to) %in% model$latent){
     stop("LVs without indicators.")
   }
@@ -25,7 +33,11 @@ addPath <- function(model, from=character(), to=character()){
   return(model)
 }
 
-removePath <- function(model, from=character(), to=character()){
+removePath <- function(model, ...){
+  UseMethod("removePath", model)
+}
+
+removePath.plsm <- function(model, from=character(), to=character()){
   sm <- model$strucmod
   ind <- which(sm[,1] %in% from & sm[,2] %in% to)
   if(length(ind)==0) stop("Path not in model.")
@@ -37,7 +49,11 @@ removePath <- function(model, from=character(), to=character()){
   return(model)
 }
 
-addMVs <- function(model, data, LV=character(), MVs=character()){
+addMVs <- function(model, ...){
+  UseMethod("addMVs", model)
+}
+
+addMVs.plsm <- function(model, data, LV=character(), MVs=character()){
   if(length(LV)!=1) stop("Indicators can only be added to one LV at a time.")
   if(!(LV %in% model$latent)){
   stop(paste("You can not add indicators to non existent LV '", LV, "'!\n",
@@ -52,7 +68,11 @@ addMVs <- function(model, data, LV=character(), MVs=character()){
   return(model)
 }
 
-removeMVs <- function(model, MVs=character()){
+removeMVs <- function(model, ...){
+  UseMethod("removeMVs", model)
+}
+
+removeMVs.plsm <- function(model, MVs=character()){
   ind <- which(!(model$manifest %in% MVs))
   if(length(ind) == length(model$manifest)){
     stop("MVs to not found in the model. ")
@@ -78,7 +98,11 @@ removeMVs <- function(model, MVs=character()){
   return(model)
 }
 
-invertLVs <- function(model, LVs=character()){
+invertLVs <- function(model, ...){
+  UseMethod("invertLVs", model)
+}
+
+invertLVs.plsm <- function(model, LVs=character()){
   blocks <- model$blocks
   for(i in LVs){
     if(attr(blocks[[i]], "mode")=="A"){
@@ -90,7 +114,11 @@ invertLVs <- function(model, LVs=character()){
   return(model)
 }
 
-addLV <- function(model, data,  LV=character(), mode=c("A", "B"), MVs=character(),
+addLV <- function(model, ...){
+  UseMethod("addLV", model)
+}
+
+addLV.plsm <- function(model, data,  LV=character(), mode=c("A", "B"), MVs=character(),
                   pred=character(), succ=character()){
   #if(missing(data)) stop("Argument 'data' must be specified.")
   if(length(LV) != 1) stop("LV must be a character vector of length 1.")
@@ -115,7 +143,11 @@ addLV <- function(model, data,  LV=character(), mode=c("A", "B"), MVs=character(
   return(model)
 }
 
-removeLVs <- function(model, which){
+removeLVs <- function(model, ...){
+  UseMethod("removeLVs", model)
+}
+
+removeLVs.plsm <- function(model, which){
   sm <- model$strucmod
   ind1 <- which(sm[,1] %in% which)
   ind2 <- which(sm[,2] %in% which)

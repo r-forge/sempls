@@ -1,6 +1,9 @@
-# Calculates the total effects
+totalEffects <- function(object){
+  UseMethod("totalEffects", object)
+}
 
-totalEffects <- function(pathCoeff){
+# Calculates the total effects
+totalEffects.default <- function(pathCoeff){
   ret <- pathCoeff
   step <- pathCoeff
   for (i in 2:ncol(pathCoeff)){
@@ -10,3 +13,16 @@ totalEffects <- function(pathCoeff){
   return(ret)
 }
 
+totalEffects.sempls <- function(object){
+  coeffs <- object$total_effects
+  class(coeffs) <- "totalEffects"
+  return(coeffs)
+}
+
+print.totalEffects <- function(x, na.print=".", digits=2, ...){
+  coeffs <- x
+  coeffs[coeffs==0] <- NA
+  print.table(coeffs, na.print=na.print, digits=digits, ...)
+  invisible(x)
+}
+  

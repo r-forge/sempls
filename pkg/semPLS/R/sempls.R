@@ -16,7 +16,7 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, E="A", pairwi
                  model=model, weighting_scheme=NULL, weights_evolution=NULL,
                  sum1=sum1, pairwise=pairwise, method=method, iterations=NULL,
                  convCrit=convCrit, silent=silent, tolerance=tol, maxit=maxit, N=NULL,
-                 incomplete=NULL)
+                 incomplete=NULL, Hanafi=NULL)
   class(result) <- "sempls"
 
   # checking the data
@@ -76,6 +76,10 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, E="A", pairwi
                                varying=list(colnames(Wold)),
                                direction="long")
   weights_evolution <- cbind(weights_evolution, iteration=0)
+  Hanafi <- cbind(f=sum(abs(cor(factor_scores)) * model$D),
+                  g=sum(cor(factor_scores)^2 * model$D),
+                  iteration=0)
+
 
   #############################################
   # Select the function according to the weighting scheme
@@ -124,6 +128,7 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, E="A", pairwi
   result$inner_weights <- innerWeights
   result$outer_weights <- Wnew
   result$weights_evolution <- weights_evolution
+  result$Hanafi<- Hanafi
   result$factor_scores <- factor_scores
   result$data <- data
   result$N <- N
@@ -147,7 +152,7 @@ plsLoop <- expression({
 
     #############################################
     # step 3
-    Wnew <-  outerApprx(Latent=factor_scores, data, model,
+    Wnew <-  outerApprx2(Latent=factor_scores, data, model,
                         sum1=sum1, pairwise, method)
 
     #############################################
@@ -169,6 +174,10 @@ plsLoop <- expression({
                                      direction="long")
     weights_evolution_tmp <- cbind(weights_evolution_tmp, iteration=i)
     weights_evolution <- rbind(weights_evolution, weights_evolution_tmp)
+    Hanafi_tmp <- cbind(f=sum(abs(cor(factor_scores)) * model$D),
+                         g=sum(cor(factor_scores)^2 * model$D),
+                         iteration=i)
+    Hanafi <- rbind(Hanafi, Hanafi_tmp)
 
     #############################################
     # step 5
@@ -189,3 +198,9 @@ plsLoop <- expression({
     i <- i+1
   }
 })
+
+# print method
+print.sempls <- function(x, ...){
+  print(x$coefficients)
+  invisible(x)
+}

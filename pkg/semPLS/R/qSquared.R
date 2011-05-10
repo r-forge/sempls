@@ -1,6 +1,7 @@
 # Input: sempls-Object
 # d: ommision distance
 # dlines: TRUE => leaving out the same observation for the MV-Blocks
+# Note: if total=TRUE, total_effects are used, else the path_coefficients
 qSquared <- function(object, d=NULL, impfun, dlines=TRUE, total=FALSE, ...){
     #if(!exists("impfun", mode="function")) impfun <- function(data) return(data)
     if(missing(impfun)) impfun <- function(data) return(data)
@@ -87,6 +88,8 @@ qSquared <- function(object, d=NULL, impfun, dlines=TRUE, total=FALSE, ...){
     return(qSquared)
 }
 
+
+# simple Mean replacement function
 meanrep <- function(data){
     meanRepl <- function(x){
         mu <- mean(x, na.rm=TRUE)
@@ -96,6 +99,8 @@ meanrep <- function(data){
     return(apply(data, 2, meanRepl))
 }
 
+# function to evaluate different values for
+# the omission distance 'd'
 ommissionTest <- function(object, drange, ...){
     omt <- matrix(NA, nrow=length(object$model$latent),
                   ncol=length(drange))

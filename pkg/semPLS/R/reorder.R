@@ -4,6 +4,7 @@ reorder <- function(D, n){
   if(!missing(n)) n <- min(n, ncol(D), nrow(D))
   else n <- min( ncol(D), nrow(D))
   chain <- NULL
+  level <- NULL
   Dn <- D
   Dn[Dn!=0] <- 0
   for(i in n:1){
@@ -20,6 +21,7 @@ reorder <- function(D, n){
   source <- dimnames(D)[[1]][which(D!=0, TRUE)[,1]]
   target <- dimnames(D)[[2]][which(D!=0, TRUE)[,2]]
   sm <- cbind(source, target)
+  attr(chain, "level") <- level
   # Dn is the sum of the 1, ..., n - step transition matrices
   return(list(chain=chain, Dn=Dn, n=n, strucmod=sm))
 }

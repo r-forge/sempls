@@ -1,8 +1,8 @@
-# 12.05.2011
+# 23.05.2011
 plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall", "spearman"),
-                         pairwise=FALSE, scale=c("scaled", "original"), total=FALSE, addError=FALSE)
+                         pairwise=FALSE, scale=c("scaled", "original"), total=FALSE, lc=FALSE)
 {
-    # Note: All MVs are treated as if they were reflective.
+  # Note: All MVs are treated as if they were reflective.
   scale <- match.arg(scale)
   method <- match.arg(method)
   ifelse(pairwise, use <- "pairwise.complete.obs", use <- "everything")
@@ -14,6 +14,7 @@ plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall",
   exMVs <- unlist(model$blocks[exLVs])
   endMVs <- unlist(model$blocks[endLVs])
   factor_scores <- object$factor_scores
+  
   if(ordinal) {
     if(require(orddata)==FALSE){
       stop("If argument ordinal is set to TRUE the orddata package is required.")
@@ -31,67 +32,83 @@ plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall",
 
   #exLatent <- scale(simexData %*% object$outer_weights[exMVs, exLVs, drop=FALSE])
   exLatent <- simexData %*% object$outer_weights[exMVs, exLVs, drop=FALSE]
-  
-  # adding error
-  if(addError){
-    addEps <- function(x, n){
-      sigma <- sd(x)
-      if(!is.null(attr(x, "R-squared"))){
-        sigma <- sigma / (1-attr(x, "R-squared"))
-      }
-      if(!is.null(attr(x, "loadings"))){
-        sigma <- sigma / (1-attr(x, "loadings"))
-      }
-      else sigma <- sigma / (1-0.7)
-      x <- x + rnorm(n=n, mean=0, sd=sigma)
-      return(x)
-    }
-  }
  
   
   # create endogen LVs from the model
   if(total){
     endLatent <- as.data.frame(exLatent %*% object$total_effects[exLVs,endLVs, drop=FALSE])
+    rSq <- rSquared(object, total=total)
+    for(i in endLVs){
+      attr(endLatent[[i]], "R-squared") <- rSq[i,]
+      if(lc){
+        attr(endLatent[[i]], "load-correction") <- object$outer_loadings[, i]
+      }
+      endLatent[[i]] <- addEps(endLatent[[i]], n=n)
+    }
+    endLatent <- as.matrix(endLatent)
   }
   else {
     Latent <- exLatent
     predList <- predecessors(model)
+    rSq <- rSquared(object, total=total)
     for(i in endLVs){
-      tmp <- Latent[, predList[[i]]] %*% object$path_coefficients[predList[[i]], i , drop=FALSE]
+      tmp <- Latent[, predList[[i]]] %*%
+             object$path_coefficients[predList[[i]], i , drop=FALSE]
+      if(lc){
+        attr(tmp, "load-correction") <- object$outer_loadings[, i]
+      }
+      attr(tmp, "R-squared") <- rSq[i,]
+      tmp <- addEps(tmp, n=n)
       Latent <- cbind(Latent, tmp)
     }
-    endLatent <- as.data.frame(Latent[, endLVs])
+    #endLatent <- as.data.frame(Latent[, endLVs])
+    endLatent <- Latent[, endLVs]
   }
       
-  #levels <- colSums(model$D[, endLVs, drop=FALSE])
-  if(addError){
-    rSq <- rSquared(object)
-    for(i in endLVs){
-    #attr(endLatent[[i]], "level") <- levels[i]
-      attr(endLatent[[i]], "R-squared") <- rSq[i,]
-    }
-    endLatent <- apply(endLatent, 2, addEps, n=n)
-  }
   
   # create endogen MVs from the model     
-  simendData <- as.matrix(endLatent) %*%
+  simendData <- endLatent %*% #as.matrix(endLatent) %*%
                 t(object$outer_loadings[endMVs, endLVs])
   simendData <- as.data.frame(simendData)
 
-  if(addError){
-    loadings <- object$outer_loadings[endMVs,]
-    loadings <- loadings[loadings!=0]
-    names(loadings) <- endMVs
-    for(i in endMVs){
-      attr(simendData[[i]], "loadings") <- loadings[i]
-    }
-    simendData <- scale(apply(simendData, 2, addEps, n=n))
-  }
-  #simendData <- scale(apply(simendData, 2, addEps, n=n))
-  simendData <- scale(apply(simendData, 2, addEps, n=n))
+  loadings <- object$outer_loadings[endMVs,]
+  loadings <- loadings[loadings!=0]
+  names(loadings) <- endMVs
   
+  for(i in endMVs){
+    attr(simendData[[i]], "loadings") <- loadings[i]
+    simendData[[i]] <- addEps(simendData[[i]], n=n)
+  }
+  
+  simendData <- scale(simendData) 
   simData <- cbind(simexData, simendData)
   if(scale=="original"){simData <- rescale(data, simData)}
   result <- simData                      
   return(result)
+}
+
+# function to computer signal to noise ratio from R squared
+# (determination coefficient)
+snr <- function(rSquared) sqrt(rSquared/(1-rSquared))
+
+# function for adding error
+addEps <- function(x, n){
+  sigma <- sd(x)
+  # for LVs
+  if(!is.null(attr(x, "R-squared"))){
+    if(!is.null(attr(x, "load-correction"))){
+      lc <- sum(attr(x, "load-correction")^2)
+    }
+    #else lc <- 1.3 # seems to work (2011-05-23; AM: single case)
+    #               # No, it does not! (2011-05-24; AM: simulation)
+    else lc <- 1.216487
+    sigma <- sigma * lc * (snr(attr(x, "R-squared")))^-1
+  }
+  # for MVs
+  else if(!is.null(attr(x, "loadings"))){
+    sigma <- sigma * snr(attr(x, "loadings")^2)^-1
+  }
+  else stop("Internal error.")
+  x <- x + rnorm(n=n, mean=0, sd=sigma)
+  return(x)
 }

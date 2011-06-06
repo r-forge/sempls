@@ -1,4 +1,5 @@
 # Method to update a PLS path model of class 'plsm'
+# Note: .Rd-files -> pls utils
 plsmEdit <- function(model, ...){
   UseMethod("plsmEdit", model)
 }
@@ -21,7 +22,7 @@ addPath <- function(model, ...){
 }
 
 addPath.plsm <- function(model, from=character(), to=character()){
-  if(!c(from,to) %in% model$latent){
+  if(!all(c(from,to) %in% model$latent)){
     stop("LVs without indicators.")
   }
   sm <- model$strucmod

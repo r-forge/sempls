@@ -14,7 +14,7 @@ plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall",
   exMVs <- unlist(model$blocks[exLVs])
   endMVs <- unlist(model$blocks[endLVs])
   factor_scores <- object$factor_scores
-  
+
   if(ordinal) {
     if(require(orddata)==FALSE){
       stop("If argument ordinal is set to TRUE the orddata package is required.")
@@ -30,10 +30,24 @@ plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall",
     simexData <- scale(simexData)
   }
 
+  if(!ordinal) {
+    if(require(mvtnorm)==FALSE){
+      stop("If argument ordinal is set to FALSE the mvtnorm package is required.")
+    }
+    exData <- as.data.frame(rescale(data)[, exMVs, drop=FALSE])
+    simexData <- matrix(NA, nrow=n, ncol=length(exMVs))
+    colnames(simexData) <- exMVs
+    for(i in exLVs){
+      r <- cor(exData[, blocks[[i]]], method=method, use=use)
+      simexData[, blocks[[i]]] <- rmvnorm(n=n, mean=rep(0, nrow(r)), sigma=r)
+    }
+    simexData <- scale(simexData)
+  }
+
   #exLatent <- scale(simexData %*% object$outer_weights[exMVs, exLVs, drop=FALSE])
   exLatent <- simexData %*% object$outer_weights[exMVs, exLVs, drop=FALSE]
- 
-  
+
+
   # create endogen LVs from the model
   if(total){
     endLatent <- as.data.frame(exLatent %*% object$total_effects[exLVs,endLVs, drop=FALSE])
@@ -41,7 +55,7 @@ plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall",
     for(i in endLVs){
       attr(endLatent[[i]], "R-squared") <- rSq[i,]
       if(lc){
-        attr(endLatent[[i]], "load-correction") <- object$outer_loadings[, i]
+        attr(endLatent[[i]], "load-correction") <- object$outer_weights[,i]
       }
       endLatent[[i]] <- addEps(endLatent[[i]], n=n)
     }
@@ -55,7 +69,7 @@ plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall",
       tmp <- Latent[, predList[[i]]] %*%
              object$path_coefficients[predList[[i]], i , drop=FALSE]
       if(lc){
-        attr(tmp, "load-correction") <- object$outer_loadings[, i]
+        attr(tmp, "load-correction") <- object$outer_weights[,i]
       }
       attr(tmp, "R-squared") <- rSq[i,]
       tmp <- addEps(tmp, n=n)
@@ -64,26 +78,29 @@ plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall",
     #endLatent <- as.data.frame(Latent[, endLVs])
     endLatent <- Latent[, endLVs]
   }
-      
-  
-  # create endogen MVs from the model     
-  simendData <- endLatent %*% #as.matrix(endLatent) %*%
+
+
+  # create endogen MVs from the model
+  simendData <- endLatent %*%
                 t(object$outer_loadings[endMVs, endLVs])
+  # does the same:
+  #simendData <- endLatent %*%
+  #              t(object$outer_weights[endMVs, endLVs])
   simendData <- as.data.frame(simendData)
 
   loadings <- object$outer_loadings[endMVs,]
   loadings <- loadings[loadings!=0]
   names(loadings) <- endMVs
-  
+
   for(i in endMVs){
     attr(simendData[[i]], "loadings") <- loadings[i]
     simendData[[i]] <- addEps(simendData[[i]], n=n)
   }
-  
-  simendData <- scale(simendData) 
+
+  simendData <- scale(simendData)
   simData <- cbind(simexData, simendData)
   if(scale=="original"){simData <- rescale(data, simData)}
-  result <- simData                      
+  result <- simData
   return(result)
 }
 
@@ -97,16 +114,19 @@ addEps <- function(x, n){
   # for LVs
   if(!is.null(attr(x, "R-squared"))){
     if(!is.null(attr(x, "load-correction"))){
-      lc <- sum(attr(x, "load-correction")^2)
+      lc <- sum(attr(x, "load-correction"))
     }
     #else lc <- 1.3 # seems to work (2011-05-23; AM: single case)
     #               # No, it does not! (2011-05-24; AM: simulation)
-    else lc <- 1.216487
-    sigma <- sigma * lc * (snr(attr(x, "R-squared")))^-1
+    else lc <- 1
+    sigma <- sigma * (lc * snr(attr(x, "R-squared")))^-1
   }
   # for MVs
   else if(!is.null(attr(x, "loadings"))){
+    ## theoretisch richtig
     sigma <- sigma * snr(attr(x, "loadings")^2)^-1
+    ## eigentlich falsch, ABER?!?
+    #sigma <- sigma/2 * snr(attr(x, "loadings")^2)^-1
   }
   else stop("Internal error.")
   x <- x + rnorm(n=n, mean=0, sd=sigma)

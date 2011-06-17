@@ -1,5 +1,5 @@
 # 23.05.2011
-plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall", "spearman"),
+plsSimulatorOld <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall", "spearman"),
                          pairwise=FALSE, scale=c("scaled", "original"), total=FALSE, lc=FALSE)
 {
   # Note: All MVs are treated as if they were reflective.
@@ -106,10 +106,10 @@ plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall",
 
 # function to computer signal to noise ratio from R squared
 # (determination coefficient)
-snr <- function(rSquared) sqrt(rSquared/(1-rSquared))
+snrOld <- function(rSquared) sqrt(rSquared/(1-rSquared))
 
 # function for adding error
-addEps <- function(x, n){
+addEpsOld <- function(x, n){
   sigma <- sd(x)
   # for LVs
   if(!is.null(attr(x, "R-squared"))){

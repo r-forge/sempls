@@ -24,7 +24,7 @@ Armin Monecke \email{armin.monecke@stat.uni-muenchen.de}
 }
 
 \seealso{
-  \code{\link{plsm}}, \code{\link{sempls}}}
+  \code{\link{plsm}}, \code{\link{sempls}}
 }
 
 \examples{

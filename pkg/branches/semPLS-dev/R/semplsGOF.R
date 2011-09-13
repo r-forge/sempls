@@ -1,6 +1,10 @@
+dgrho <- function(object, ...){
+  UseMethod("dgrho", object)
+}
+
 # Dillon-Goldstein's rho (Composite Reliability in SmartPLS)
 # requires: outer loadings (factor scores), model
-dgrho <- function(object){
+dgrho.sempls <- function(object, ...){
     dgr <- matrix(NA, nrow=length(object$model$latent), ncol=2)
     rownames(dgr) <- object$model$latent
     colnames(dgr) <- c("Dillon-Goldstein's rho", "reflective MVs")
@@ -20,11 +24,25 @@ dgrho <- function(object){
             dgr[i,2] <- length(ind)
         }
     }
+    class(dgr) <- c("dgrho", class(dgr))
     return(dgr)
 }
 
+print.dgrho <- function(x, na.print=".", digits=2, ...){
+  #xChar <- format(as.data.frame(unclass(x)), digits=digits, ...)
+  xChar <- format(as.data.frame(x), digits=digits, ...)
+  xChar[is.na(x)] <- na.print
+  print(xChar, ...)
+  invisible(x) 
+  return(x)
+}
+
+comunality <- function(object, ...){
+  UseMethod("comunality", object)
+}
+
 # requires: outer loadings (factor scores), model
-comunality <- function(object){
+comunality.sempls <- function(object, ...){
     com <- matrix(NA, nrow=length(object$model$latent), ncol=2)
     rownames(com) <- object$model$latent
     colnames(com) <- c("comunality", "reflective MVs")
@@ -44,38 +62,46 @@ comunality <- function(object){
             com[i,2] <- length(ind)
         }
     }
-    com <- as.data.frame(com)
-    storage.mode(com[,2]) <- "integer"
-    #class(com) <- "comunality"
-    #class(com) <- c("comunality", class(com))
+    class(com) <- c("comunality", class(com))
     return(com)
 }
 
-print.comunality <- function(x, na.print=".", ...){
+print.comunality <- function(x, na.print=".", digits=2, ...){
+  #xChar <- format(as.data.frame(unclass(x)), digits=digits, ...)
+  xChar <- format(as.data.frame(x), digits=digits, ...)
+  xChar[is.na(x)] <- na.print
+  print(xChar, ...)
   aveCom <- sum(x[,2], na.rm=TRUE)^-1 * sum(x[,1] * x[,2], na.rm=TRUE)
-  cat(paste("\tAverage comunality:", signif(aveCom, ...), "\n\n"))
-  print.table(x, na.print=na.print, ...)
+  message(paste("\nAverage comunality:", signif(aveCom, digits=digits, ...)))
   invisible(x) 
 }
 
 
-
+redundancy <- function(object, ...){
+  UseMethod("redundancy", object)
+}
 # Redundancy Example:
 # requires: rSquared(predict, factor scores), communality(outer loadings (factor scores), model)
-redundancy <- function(object){
+redundancy.sempls <- function(object, ...){
     red <- as.matrix(comunality(object)[,1] * rSquared(object)[,1])
     colnames(red) <- "redundancy"
+    class(red) <- c("redundancy", class(red))
     return(red)
 }
 
-print.redundancy <- function(object){
-    print(object, digits=3)
-    aveRed <- nrow(object)^-1 * sum(object[,1], na.rm=TRUE)
-    paste("Average redundancy:", round(aveRed, digits=3))
+print.redundancy <- function(x, na.print=".", digits=2, ...){
+  print.table(x, na.print=na.print, digits=digits, ...)
+  aveRed <- nrow(x)^-1 * sum(x[,1], na.rm=TRUE)
+  message(paste("\nAverage redundancy:", round(aveRed, digits=digits)))
+  invisible(x)
 }
 
+
+rSquared2 <- function(object, ...){
+  UseMethod("rSquared2", object)
+}
 # requires: rSquared(predict, factor scores), communality(outer loadings (factor scores), model)
-rSquared <- function(object, na.rm=FALSE, ...){
+rSquared2.sempls <- function(object, na.rm=FALSE, ...){
   Y_hat <- predict(object, what="LVs", ...)
   if(sum(is.na(Y_hat)) > 0 & !na.rm) stop("Use argument 'na.rm=TRUE'!")
   R_squared <- apply(Y_hat, 2, var, na.rm=na.rm) / apply(object$factor_scores, 2, var, na.rm=na.rm)
@@ -88,21 +114,42 @@ rSquared <- function(object, na.rm=FALSE, ...){
   N <- object$N
   J <- R_squared[, "predecessors"]
   R_squared[, "R-squared-corrected"] <- correct(R_squared[, "R-squared"], J, N)
+  R_squared <- as.data.frame(R_squared)
+  class(R_squared) <- c("rSquared2", class(R_squared))
   return(R_squared)
 }
 
-print.rSquared <- function(object){
-    print(object, digits=3)
-    aveRsquared <- nrow(object)^-1 * sum(object[,1], na.rm=TRUE)
-    paste("Average R-squared:", round(aveRsquared, digits=3))
+print.rSquared2 <- function(x, na.print=".", digits=2, ...){
+  #xChar <- format(as.data.frame(unclass(x)), digits=digits, ...)
+  xChar <- format(as.data.frame(x), digits=digits, ...)
+  xChar[is.na(x)] <- na.print
+  print(xChar)
+  aveRsquared <- nrow(x)^-1 * sum(x[,1], na.rm=TRUE)
+  message(paste("\nAverage R-squared:", round(aveRsquared, digits=2)))
+  invisible(x)
+}
+
+
+gof <- function(object, ...){
+  UseMethod("gof", object)
 }
 
 # requires: rSquared, communality
-gof <- function(object){
+gof.sempls <- function(object, ...){
     rSq <- rSquared(object)
     aveRsq <- nrow(rSq)^-1 * sum(rSq[,1], na.rm=TRUE)
     com <- comunality(object)
     aveCom <- sum(com[,2], na.rm=TRUE)^-1 * sum(com[,1] * com[,2], na.rm=TRUE)
     gof <- sqrt(aveCom * aveRsq)
+    gof <- matrix(c(aveRsq, aveCom, gof), nrow=3, ncol=1)
+    rownames(gof) <- c("Average R-squared", "Average Comunality", "GOF")
+    colnames(gof) <- c("Value")
+    class(gof) <- c("gof", class(gof))
     return(gof)
 }
+
+print.gof <- function(x, na.print=".", digits=2, ...){
+  print.table(as.matrix(x), na.print=na.print, digits=digits, ...)
+  invisible(x)
+}
+  

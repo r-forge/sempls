@@ -1,15 +1,15 @@
-plsm <- function(data, strucmod=NULL, measuremod=NULL, order=c("generic", "alphabetical"), interactive=FALSE)
+plsm <- function(data, strucmod, measuremod, order=c("generic", "alphabetical"), interactive=FALSE)
 {
-  if(is.null(strucmod) & !interactive){
-    cat("Choose a .csv file for the structural model!\n")
-    strucmod <- as.matrix(read.csv(file.choose()))
+  if(!is.matrix(strucmod) & !interactive){
+    #cat("Choose a .csv file for the structural model!\n")
+    strucmod <- as.matrix(read.csv(strucmod))
   }
-  if(is.null(measuremod) & !interactive){
-    cat("Choose a .csv file for the measurement model!\n")
-    measuremod <- as.matrix(read.csv(file.choose()))
+  if(!is.matrix(measuremod) & !interactive){
+    #cat("Choose a .csv file for the measurement model!\n")
+    measuremod <- as.matrix(read.csv(measuremod))
   }
   # interactive: using 'edit'
-  if(is.null(strucmod) & interactive){
+  if(interactive){
     cat("Edit the structural model!\n")
     strucmod <- matrix(ncol=2)
     colnames(strucmod) <- c("source", "target")
@@ -74,24 +74,4 @@ plsm <- function(data, strucmod=NULL, measuremod=NULL, order=c("generic", "alpha
   if(!connected(model=result)) stop("Structural model must be connected!")
   if(!acyclic(model=result)) stop("Structural model must be acyclic!")
   return(result)
-}
-
-
-connected <- function(model){
-    pred <- predecessors(model)
-    succ <- successors(model)
-    for(i in model$latent){
-    if(length(pred[[i]])==0 & length(succ[[i]])==0){
-      message(paste("Broken chain at ", i, ".", sep=""))
-      return(FALSE)
-    }
-    else {return(TRUE)}
-  }
-}
-
-acyclic <- function(model){
-    if(sum(diag(reorder(model$D)$Dn))!=0){
-      return(FALSE)
-    }
-    else {return(TRUE)}
 }

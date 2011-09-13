@@ -9,8 +9,8 @@ plsSimulatorOld <- function(object, n, ordinal=TRUE, method=c("pearson", "kendal
   model <- object$model
   blocks <- model$blocks
   data <- object$data
-  exLVs <- exogen(model)
-  endLVs <- endogen(model)
+  exLVs <- exogenous(model)
+  endLVs <- endogenous(model)
   exMVs <- unlist(model$blocks[exLVs])
   endMVs <- unlist(model$blocks[endLVs])
   factor_scores <- object$factor_scores
@@ -48,7 +48,7 @@ plsSimulatorOld <- function(object, n, ordinal=TRUE, method=c("pearson", "kendal
   exLatent <- simexData %*% object$outer_weights[exMVs, exLVs, drop=FALSE]
 
 
-  # create endogen LVs from the model
+  # create endogenous LVs from the model
   if(total){
     endLatent <- as.data.frame(exLatent %*% object$total_effects[exLVs,endLVs, drop=FALSE])
     rSq <- rSquared(object, total=total)
@@ -80,7 +80,7 @@ plsSimulatorOld <- function(object, n, ordinal=TRUE, method=c("pearson", "kendal
   }
 
 
-  # create endogen MVs from the model
+  # create endogenous MVs from the model
   simendData <- endLatent %*%
                 t(object$outer_loadings[endMVs, endLVs])
   # does the same:

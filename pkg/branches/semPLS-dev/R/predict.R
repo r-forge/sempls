@@ -5,7 +5,7 @@ predict.sempls <- function(object, newdata, what=c("LVs", "MVs"), scale=c("scale
     scale <- match.arg(scale)
     model <- object$model
     data <- object$data
-    exLVs <- exogen(model)
+    exLVs <- exogenous(model)
     exMVs <- unlist(model$blocks[exLVs])
     factor_scores <- object$factor_scores
     if(!missing(newdata)){

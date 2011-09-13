@@ -10,8 +10,8 @@ plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall",
   model <- object$model
   blocks <- model$blocks
   data <- object$data
-  exLVs <- exogen(model)
-  endLVs <- endogen(model)
+  exLVs <- exogenous(model)
+  endLVs <- endogenous(model)
   exMVs <- unlist(model$blocks[exLVs])
   endMVs <- unlist(model$blocks[endLVs])
   factor_scores <- object$factor_scores
@@ -57,7 +57,7 @@ plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall",
   }
 
 
-  # create endogen data
+  # create endogenous data
   Latent <- exLatent
   predList <- predecessors(model)
   succList <- successors(model)

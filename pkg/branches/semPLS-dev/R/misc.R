@@ -1,11 +1,11 @@
 # for object of class: plsm
-exogen <- function(model){
+exogenous <- function(model){
     if(!inherits(model, "plsm")) stop("Model must be of class 'plsm'!")
     ret <- names(which(colSums(model$D)==0))
     return(ret)
 }
 
-endogen <- function(model){
+endogenous <- function(model){
     if(!inherits(model, "plsm")) stop("Model must be of class 'plsm'!")
     ret <- names(which(colSums(model$D)!=0))
     return(ret)

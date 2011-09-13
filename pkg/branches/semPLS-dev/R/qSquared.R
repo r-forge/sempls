@@ -9,12 +9,12 @@ qSquared.sempls <- function(object, d=NULL, impfun, dlines=TRUE, total=FALSE, ..
     if(missing(impfun)) impfun <- function(data) return(data)
     data <- object$data
     model <- object$model
-    endrefl<- intersect(reflective(model), endogen(model))
+    endrefl<- intersect(reflective(model), endogenous(model))
     qSquared <- matrix(NA, nrow=length(model$latent), ncol=1)
     colnames(qSquared) <- "Q-Squared"
     rownames(qSquared) <- model$latent
     sse <- function(model, data, dblind, i, impfun, total, ...){
-        plsm <- sempls(model, impfun(dblind), pairwise=TRUE, silent=TRUE, ...)
+        plsm <- sempls(model, impfun(dblind), pairwise=TRUE, verbose=FALSE, ...)
         #m <- length(model$blocks[[i]])
         #sse <- vector("numeric", length=m)
         m <- attr(plsm$data, "scaled:center")[model$blocks[[i]]]
@@ -23,13 +23,13 @@ qSquared.sempls <- function(object, d=NULL, impfun, dlines=TRUE, total=FALSE, ..
         for(l in 1:length(m)){
             # Estimation
             if(total){
-                exogen <- exogen(model)
+                exogenous <- exogenous(model)
                 yind <- which(i==model$latent)
                 ind <- is.na(dblind[, model$blocks[[i]][l]])
-                indf <- complete.cases(plsm$factor_scores[, exogen])
+                indf <- complete.cases(plsm$factor_scores[, exogenous])
                 ind <- as.logical(ind*indf)
-                e <- plsm$factor_scores[ind, exogen, drop=FALSE] %*%
-                     plsm$total_effects[exogen, i, drop=FALSE] *
+                e <- plsm$factor_scores[ind, exogenous, drop=FALSE] %*%
+                     plsm$total_effects[exogenous, i, drop=FALSE] *
                      plsm$outer_loadings[model$blocks[[i]][l],i]
             }
             else{

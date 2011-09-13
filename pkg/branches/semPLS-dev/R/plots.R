@@ -51,7 +51,7 @@ densityplot.sempls <- function(x, data, use=c("fscores", "prediction", "residual
     else if(use=="residuals")  val <- residuals(x)
 
     Y <- data.frame(NULL)
-    exogenous <- exogen(x$model)
+    exogenous <- exogenous(x$model)
     for(i in x$model$latent){
         if(i %in% exogenous & use!="fscores") next
         tmp <- data.frame(value=val[,i], name=i)

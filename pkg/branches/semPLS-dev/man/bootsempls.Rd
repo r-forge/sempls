@@ -39,7 +39,7 @@ bootsempls(object, nboot=200, start=c("ones", "old"), method=
     The number of bootstrap replications; the default is \code{200}.
   }
   \item{start}{
-    A \code{character} value telling, how to initialise the
+    A \code{character} value defining the initialisation of
     outer weights. If
     \itemize{
      \item \code{start="ones"}, then the outer weights for each block are initialised by ones.

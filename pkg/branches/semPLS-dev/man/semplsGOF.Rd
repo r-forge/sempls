@@ -6,7 +6,24 @@
 \alias{qSquared}
 \alias{qSquared.sempls}
 \alias{print.qSquared}
-
+\alias{dgrho}
+\alias{dgrho.sempls}
+\alias{print.dgrho}
+\alias{comunality}
+\alias{comunality.sempls}
+\alias{print.comunality}
+\alias{comunality}
+\alias{comunality.sempls}
+\alias{print.comunality}
+\alias{redundancy}
+\alias{redundancy.sempls}
+\alias{print.redundancy}
+\alias{rSquared2}
+\alias{rSquared2.sempls}
+\alias{print.rSquared2}
+\alias{gof}
+\alias{gof.sempls}
+\alias{print.gof}
 
 \title{
 Goodness of fit measures for pls path models
@@ -23,6 +40,26 @@ qSquared(object, \ldots)
 \method{qSquared}{sempls}(object, d=NULL, impfun, dlines=TRUE,
          total=FALSE, \dots)
 \method{print}{qSquared}(x, na.print=".", digits=2, \ldots)
+
+dgrho(object, \ldots)
+\method{dgrho}{sempls}(object, \ldots)
+\method{print}{dgrho}(x, na.print=".", digits=2, \ldots)
+
+comunality(object, \ldots)
+\method{comunality}{sempls}(object, \ldots)
+\method{print}{comunality}(x, na.print=".", digits=2, \ldots)
+
+redundancy(object, \ldots)
+\method{redundancy}{sempls}(object, \ldots)
+\method{print}{redundancy}(x, na.print=".", digits=2, \ldots)
+
+rSquared2(object, \ldots)
+\method{rSquared2}{sempls}(object, na.rm=FALSE, \dots)
+\method{print}{rSquared2}(x, na.print=".", digits=2, \ldots)
+
+gof(object, \ldots)
+\method{gof}{sempls}(object, \ldots)
+\method{print}{gof}(x, na.print=".", digits=2, \ldots)
 }
 \arguments{
   \item{object}{
@@ -59,6 +96,10 @@ qSquared(object, \ldots)
   \item{digits}{
     minimal number of _significant_ digits, see \code{\link{print.default}}.
   }
+  %\item{justify}{
+  %  character indicating if strings should left- or
+  %  right-justified or left alone, passed to \code{format}.
+  %}
   \item{\dots}{
     Arguments to be passed down.
   }
@@ -86,12 +127,22 @@ rSquared(ecsi)
 ### Q-squared with omission distance d=4
 qSquared(ecsi, d=4)
 
-## get loadings and check for discriminant validity
-(l <- plsLoadings(ecsi))
-# outer loadings
-print(l, type="outer", digits=2)
-# outer loadings greater than 0.5
-print(l,type="outer", cutoff=0.5, digits=2)
-# cross loadings greater than 0.5
-print(ecsi, type="cross", cutoff=0.5, digits=2)
+### Dillon-Goldstein's rho (aka composite reliability)
+dgrho(ecsi)
+
+### Comunalities
+comunality(ecsi)
+
+### Redundancy
+redundancy(ecsi)
+
+### R-squared (normal + corrected)
+rSquared2(ecsi)
+
+### Goodness of fit
+gof(ecsi)
+
+### check for discriminant validity using loadings
+l <-plsLoadings(ecsi)
+print(l, type="discriminant", cutoff=0.5, reldiff=0.2)
 }

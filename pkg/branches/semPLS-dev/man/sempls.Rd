@@ -34,7 +34,7 @@ sempls(model, \ldots)
          scaled=TRUE, sum1=FALSE, E="A", pairwise=FALSE,
          method=c("pearson", "kendall", "spearman"),
          convCrit=c("relative", "square"),
-         silent=FALSE, \ldots)
+         verbose=TRUE, \ldots)
 
 \method{print}{sempls}(x, \ldots)
 \method{plot}{sempls}(x, \ldots)
@@ -127,8 +127,8 @@ plsLoadings(object)
       \item \code{"square"}.
     }
   }
-  \item{silent}{
-    Logical: If \code{TRUE} no status messages are printed.
+  \item{verbose}{
+    Logical: If \code{FALSE} no status messages are printed.
   }
   \item{object}{
     An object of class \code{sempls}.

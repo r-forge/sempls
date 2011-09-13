@@ -16,14 +16,15 @@
 \alias{addPath.plsm}
 \alias{removePath}
 \alias{removePath.plsm}
-\alias{exogen}
-\alias{endogen}
+\alias{exogenous}
+\alias{endogenous}
 \alias{reflective}
 \alias{formative}
 \alias{indicators}
 \alias{predecessors}
 \alias{successors}
-
+\alias{connected}
+\alias{acyclic}
 
 \title{
 Utility methods for \code{plsm} objects.
@@ -58,13 +59,15 @@ addPath(model, \ldots)
 removePath(model, \ldots)
 \method{removePath}{plsm}(model, from, to, \ldots)
 
-exogen(model)
-endogen(model)
+exogenous(model)
+endogenous(model)
 reflective(model)
 formative(model)
 indicators(model, LV)
 predecessors(model)
 successors(model)
+connected(model)
+acyclic(model)
 }
 \arguments{
   \item{model}{
@@ -128,10 +131,10 @@ successors(model)
 }
 
 \details{
-  \code{exogen} returns the exogenous latent variables contained in a path
+  \code{exogenous} returns the exogenous latent variables contained in a path
   model.
 
-  \code{endogen} returns the endogenous latent variables contained in a path
+  \code{endogenous} returns the endogenous latent variables contained in a path
   model.
 
   \code{reflective} returns the reflectively measured latent variables
@@ -148,6 +151,12 @@ successors(model)
 
   \code{successors} returns a list with the names of successors for
   each latent variable.
+
+  \code{connected} returns \code{TRUE} if the inner model is a connected
+  graph.
+
+  \code{acyclic} returns \code{TRUE} if the inner model is recursive,
+  thus represented by an acyclic graph.
 }
 
 \author{

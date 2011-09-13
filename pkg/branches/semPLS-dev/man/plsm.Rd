@@ -17,8 +17,8 @@
   represents the target of each path.
 }
 \usage{
-plsm(data, strucmod=NULL, measuremod=NULL, order=c("generic",
-  "alphabetical"), interactive=FALSE)
+plsm(data, strucmod, measuremod, order=c("generic",
+     "alphabetical"), interactive=FALSE)
 
 mvplot(model, \ldots)
 \method{mvplot}{plsm}(model, data, ask=TRUE, \ldots)
@@ -32,14 +32,14 @@ mvpairs(model, \ldots)
     A \code{data.frame} intendend to use for the fitting method, \code{sempls}.
   }
   \item{strucmod}{
-    A from-to-matrix representing the structural model. If
-    \code{NULL} the path to an .csv file representing the structural
-    model can be entered interactively.
+    Either a from-to-matrix representing the inner/structural model or
+    the path to an .csv file representing the inner/structural
+    model.
   }
   \item{measuremod}{
-    A from-to-matrix representing the measurement models. If
-    \code{NULL} the path to an .csv file representing the measurement
-    models can be entered interactively.
+    Either from-to-matrix representing the outer/measurement models or
+    the path to an .csv file representing the outer/measurement
+    models.
   }
   \item{order}{
      A \code{character} describing how to order the latent variables
@@ -57,10 +57,6 @@ mvpairs(model, \ldots)
   \item{model}{
     An object of class \code{plsm}.
   }
-%  \item{LV}{
-%    A character value naming a latent variable contained in the
-%    model.
-%  }
   \item{ask}{
     See \code{?par}
   }
@@ -112,6 +108,7 @@ ptf_Struc <- system.file("ECSIstrucmod.csv", package="semPLS")
 # getting the path to the .csv file representing the outer Models
 ptf_Meas <- system.file("ECSImeasuremod.csv", package="semPLS")
 
+
 sm <- as.matrix(read.csv(ptf_Struc))
 mm <- as.matrix(read.csv(ptf_Meas))
 data(mobi)
@@ -124,8 +121,8 @@ ECSI
 ECSI <- plsm(data=mobi)
 ECSI}
 
-exogen(ECSI)
-endogen(ECSI)
+exogenous(ECSI)
+endogenous(ECSI)
 reflective(ECSI)
 formative(ECSI)
 indicators(ECSI, "Image")

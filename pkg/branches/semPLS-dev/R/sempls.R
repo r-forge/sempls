@@ -6,7 +6,7 @@ sempls <- function(model, ...){
 sempls.plsm <-
 function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, E="A", pairwise=FALSE,
          method=c("pearson", "kendall", "spearman"),
-         convCrit=c("relative", "square"), silent=FALSE, ...){
+         convCrit=c("relative", "square"), verbose=TRUE, ...){
   method <- match.arg(method)
   convCrit <- match.arg(convCrit)
   result <- list(coefficients=NULL, path_coefficients=NULL,
@@ -15,7 +15,7 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, E="A", pairwi
                  blocks=NULL, factor_scores=NULL, data=NULL, scaled=scaled,
                  model=model, weighting_scheme=NULL, weights_evolution=NULL,
                  sum1=sum1, pairwise=pairwise, method=method, iterations=NULL,
-                 convCrit=convCrit, silent=silent, tolerance=tol, maxit=maxit, N=NULL,
+                 convCrit=convCrit, verbose=verbose, tolerance=tol, maxit=maxit, N=NULL,
                  incomplete=NULL, Hanafi=NULL)
   class(result) <- "sempls"
 
@@ -23,21 +23,21 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, E="A", pairwi
   data <- data[, model$manifest]
   N <- nrow(data)
   missings <- which(complete.cases(data)==FALSE)
-  if(length(missings)==0 & !silent){
+  if(length(missings)==0 & verbose){
     cat("All", N ,"observations are valid.\n")
     if(pairwise){
       pairwise <- FALSE
       cat("Argument 'pairwise' is reset to FALSE.\n")
     }
   }
-  else if(length(missings)!=0 & !pairwise & !silent){
+  else if(length(missings)!=0 & !pairwise & verbose){
     # Just keeping the observations, that are complete.
     data <- na.omit(data[, model$manifest])
     cat("Data rows:", paste(missings, collapse=", "),
         "\nare not taken into acount, due to missings in the manifest variables.\n",
         "Total number of complete cases:", N-length(missings), "\n")
   }
-  else if(!silent){
+  else if(verbose){
      cat("Data rows", paste(missings, collapse=", "),
          " contain missing values.\n",
          "Total number of complete cases:", N-length(missings), "\n")
@@ -104,7 +104,7 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, E="A", pairwi
   eval(plsLoop)
 
   ## print
-  if(converged & !silent){
+  if(converged & verbose){
       cat(paste("Converged after ", (i-1), " iterations.\n",
                 "Tolerance: ", tol ,"\n", sep=""))
       if (E=="A") cat("Scheme: centroid\n")

@@ -11,6 +11,12 @@ rSquared.sempls <- function(object, na.rm=FALSE, ...){
   R_squared[R_squared==0] <- NA
   R_squared <- as.matrix(R_squared)
   colnames(R_squared) <- "R-squared"
+  class(R_squared) <- "rSquared"
   return(R_squared)
+}
+
+print.rSquared <- function(x, na.print=".", digits=2, ...){
+  print.table(x, na.print=na.print, digits=digits, ...)
+  invisible(x)
 }
 

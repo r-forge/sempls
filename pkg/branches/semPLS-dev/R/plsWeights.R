@@ -3,7 +3,7 @@ plsWeights <- function(object){
   UseMethod("plsWeights", object)
 }
 
-plsWeights.sempls <- function(object, ...)
+plsWeights.sempls <- function(object)
 {
   plsWeights <- object$outer_weights
   class(plsWeights) <- c("plsWeights")

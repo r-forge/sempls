@@ -1,9 +1,11 @@
-# Input: sempls-Object
+qSquared <- function(object, ...){
+  UseMethod("qSquared")
+}
+
 # d: ommision distance
 # dlines: TRUE => leaving out the same observation for the MV-Blocks
 # Note: if total=TRUE, total_effects are used, else the path_coefficients
-qSquared <- function(object, d=NULL, impfun, dlines=TRUE, total=FALSE, ...){
-    #if(!exists("impfun", mode="function")) impfun <- function(data) return(data)
+qSquared.sempls <- function(object, d=NULL, impfun, dlines=TRUE, total=FALSE, ...){
     if(missing(impfun)) impfun <- function(data) return(data)
     data <- object$data
     model <- object$model
@@ -62,7 +64,7 @@ qSquared <- function(object, d=NULL, impfun, dlines=TRUE, total=FALSE, ...){
             d <- n
             if(!dlines){
                 dlines <- TRUE
-                cat("Set argument 'dlines' to:", dlines, "\n")
+                message("Set argument 'dlines' to:", dlines, "\n")
             }
         }
         E <- vector("numeric", length=d)
@@ -85,6 +87,7 @@ qSquared <- function(object, d=NULL, impfun, dlines=TRUE, total=FALSE, ...){
         }
         qSquared[i,] <- 1 - sum(E)/sum(O)
     }
+    class(qSquared) <- "qSquared"
     return(qSquared)
 }
 
@@ -116,4 +119,11 @@ ommissionTest <- function(object, drange, ...){
         }
     }
     return(omt)
+}
+
+
+
+print.qSquared <- function(x, na.print=".", digits=2, ...){
+  print.table(x, na.print=na.print, digits=digits, ...)
+  invisible(x)
 }

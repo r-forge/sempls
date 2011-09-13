@@ -2,9 +2,22 @@
 \Rdversion{1.1}
 \alias{sempls}
 \alias{sempls.plsm}
-\alias{plot.sempls}
 \alias{print.sempls}
+\alias{plot.sempls}
 \alias{densityplot.sempls}
+\alias{pathCoeff}
+\alias{pathCoeff.sempls}
+\alias{print.pathCoeff}
+\alias{totalEffects}
+\alias{totalEffects.sempls}
+\alias{print.totalEffects}
+\alias{plsWeights}
+\alias{plsWeights.sempls}
+\alias{print.plsWeights}
+\alias{plsLoadings}
+\alias{plsLoadings.sempls}
+\alias{print.plsLoadings}
+
 
 \title{
 Structural Equation Modeling by Partial Least Squares
@@ -15,22 +28,35 @@ Structural Equation Modeling by Partial Least Squares
   requires no distributional assumptions.
 }
 \usage{
-sempls(model, ...)
+sempls(model, \ldots)
 
 \method{sempls}{plsm}(model, data, maxit=20, tol=1e-7,
-         scaled=TRUE,sum1=FALSE, E="A", pairwise=FALSE, method=c("pearson",
-         "kendall", "spearman"), convCrit=c("relative", "square"), silent=FALSE,
-         \ldots)
+         scaled=TRUE, sum1=FALSE, E="A", pairwise=FALSE,
+         method=c("pearson", "kendall", "spearman"),
+         convCrit=c("relative", "square"),
+         silent=FALSE, \ldots)
 
-\method{print}{sempls}(x, what=c("coefficients", "loadings", "weights",
-    "path_coefficients", "total_effects"),
-    type=c("outer", "cross", "discriminant"),
-    cutoff=NULL, reldiff=0, na.print=".", \ldots)
-
+\method{print}{sempls}(x, \ldots)
 \method{plot}{sempls}(x, \ldots)
-
 \method{densityplot}{sempls}(x, data, use=c("fscores", "prediction",
             "residuals"), \ldots)
+
+pathCoeff(object, \ldots)
+\method{pathCoeff}{sempls}(object, \ldots)
+\method{print}{pathCoeff}(x, na.print=".", digits=2, \ldots)
+
+totalEffects(object)
+\method{totalEffects}{sempls}(object)
+\method{print}{totalEffects}(x, na.print=".", digits=2, \ldots)
+
+plsWeights(object)
+\method{plsWeights}{sempls}(object)
+\method{print}{plsWeights}(x, na.print=".", digits=2, \ldots)
+
+plsLoadings(object)
+\method{plsLoadings}{sempls}(object)
+\method{print}{plsLoadings}(x, type=c("discriminant", "outer", "cross"),
+     cutoff=NULL, reldiff=0.2, na.print=".", digits=2, \ldots)
 }
 \arguments{
   \item{model}{
@@ -41,7 +67,7 @@ sempls(model, ...)
     Arguments to be passed down.
   }
   \item{data}{
-    A \code{data.frame} containing the the observed variables
+    A \code{data.frame} containing the observed variables
     (MVs). The storage mode for all the MVs included in the model must
     be \code{numeric}.
   }
@@ -104,51 +130,56 @@ sempls(model, ...)
   \item{silent}{
     Logical: If \code{TRUE} no status messages are printed.
   }
-  \item{x}{
-    An object of class \code{sempls} returned by the
-    \code{sempls} method.
-  }
-  \item{what}{
-    A \code{character} telling which results to print. Possible options
-    are:
-    \itemize{
-      \item \code{"coefficients"}, the default, prints all the model
-      coefficients, outer loadings (for reflective MVs), outer weights
-      (for formative MVs) and the path coefficients into one table.
-      \item \code{"loadings"}, prints only the loadings into a tabualar
-      layout with different options specified in the arguments:
-      \code{type}, \code{cutoff}, \code{reldiff} and \code{na.print}.
-      \item \code{"weights"}, prints only the weihtss into a tabualar
-      layout.
-      \item \code{"path_coefficients"}, prints only the path
-      coefficients into a tabualar layout.
-      \item \code{"total_effects"}, prints only the total effects into a
-      tabualar layout.
+  \item{object}{
+    An object of class \code{sempls}.
     }
+  \item{x}{
+    An object of the according class.% \code{sempls} returned by the
+    %\code{sempls} method.
   }
+  % \item{what}{
+  %   A \code{character} telling which results to print. Possible options
+  %   are:
+  %   \itemize{
+  %     \item \code{"coefficients"}, the default, prints all the model
+  %     coefficients, outer loadings (for reflective MVs), outer weights
+  %     (for formative MVs) and the path coefficients into one table.
+  %     \item \code{"loadings"}, prints only the loadings into a tabualar
+  %     layout with different options specified in the arguments:
+  %     \code{type}, \code{cutoff}, \code{reldiff} and \code{na.print}.
+  %     \item \code{"weights"}, prints only the weihtss into a tabualar
+  %     layout.
+  %     \item \code{"path_coefficients"}, prints only the path
+  %     coefficients into a tabualar layout.
+  %     \item \code{"total_effects"}, prints only the total effects into a
+  %     tabualar layout.
+  %   }
+  %}
   \item{type}{
     If the argument \code{what="loadings"}, \code{type} describes the
     loadings to be extracted -- those are:
     \itemize{
-      \item \code{"outer"} for the outer loadings, the default,
-      \item \code{"cross"} for the cross loadings and
-      \item \code{"discriminant"} contrasts outer against cross
-      loadings to check for discrimant validity of the measurement model.
+      \item \code{"discriminant"}, the default, contrasts outer against cross
+      loadings to check for discrimant validity of the measurement model,
+      \item \code{"outer"} for the outer loadings and
+      \item \code{"cross"} for the cross loadings.
     }
   }
   \item{cutoff}{
     A numerical value at which to cutoff the loadings -- this means
-    loadings smaller than the cutoff value will not be printed. This
-    argument is only effective if \code{what="loadings"}.
+    loadings smaller than the cutoff value will not be printed.
   }
   \item{reldiff}{
     The argument is only effectiv when \code{type="discriminant"}. It is
     a \code{numeric} value, specifying the relative difference between
     outer and cross loadings at which cross loadings will still be
-    printed. This argument is only effective if \code{what="loadings"}.
+    printed.
   }
   \item{na.print}{
     A \code{character} substituting values not to be printed.
+  }
+  \item{digits}{
+    minimal number of _significant_ digits, see \code{\link{print.default}}.
   }
   \item{use}{
     The values for which the density plots are created. If
@@ -220,30 +251,34 @@ data(ECSImobi)
 ecsi <- sempls(model=ECSImobi, data=mobi, E="C")
 ecsi
 
+## create plots
 densityplot(ecsi)
 densityplot(ecsi, use="prediction")
 densityplot(ecsi, use="residuals")
 
+## Values of 'sempls' objects
 names(ecsi)
 ecsi$outer_weights
 ecsi$outer_loadings
 ecsi$path_coefficients
 ecsi$total_effects
 
-### using the print method
-# outer weights
-print(ecsi, what="weights", digits=2)
+
+### using convenience methods to sempls results
+## path coefficients
+pathCoeff(ecsi)
+
+## total effects
+totalEffects(ecsi)
+
+## get loadings and check for discriminant validity
+(l <- plsLoadings(ecsi))
+# outer loadings
+print(l, type="outer", digits=2)
 # outer loadings greater than 0.5
-print(ecsi, what="loadings", type="outer", cutoff=0.5, digits=2)
+print(l,type="outer", cutoff=0.5, digits=2)
 # cross loadings greater than 0.5
-print(ecsi, what="loadings", type="cross", cutoff=0.5, digits=2)
-# check for discriminant validity
-print(ecsi, what="loadings", type="discriminant", cutoff=0.5, reldiff=0.2,
-digits=2)
-# path coefficients
-print(ecsi, what="path_coefficients", digits=2)
-# total effects
-print(ecsi, what="total_effects", digits=2)
+print(ecsi, type="cross", cutoff=0.5, digits=2)
 
 
 ### R-squared

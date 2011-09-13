@@ -4,7 +4,7 @@ pathCoeff <- function(object, ...){
 
 
 # Calculates the matrix of path coefficients.
-pathCoeff.default <- function(model, factor_scores, method, pairwise){
+pathCoeff.default <- function(model, factor_scores, method, pairwise, ...){
   ifelse(pairwise, use <- "pairwise.complete.obs", use <- "everything")
   latent <- model$latent             # names of latent variables
   strucmod <- model$strucmod         # names of manifest variables
@@ -30,7 +30,7 @@ pathCoeff.default <- function(model, factor_scores, method, pairwise){
   return(pC)
 }
 
-pathCoeff.sempls <- function(object){
+pathCoeff.sempls <- function(object, ...){
   coeffs <- object$path_coefficients
   class(coeffs) <- "pathCoeff"
   return(coeffs)

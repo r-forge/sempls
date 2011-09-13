@@ -24,7 +24,7 @@ Armin Monecke \email{armin.monecke@stat.uni-muenchen.de}
 }
 
 \seealso{
-  \code{\link{plsm}}, \code{\link{sempls}}}
+  \code{\link{plsm}}, \code{\link{sempls}}
 }
 
 \examples{
@@ -53,7 +53,7 @@ matplot(ex1A$Hanafi[,"iteration"], 2*ex1A$Hanafi[,"f"],
         main="Hanafi 2007: Example 1\ncentroid scheme",
         ylab="Criterion f", xlab="Iteration")
 
-legend(x=17, y=0.5, legend="Lohmöller's procedure", lty=1, pch=3)
+legend(x=17, y=0.5, legend="Lohm{\"o}ller's procedure", lty=1, pch=3)
 
 # check the evolution of outer weights 
 plot(ex1A, xlim=c(0, 30))
@@ -69,7 +69,7 @@ matplot(ex1B$Hanafi[,"iteration"], 2*ex1B$Hanafi[,"g"],
         main="Hanafi 2007: Example 1\nfactorial scheme",
         ylab="Criterion g", xlab="Iteration")
 
-legend(x=17, y=0.5, legend="Lohmöller's procedure", lty=1, pch=3)
+legend(x=17, y=0.5, legend="Lohm{\"o}ller's procedure", lty=1, pch=3)
 
 
 ### 2nd Example: the 11 MVs relate to 5 formative LVs
@@ -93,9 +93,9 @@ matplot(ex2A$Hanafi[,"iteration"], 2*ex2A$Hanafi[,"f"],
         main="Hanafi 2007: Example 2\ncentroid scheme",
         ylab="Criterion f", xlab="Iteration")
 
-legend(x=6, y=1.5, legend="Lohmöller's procedure", lty=1, pch=3)
+legend(x=6, y=1.5, legend="Lohm{\"o}ller's procedure", lty=1, pch=3)
 
 # check the evolution of outer weights 
 plot(ex2A, xlim=c(0, 10))
 }
-\keyword{}
+%\keyword{}

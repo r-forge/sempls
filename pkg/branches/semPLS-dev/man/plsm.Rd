@@ -1,12 +1,6 @@
 \name{plsm}
 \Rdversion{1.1}
 \alias{plsm}
-\alias{exogen}
-\alias{endogen}
-\alias{reflective}
-\alias{formative}
-\alias{indicators}
-\alias{predecessors}
 \alias{mvplot}
 \alias{mvpairs}
 \alias{mvplot.plsm}
@@ -25,13 +19,6 @@
 \usage{
 plsm(data, strucmod=NULL, measuremod=NULL, order=c("generic",
   "alphabetical"), interactive=FALSE)
-
-exogen(model)
-endogen(model)
-reflective(model)
-formative(model)
-indicators(model, LV)
-predecessors(model)
 
 mvplot(model, \ldots)
 \method{mvplot}{plsm}(model, data, ask=TRUE, \ldots)
@@ -70,10 +57,10 @@ mvpairs(model, \ldots)
   \item{model}{
     An object of class \code{plsm}.
   }
-  \item{LV}{
-    A character value naming a latent variable contained in the
-    model
-  }
+%  \item{LV}{
+%    A character value naming a latent variable contained in the
+%    model.
+%  }
   \item{ask}{
     See \code{?par}
   }
@@ -108,24 +95,6 @@ mvpairs(model, \ldots)
     A \code{list} naming the MVs belonging to each LV's block
     and telling their measurement mode.
   }
-
-  \code{exogen} returns the exogenous latent variables contained in a path
-  model.
-
-  \code{endogen} returns the endogenous latent variables contained in a path
-  model.
-
-  \code{reflective} returns the reflectively measured latent variables
-  contained in a path model.
-
-  \code{formative} returns the formatively measured latent variables
-  contained in a path model.
-
-  \code{indicators} returns the index or observed variables related to
-  the given latent variable.
-
-  \code{predecessors} returns a list with the names of predecessors for
-  each latent variable.
 }
 
 \author{

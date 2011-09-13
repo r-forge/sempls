@@ -32,17 +32,19 @@ predict.sempls <- function(object, newdata, what=c("LVs", "MVs"), scale=c("scale
     # LVs
     if(what=="LVs" & total){
       Y_hat <- matrix(NA, nrow=nrow(factor_scores), ncol=ncol(object$factor_scores))
-      # Only exogenous LV can be used to predict 
+      # Only exogenous LVs can be used to predict 
       Y_hat[!fsMissing,] <- factor_scores[!fsMissing, exLVs, drop=FALSE] %*%
                             object$total_effects[exLVs,, drop=FALSE]
+      colnames(Y_hat) <- colnames(object$factor_scores)
       return(Y_hat)
     }
 
     if(what=="LVs" & !total){
       Y_hat <- matrix(NA, nrow=nrow(object$factor_scores), ncol=ncol(object$factor_scores))
-      # Only exogenous LV can be used to predict 
+      # all LVs can be used to predict 
       Y_hat[!fsMissing,] <- factor_scores[!fsMissing, , drop=FALSE] %*%
                             object$path_coefficients[, , drop=FALSE]
+      colnames(Y_hat) <- colnames(object$factor_scores)
       return(Y_hat)
     }
     
@@ -55,7 +57,7 @@ predict.sempls <- function(object, newdata, what=c("LVs", "MVs"), scale=c("scale
                              object$total_effects[exLVs,, drop=FALSE] %*%
                              t(object$outer_loadings)
       if(scale=="original"){mv_hat <- rescale(data, mv_hat)}
-      result <- mv_hat                       
+      result <- mv_hat
       return(result)
     }
 

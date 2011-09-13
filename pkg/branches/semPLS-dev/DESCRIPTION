@@ -2,11 +2,11 @@ Package: semPLS
 Type: Package
 Title: Structural Equation Modeling Using Partial Least Squares
 Version: 1.1-0
-Date: 2011-07-14
+Date: 2011-09-12
 Author: Armin Monecke
 Maintainer: Armin Monecke <armin.monecke@stat.uni-muenchen.de>
 Description: Fits structural equation models using partial least squares (PLS). The PLS approach is referred to as 'soft-modeling' technique requiring no distributional assumptions on the observed data.
 License: GPL-2
 Depends: lattice
-Suggests: XML, boot, sem, colorspace, ggplot2
+Suggests: XML, boot, sem, colorspace, ggplot2, mvtnorm, orddata
 LazyLoad: yes

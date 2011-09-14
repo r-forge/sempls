@@ -294,11 +294,11 @@ pathDiagram(ecsi, file="ecsiPLS1", edge.labels="both",
 # include R-squared values
 pathDiagram(ecsi, file="ecsiPLS2", edge.labels="both",
             output.type="graphics", digits=3, graphics.fmt = "pdf",
-            rSquared=Rsquared)
+            rSquared=rSquared(ecsi))
 
 # only the structural model
 pathDiagram(ecsi, file="ecsiPLS3", edge.labels="both",
             output.type="graphics", digits=3, graphics.fmt = "pdf",
-            rSquared=Rsquared, full=FALSE)
+            rSquared=rSquared(ecsi), full=FALSE)
 }
 }

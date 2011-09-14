@@ -118,8 +118,9 @@ ECSI
 
 ### Interactive mode
 \dontrun{
-ECSI <- plsm(data=mobi)
-ECSI}
+ECSI <- plsm(data=mobi, interactive=TRUE)
+ECSI
+}
 
 exogenous(ECSI)
 endogenous(ECSI)

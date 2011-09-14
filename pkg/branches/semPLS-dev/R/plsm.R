@@ -6,15 +6,24 @@ plsm <- function(data, strucmod, measuremod, order=c("generic", "alphabetical"),
   # interactive: using 'edit'
   if(interactive & missing(strucmod)){
     cat("Edit the structural model!\n")
-    strucmod <- matrix(ncol=2)
-    colnames(strucmod) <- c("source", "target")
+    strucmod <- matrix("Enter!", nrow=1, ncol=2, dimnames=list(NULL, c('source', 'target')))
     strucmod <- edit(strucmod, title="Edit the structural model!")
+    cat("Call for structural model:\n",
+        paste("strucmod <- matrix(c(",
+              paste(as.vector(t(strucmod)), collapse=", "),
+              "), ncol=2, byrow=TRUE, dimnames=list(NULL, c('source', 'target')))", sep=""),
+        "\n", sep="")
   }
   if(interactive & missing(measuremod)){
     cat("Edit the measurement model!\n")
-    measuremod <- matrix(ncol=2)
-    colnames(measuremod) <- c("source", "target")
+    measuremod <- matrix("Enter!", nrow=1, ncol=2,
+                         dimnames=list(NULL, c('source', 'target')))
     measuremod <- edit(measuremod, title="Edit the measurement model!")
+    cat("Call for measurement model:\n",
+        paste("measuremod <- matrix(c(",
+              paste(as.vector(t(measuremod)), collapse=", "),
+              "), ncol=2, byrow=TRUE, dimnames=list(NULL, c('source', 'target')))", sep=""),
+        "\n", sep="")
   }
 
   if(!is.matrix(strucmod)){

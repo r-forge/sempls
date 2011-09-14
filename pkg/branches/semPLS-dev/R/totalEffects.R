@@ -25,4 +25,3 @@ print.totalEffects <- function(x, na.print=".", digits=2, ...){
   print.table(coeffs, na.print=na.print, digits=digits, ...)
   invisible(x)
 }
-  

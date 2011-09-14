@@ -1,37 +1,39 @@
 plsm <- function(data, strucmod, measuremod, order=c("generic", "alphabetical"), interactive=FALSE)
 {
-  if(!is.matrix(strucmod) & !interactive){
-    #cat("Choose a .csv file for the structural model!\n")
-    strucmod <- as.matrix(read.csv(strucmod))
-  }
-  if(!is.matrix(measuremod) & !interactive){
-    #cat("Choose a .csv file for the measurement model!\n")
-    measuremod <- as.matrix(read.csv(measuremod))
-  }
+  if(class(data)!="data.frame")
+    stop("The argument 'data' must be of class 'data.frame'.")
+
   # interactive: using 'edit'
-  if(interactive){
+  if(interactive & missing(strucmod)){
     cat("Edit the structural model!\n")
     strucmod <- matrix(ncol=2)
     colnames(strucmod) <- c("source", "target")
     strucmod <- edit(strucmod, title="Edit the structural model!")
   }
-  if(is.null(measuremod) & interactive){
+  if(interactive & missing(measuremod)){
     cat("Edit the measurement model!\n")
     measuremod <- matrix(ncol=2)
     colnames(measuremod) <- c("source", "target")
     measuremod <- edit(measuremod, title="Edit the measurement model!")
   }
 
+  if(!is.matrix(strucmod)){
+    #cat("Choose a .csv file for the structural model!\n")
+    strucmod <- as.matrix(read.csv(strucmod))
+  }
+  if(!is.matrix(measuremod)){
+    #cat("Choose a .csv file for the measurement model!\n")
+    measuremod <- as.matrix(read.csv(measuremod))
+  }
+  
   if(ncol(strucmod)!=2 || mode(strucmod)!="character" || class(strucmod)!="matrix")
-    stop("The argument 'strucmod' must be a two column character matrix!")
+    stop("The argument 'strucmod' must be a two column character matrix.")
   if(ncol(measuremod)!=2 || mode(measuremod)!="character" || class(measuremod)!="matrix")
-    stop("The argument 'measuremod' must be a two column character matrix!")
-  if(class(data)!="data.frame")
-    stop("The argument 'data' must be of class 'data.frame'!")
-
+    stop("The argument 'measuremod' must be a two column character matrix.")
+    
   latent <- unique(as.vector(strucmod))
   if(any(latent %in% colnames(data)))
-     stop("The latent variables are not allowed to coincide with names of observed variables!")
+     stop("The latent variables are not allowed to coincide with names of observed variables.")
   manifest <- sort(setdiff(as.vector(measuremod), latent))
 
   if(!all(manifest %in% colnames(data)))

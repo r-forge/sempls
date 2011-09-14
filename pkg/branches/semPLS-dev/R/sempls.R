@@ -201,6 +201,6 @@ plsLoop <- expression({
 
 # print method
 print.sempls <- function(x, ...){
-  print(x$coefficients)
+  print(x$coefficients, ...)
   invisible(x)
 }

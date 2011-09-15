@@ -68,9 +68,20 @@ plsm <- function(data, strucmod, measuremod, order=c("generic", "alphabetical"),
   # build blocks of manifest variables (including 'measurement mode')
   blocks <- block(latent, manifest, measuremod)
 
-  # Ordering of MVs
+  # Ordering of MVs and measuremod
   MVs <- NULL
-  for(i in 1:length(blocks)) MVs <- append(MVs, blocks[[i]])
+  mm <- NULL
+  for(i in names(blocks)){
+    MVs <- append(MVs, blocks[[i]])
+    if(attr(blocks[[i]], "mode") == "A"){
+      mm <- rbind(mm, (cbind(i, blocks[[i]])))
+    }
+    if(attr(blocks[[i]], "mode") == "B"){
+      mm <- rbind(mm, (cbind(blocks[[i]], i)))
+    }
+  }
+  dimnames(mm) <- dimnames(measuremod)
+  measuremod <- mm
 
   result <- list()
   result$latent <- latent

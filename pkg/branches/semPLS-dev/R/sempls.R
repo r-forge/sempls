@@ -200,7 +200,7 @@ plsLoop <- expression({
 })
 
 # print method
-print.sempls <- function(x, ...){
-  print(x$coefficients, ...)
+print.sempls <- function(x, digits=2, ...){
+  print(x$coefficients, digits=digits, ...)
   invisible(x)
 }

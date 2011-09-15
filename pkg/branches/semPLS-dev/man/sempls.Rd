@@ -36,7 +36,7 @@ sempls(model, \ldots)
          convCrit=c("relative", "square"),
          verbose=TRUE, \ldots)
 
-\method{print}{sempls}(x, \ldots)
+\method{print}{sempls}(x, digits=2, \ldots)
 \method{plot}{sempls}(x, \ldots)
 \method{densityplot}{sempls}(x, data, use=c("fscores", "prediction",
             "residuals"), \ldots)

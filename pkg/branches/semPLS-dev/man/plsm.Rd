@@ -91,6 +91,9 @@ mvpairs(model, \ldots)
     A \code{list} naming the MVs belonging to each LV's block
     and telling their measurement mode.
   }
+  \item{order}{
+    See armguments section.
+  }
 }
 
 \author{

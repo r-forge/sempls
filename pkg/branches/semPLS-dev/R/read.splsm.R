@@ -1,4 +1,5 @@
-# Method to import a SmartPLS XML  model specification file: .splsm
+### moved to obsolet: 2011-09-15
+### Method to import a SmartPLS XML  model specification file: .splsm
 # Uses: 'path', 'order', 'innerW', 'initM1', 'block'
 read.splsm <-
 function(file=character(), order=c("generic", "alphabetical")){
@@ -29,7 +30,7 @@ function(file=character(), order=c("generic", "alphabetical")){
   # structural model IDs
   smID <- with(connections, connections[sourceID %in% id1 & targetID %in% id1,])
 
-  # pahtes with names only for the structural model
+  # pathes with names only for the structural model
   sm <-  path(variables, smID)
 
   # measurement model IDs

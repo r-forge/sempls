@@ -26,10 +26,12 @@
 \alias{print.gof}
 
 \title{
-Goodness of fit measures for pls path models
+Quality Indices and Goodness of fit measures for pls path models
 }
 \description{
-  More detailed description.
+  A collection of method to validate the goodness of the model. Since
+  there is no well identified global optimization criterion each part of
+  the model needs to be validated.
 }
 \usage{
 rSquared(object, \ldots)
@@ -108,6 +110,14 @@ gof(object, \ldots)
 \value{
   Most GOF methods return a column vector with the names of the variables as
   rows and the respective measure as column.
+}
+
+\references{
+  Esposito Vinzi V., Trinchera L., Amato S. (2010). PLS Path Modeling: From Foundations to Recent
+  Developments and Open Issues for Model Assessment and Improvement. In
+  Esposito Vinzi V., Chin W.W., Henseler J., Wang H.F. (eds.), Handbook of Partial Least Squares: Concepts,
+  Methods and Applications in Marketing and Related Fields, chapter 2. Springer-Verlag
+  Berlin Heidelberg.
 }
 
 \author{

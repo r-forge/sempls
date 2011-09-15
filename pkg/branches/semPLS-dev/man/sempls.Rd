@@ -43,20 +43,20 @@ sempls(model, \ldots)
 
 pathCoeff(object, \ldots)
 \method{pathCoeff}{sempls}(object, \ldots)
-\method{print}{pathCoeff}(x, na.print=".", digits=2, \ldots)
+\method{print}{pathCoeff}(x, na.print=".", digits=2, abbreviate=FALSE, \ldots)
 
 totalEffects(object)
 \method{totalEffects}{sempls}(object)
-\method{print}{totalEffects}(x, na.print=".", digits=2, \ldots)
+\method{print}{totalEffects}(x, na.print=".", digits=2, abbreviate=FALSE,\ldots)
 
 plsWeights(object)
 \method{plsWeights}{sempls}(object)
-\method{print}{plsWeights}(x, na.print=".", digits=2, \ldots)
+\method{print}{plsWeights}(x, na.print=".", digits=2, abbreviate=FALSE, \ldots)
 
 plsLoadings(object)
 \method{plsLoadings}{sempls}(object)
 \method{print}{plsLoadings}(x, type=c("discriminant", "outer", "cross"),
-     cutoff=NULL, reldiff=0.2, na.print=".", digits=2, \ldots)
+     cutoff=NULL, reldiff=0.2, na.print=".", digits=2, abbreviate=FALSE, \ldots)
 }
 \arguments{
   \item{model}{
@@ -188,6 +188,10 @@ plsLoadings(object)
       \item \code{"prediction"}: the estimated factor scores are used,
       \item \code{"residuals"}: the residuals are used.
     }
+  }
+  \item{abbreviate}{
+    A logical indicating whether dimnames should be abbreviated. For
+    Details see \code{\link{abbreviate}}. The default is \code{FALSE}.
   }
 %  \item{main, sub}{Graphical parameters.}
 }

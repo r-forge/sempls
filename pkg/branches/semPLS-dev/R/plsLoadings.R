@@ -13,7 +13,8 @@ plsLoadings.sempls <- function(object)
 }
 
 print.plsLoadings <- function(x, type=c("discriminant", "outer", "cross"),
-                              cutoff=NULL, reldiff=0.2, na.print=".", digits=2, ...)
+                              cutoff=NULL, reldiff=0.2, na.print=".", digits=2,
+                              abbreviate=FALSE,...)
 {
   type <- match.arg(type)
   # to check discriminant validity
@@ -27,6 +28,7 @@ print.plsLoadings <- function(x, type=c("discriminant", "outer", "cross"),
     if(!is.null(cutoff)) cross[cross < cutoff] <- NA
     mind <- cross <= (maxv - reldiff * maxv)
     cross[mind] <- NA
+    if(abbreviate) dimnames(cross) <- lapply(dimnames(cross), abbreviate, ...)
     print.table(cross, na.print=na.print, digits=digits, ...)
     invisible(x)
   }

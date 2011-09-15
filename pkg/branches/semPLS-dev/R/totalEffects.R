@@ -19,9 +19,10 @@ totalEffects.sempls <- function(object){
   return(coeffs)
 }
 
-print.totalEffects <- function(x, na.print=".", digits=2, ...){
+print.totalEffects <- function(x, na.print=".", digits=2, abbreviate=FALSE, ...){
   coeffs <- x
   coeffs[coeffs==0] <- NA
+  if(abbreviate) dimnames(coeffs) <- lapply(dimnames(coeffs), abbreviate, ...)
   print.table(coeffs, na.print=na.print, digits=digits, ...)
   invisible(x)
 }

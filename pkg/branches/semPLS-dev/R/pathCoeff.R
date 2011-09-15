@@ -36,9 +36,10 @@ pathCoeff.sempls <- function(object, ...){
   return(coeffs)
 }
 
-print.pathCoeff <- function(x, na.print=".", digits=2, ...){
+print.pathCoeff <- function(x, na.print=".", digits=2, abbreviate=FALSE, ...){
   pathCoeff <- x
   pathCoeff[pathCoeff==0] <- NA
+  if(abbreviate) dimnames(pathCoeff) <- lapply(dimnames(pathCoeff), abbreviate, ...)
   print.table(pathCoeff, na.print=na.print, digits=digits, ...)
   invisible(x)
 }

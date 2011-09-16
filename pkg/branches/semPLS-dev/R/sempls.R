@@ -83,7 +83,7 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, wscheme="cent
 
   #############################################
   # Select the function according to the weighting scheme
-  if(wcheme %in% c("A", "centroid")) {
+  if(wscheme %in% c("A", "centroid")) {
     innerWe <- centroid
     result$weighting_scheme <- "centroid"
   }

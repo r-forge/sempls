@@ -172,7 +172,7 @@ data(mobi)
 data(ECSIsm)
 data(ECSImm)
 
-ECSI <- plsm(data=mobi, strucmod=ECSIsm, measruemod=ECSImm)
+ECSI <- plsm(data=mobi, strucmod=ECSIsm, measuremod=ECSImm)
 
 ### Some sense free examples
 ECSI[["blocks"]]["Expectation"]

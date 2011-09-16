@@ -1,5 +1,6 @@
 \name{semplsGOF}
 \Rdversion{1.1}
+\alias{semplsGOF}
 \alias{rSquared}
 \alias{rSquared.sempls}
 \alias{print.rSquared}

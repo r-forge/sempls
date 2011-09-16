@@ -16,12 +16,12 @@ bootsempls(object, nboot=200, start=c("ones", "old"), method=
             c("ConstructLevelChanges", "IndividualSignChanges",
             "Standard"), verbose=TRUE, strata, \ldots)
 
-\method{print}{bootsempls}(x, digits=getOption("digits"), \ldots)
+\method{print}{bootsempls}(x, digits=3, \ldots)
 
 \method{summary}{bootsempls}(object, type=c("perc", "bca", "norm", "basic", "none"),
         level=0.95, \ldots)
 
-\method{print}{summary.bootsempls}(x, digits = getOption("digits"), \ldots)
+\method{print}{summary.bootsempls}(x, na.print, digits = 3, \ldots)
 
 \method{densityplot}{bootsempls}(x, data, pattern="beta", subset=NULL, \ldots)
 
@@ -70,6 +70,9 @@ bootsempls(object, nboot=200, start=c("ones", "old"), method=
   \item{x}{
     An object of class \code{bootsempls} and
     \code{summary.bootsempls} respectively.
+  }
+  \item{na.print}{
+    A \code{character} substituting values not to be printed.
   }
   \item{digits}{
     Controls the number of digits to print.

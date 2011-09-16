@@ -78,7 +78,7 @@ bootsempls <- function(object, nboot=200, start=c("ones", "old"),
 }
 
 
-print.bootsempls <- function(x, digits = getOption("digits"), ...){
+print.bootsempls <- function(x, digits = 3, ...){
     t <- x$t
     t0 <- x$t0
     result <- data.frame("Estimate"=t0, "Bias"=colMeans(t, ...) - t0,
@@ -87,7 +87,7 @@ print.bootsempls <- function(x, digits = getOption("digits"), ...){
     cat("Call: ")
     dput(x$call)
     cat("\n")
-    print(result, digits=digits)
+    print(result, digits=digits, ...)
     invisible(x)
 }
 
@@ -135,7 +135,7 @@ summary.bootsempls <- function(object,
 }
 
 
-print.summary.bootsempls <- function(x, digits = getOption("digits"), ...){
+print.summary.bootsempls <- function(x, na.print=".", digits = 3, ...){
     cat("Call: ")
     dput(x$call)
     cat("\n")
@@ -143,7 +143,9 @@ print.summary.bootsempls <- function(x, digits = getOption("digits"), ...){
         cat(paste("Lower and upper limits are for the", 100*x$level,
             "percent", x$type, "confidence interval\n\n"))
         }
-    print(x$table, digits=digits)
+    xChar <- format(x$table, digits=digits, ...)
+    xChar[is.na(x$table)] <- na.print
+    print(xChar, ...)
     invisible(return(x))
 }
 

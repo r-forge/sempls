@@ -4,7 +4,7 @@ sempls <- function(model, ...){
 }
 
 sempls.plsm <-
-function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, E="A", pairwise=FALSE,
+function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, wscheme="centroid", pairwise=FALSE,
          method=c("pearson", "kendall", "spearman"),
          convCrit=c("relative", "square"), verbose=TRUE, ...){
   method <- match.arg(method)
@@ -83,15 +83,15 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, E="A", pairwi
 
   #############################################
   # Select the function according to the weighting scheme
-  if(E=="A") {
+  if(wcheme %in% c("A", "centroid")) {
     innerWe <- centroid
     result$weighting_scheme <- "centroid"
   }
-  else if(E=="B") {
+  else if(wscheme %in% c("B", "factorial")) {
     innerWe <- factorial
     result$weighting_scheme <- "factorial"
   }
-  else if(E=="C") {
+  else if(wscheme %in% c("C", "pw", "pathWeighting")) {
     innerWe <- pathWeighting
     result$weighting_scheme <- "path weighting"
   }
@@ -107,9 +107,9 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, E="A", pairwi
   if(converged & verbose){
       cat(paste("Converged after ", (i-1), " iterations.\n",
                 "Tolerance: ", tol ,"\n", sep=""))
-      if (E=="A") cat("Scheme: centroid\n")
-      if (E=="B") cat("Scheme: factorial\n")
-      if (E=="C") cat("Scheme: path weighting\n")
+      if (wscheme %in% c("A", "centroid")) cat("Scheme: centroid\n")
+      if (wscheme %in% c("B", "factorial")) cat("Scheme: factorial\n")
+      if (wscheme %in% c("C", "pw", "pathWeighting")) cat("Scheme: path weighting\n")
   }
   else if(!converged){
       stop("Result did not converge after ", result$maxit, " iterations.\n",

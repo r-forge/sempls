@@ -110,7 +110,7 @@ mvplot <- function(model, ...){
   UseMethod("mvplot", model)
 }
 
-mvplot.plsm <- function(model, data, ask=TRUE, ...){
+mvplot.plsm <- function(model, data, LVs, ask=TRUE, ...){
     try(data <- data[, model$manifest], silent=TRUE)
     if(inherits(data, "try-error")) stop("The 'models' manifest variables must be contained in 'data'!")
 
@@ -120,8 +120,11 @@ mvplot.plsm <- function(model, data, ask=TRUE, ...){
     opar <- par(no.readonly=TRUE)
     on.exit(par(opar))
     par(ask=ask)
+    if(missing(LVs)) indx <- model$latent
+    else indx <- LVs
+    if(length(indx)==1) par(ask=FALSE)
     charts <- list()
-    for(i in model$latent){
+    for(i in indx){
         tab <- as.data.frame(xtabs(~ value + MV ,
                                    data=long[long$MV %in% model$block[[i]],]))
         charts[[i]] <- barchart(Freq ~ value| MV, data=tab, main=i, ...)

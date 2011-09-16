@@ -29,12 +29,10 @@ dgrho.sempls <- function(object, ...){
 }
 
 print.dgrho <- function(x, na.print=".", digits=2, ...){
-  #xChar <- format(as.data.frame(unclass(x)), digits=digits, ...)
   xChar <- format(as.data.frame(x), digits=digits, ...)
   xChar[is.na(x)] <- na.print
   print(xChar, ...)
   invisible(x) 
-  return(x)
 }
 
 comunality <- function(object, ...){
@@ -72,7 +70,7 @@ print.comunality <- function(x, na.print=".", digits=2, ...){
   xChar[is.na(x)] <- na.print
   print(xChar, ...)
   aveCom <- sum(x[,2], na.rm=TRUE)^-1 * sum(x[,1] * x[,2], na.rm=TRUE)
-  message(paste("\nAverage comunality:", signif(aveCom, digits=digits, ...)))
+  cat(paste("\n\tAverage comunality:", signif(aveCom, digits=digits), "\n"))
   invisible(x) 
 }
 
@@ -92,7 +90,7 @@ redundancy.sempls <- function(object, ...){
 print.redundancy <- function(x, na.print=".", digits=2, ...){
   print.table(x, na.print=na.print, digits=digits, ...)
   aveRed <- nrow(x)^-1 * sum(x[,1], na.rm=TRUE)
-  message(paste("\nAverage redundancy:", round(aveRed, digits=digits)))
+  cat(paste("\tAverage redundancy:", signif(aveRed, digits=digits), "\n"))
   invisible(x)
 }
 
@@ -125,7 +123,7 @@ print.rSquared2 <- function(x, na.print=".", digits=2, ...){
   xChar[is.na(x)] <- na.print
   print(xChar)
   aveRsquared <- nrow(x)^-1 * sum(x[,1], na.rm=TRUE)
-  message(paste("\nAverage R-squared:", round(aveRsquared, digits=2)))
+  cat(paste("\tAverage R-squared:", signif(aveRsquared, digits=digits), "\n"))
   invisible(x)
 }
 
@@ -142,7 +140,7 @@ gof.sempls <- function(object, ...){
     aveCom <- sum(com[,2], na.rm=TRUE)^-1 * sum(com[,1] * com[,2], na.rm=TRUE)
     gof <- sqrt(aveCom * aveRsq)
     gof <- matrix(c(aveRsq, aveCom, gof), nrow=3, ncol=1)
-    rownames(gof) <- c("Average R-squared", "Average Comunality", "GOF")
+    rownames(gof) <- c("Average R-squared", "Average Comunality", "GoF")
     colnames(gof) <- c("Value")
     class(gof) <- c("gof", class(gof))
     return(gof)

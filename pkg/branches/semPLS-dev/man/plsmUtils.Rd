@@ -1,5 +1,6 @@
 \name{plsmUtils}
 \Rdversion{1.1}
+\alias{plsmUtils}
 \alias{plsmEdit}
 \alias{plsmEdit.plsm}
 \alias{addLV}
@@ -167,7 +168,26 @@ acyclic(model)
    \code{\link{plsm}}, \code{\link{read.splsm}}
 }
 \examples{
-data(ECSImobi)
+data(mobi)
+data(ECSIsm)
+data(ECSImm)
 
-## Some sense free examples
+ECSI <- plsm(data=mobi, strucmod=ECSIsm, measruemod=ECSImm)
+
+### Some sense free examples
+ECSI[["blocks"]]["Expectation"]
+invertLVs(model=ECSI, LVs=c("Expectation"))[["blocks"]]["Expectation"]
+
+ECSI[["D"]]
+addPath(model=ECSI, from="Quality", to="Loyalty")[["D"]]
+removePath(model=ECSI, from="Image", to=c("Satisfaction", "Loyalty"))[["D"]]
+
+
+### some handy functions
+exogenous(ECSI)
+endogenous(ECSI)
+reflective(ECSI)
+formative(ECSI)
+indicators(ECSI, "Image")
+predecessors(ECSI)
 }

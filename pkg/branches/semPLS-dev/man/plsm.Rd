@@ -21,10 +21,10 @@ plsm(data, strucmod, measuremod, order=c("generic",
      "alphabetical"), interactive=FALSE)
 
 mvplot(model, \ldots)
-\method{mvplot}{plsm}(model, data, ask=TRUE, \ldots)
+\method{mvplot}{plsm}(model, data, LVs, ask=TRUE, \ldots)
 
 mvpairs(model, \ldots)
-\method{mvpairs}{plsm}(model, data, ask=TRUE, \ldots)
+\method{mvpairs}{plsm}(model, data, LVs, ask=TRUE, \ldots)
 }
 
 \arguments{
@@ -57,11 +57,15 @@ mvpairs(model, \ldots)
   \item{model}{
     An object of class \code{plsm}.
   }
+  \item{LVs}{
+    A \code{character} vector naming the blocks of LVs for which to
+  create the plots.
+  }
   \item{ask}{
     See \code{?par}
   }
   \item{...}{
-    Arguments to pass down to other methods, e.g. \code{par}
+    Arguments to pass down to other methods, e.g., \code{par}.
   }
 }
 
@@ -117,18 +121,24 @@ mm <- as.matrix(read.csv(ptf_Meas))
 data(mobi)
 
 ECSI <- plsm(data=mobi, strucmod=sm, measuremod=mm)
+
+# Adjacency matrix of the structural model
+ECSI$D
+
+# Adjacency matrix of the measurement model
+ECSI$M
+
+# return all elements
 ECSI
 
 ### Interactive mode
 \dontrun{
+# specify model in a spreadsheets
 ECSI <- plsm(data=mobi, interactive=TRUE)
 ECSI
 }
 
-exogenous(ECSI)
-endogenous(ECSI)
-reflective(ECSI)
-formative(ECSI)
-indicators(ECSI, "Image")
-predecessors(ECSI)
+### explore blocks of MVs
+mvplot(model=ECSI, data=mobi, LVs="Expectation")
+mvpairs(model=ECSI, data=mobi, LVs="Expectation")
 }

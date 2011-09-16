@@ -31,7 +31,7 @@ Structural Equation Modeling by Partial Least Squares
 sempls(model, \ldots)
 
 \method{sempls}{plsm}(model, data, maxit=20, tol=1e-7,
-         scaled=TRUE, sum1=FALSE, E="A", pairwise=FALSE,
+         scaled=TRUE, sum1=FALSE, wscheme="centroid", pairwise=FALSE,
          method=c("pearson", "kendall", "spearman"),
          convCrit=c("relative", "square"),
          verbose=TRUE, \ldots)
@@ -94,13 +94,13 @@ plsLoadings(object)
     \code{TRUE} does not affect the results.
   }
 
-  \item{E}{
+  \item{wscheme}{
     A \code{character} naming the weighting scheme to
     use. Possible values are:
     \itemize{
-      \item \code{"A"} for the centroid scheme, the default,
-      \item \code{"B"} for the factorial scheme and
-      \item \code{"C"} for the path weighting scheme.
+      \item \code{"A"} or \code{"centroid"} for the centroid scheme, the default,
+      \item \code{"B"} or \code{"factorial"}for the factorial scheme and
+      \item \code{"C"}, \code{"pw"} or \code{"pathWeighting"} for the path weighting scheme.
     }
   }
 
@@ -134,27 +134,8 @@ plsLoadings(object)
     An object of class \code{sempls}.
     }
   \item{x}{
-    An object of the according class.% \code{sempls} returned by the
-    %\code{sempls} method.
+    An object of the according class.
   }
-  % \item{what}{
-  %   A \code{character} telling which results to print. Possible options
-  %   are:
-  %   \itemize{
-  %     \item \code{"coefficients"}, the default, prints all the model
-  %     coefficients, outer loadings (for reflective MVs), outer weights
-  %     (for formative MVs) and the path coefficients into one table.
-  %     \item \code{"loadings"}, prints only the loadings into a tabualar
-  %     layout with different options specified in the arguments:
-  %     \code{type}, \code{cutoff}, \code{reldiff} and \code{na.print}.
-  %     \item \code{"weights"}, prints only the weihtss into a tabualar
-  %     layout.
-  %     \item \code{"path_coefficients"}, prints only the path
-  %     coefficients into a tabualar layout.
-  %     \item \code{"total_effects"}, prints only the total effects into a
-  %     tabualar layout.
-  %   }
-  %}
   \item{type}{
     If the argument \code{what="loadings"}, \code{type} describes the
     loadings to be extracted -- those are:
@@ -193,7 +174,6 @@ plsLoadings(object)
     A logical indicating whether dimnames should be abbreviated. For
     Details see \code{\link{abbreviate}}. The default is \code{FALSE}.
   }
-%  \item{main, sub}{Graphical parameters.}
 }
 
 \value{
@@ -252,7 +232,7 @@ plsLoadings(object)
 }
 \examples{
 data(ECSImobi)
-ecsi <- sempls(model=ECSImobi, data=mobi, E="C")
+ecsi <- sempls(model=ECSImobi, data=mobi, wscheme="pathWeighting")
 ecsi
 
 ## create plots

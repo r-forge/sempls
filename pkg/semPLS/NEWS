@@ -2,6 +2,7 @@ Changes in semPLS version 1.0-4
 
   o adaptions due to deprecated functions in the sem package version 2.0
 
+
 Changes in semPLS version 1.0-3
 
   o fixed bug in 'bootsempls' with argument 'method = "ConstructLevelChanges"': 

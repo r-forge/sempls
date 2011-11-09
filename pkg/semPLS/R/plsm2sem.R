@@ -60,18 +60,18 @@ plsm2sem.plsm <- function(model, file=stdout(), fixedVarMV=TRUE, fixedVarLV=TRUE
   }
   if(require(sem)==FALSE & file!=1){
     cat(mm, sm, mVar, lVar, "\n", file=file)
-    cat("Now you can run specify.model(\"", file, "\").\n",
+    cat("Now you can run specifyModel(\"", file, "\").\n",
       "See description of sem package.\n", sep="")
   }
   if(require(sem)==TRUE & file!=1){
     cat(mm, sm, mVar, lVar, "\n", file=file)
-    sem_model <- specify.model(file)
+    sem_model <- specifyModel(file)
     return(sem_model)
   }
   if(require(sem)==TRUE & file==1){
     tmp <- file()
     cat(mm, sm, mVar, lVar, "\n", file=tmp)
-    sem_model <- specify.model(file=tmp)
+    sem_model <- specifyModel(file=tmp)
     close(tmp)
     return(sem_model)
   }

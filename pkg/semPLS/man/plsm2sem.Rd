@@ -30,7 +30,10 @@ plsm2sem(model, \ldots)
 
 
 \value{
-  If the \code{\link[sem]{sem}} package is available, an object of class \code{mod} (see \code{\link[sem]{specifyModel}}) is returned, else a text representation of recticular action model (RAM) is written.
+  If the \code{\link[sem]{sem}} package is available, an object of class
+  \code{mod} (see \code{\link[sem]{specifyModel}}) is returned, else a
+  text representation of recticular action model (RAM) is written. Note,
+  \code{specifyModel} was \code{specify.model} in \pkg{sem (< 2.0.0)}.
 }
 
 \author{

@@ -1,6 +1,6 @@
 Changes in semPLS version 1.0-4
 
-  o adaptions due to deprecated functions in the sem package version 2.0
+  o adaptions due to deprecated functions in sem (>= 2.0.0)
 
 
 Changes in semPLS version 1.0-3

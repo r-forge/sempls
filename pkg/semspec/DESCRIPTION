@@ -1,0 +1,18 @@
+Package: semspec
+Type: Package
+Title: Unified Specification of Structural Equation Models
+Version: 0.1-1
+Date: 2012-01-03
+Author: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>,
+  Armin Monecke <armin.monecke@stat.uni-muenchen.de>
+Maintainer: Manuel J. A. Eugster
+    <manuel.eugster@stat.uni-muenchen.de>
+Description: Extensible domain specific language for the specification of
+  structural equation models based on R formula objects. It encouples
+  the model specification (equal for all packages) from the model
+  representation (partly similar for all packages) and model fitting
+  (specific for each package).
+Suggests: semPLS, sem, lavaan
+Build-dep: roxygen2
+URL: http://semPLS.r-forge.r-project.org/
+License: GPL (>= 2)

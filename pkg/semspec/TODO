@@ -1,0 +1,30 @@
+-*- mode: org; -*-
+
+* Design
+  - semspec -> semrepr -> model.frame (-> semfit)
+
+** semspec
+   - Is a list of raw R formulas describing the model; specified by
+     the user with latent(formula), regression(formula), etc. combined
+     by the '+'.
+   - How to remove a part from a model?
+     - Define '-' and assign each part a unique number which is seen
+       in the print-output?
+
+** semrepr
+   - The internal representation of the model.
+   - Function parse_semspec() creates this representation.
+   - If a developer wants to extend the syntax with unknown
+     functionality, this function has to be extendend (i.e.,
+     overwritten).
+
+** model.frame
+   - Following the common R manner, a function model.frame takes the
+     semspec and the data and returns the matrix representation
+     - Should it be actually model.matrix?
+
+** semfit
+   - For demonstration purpose we write some fit-methods to show that
+     the syntax can be easily used with the available packages.
+   - The goal is, however, that the package developers import semspec.
+

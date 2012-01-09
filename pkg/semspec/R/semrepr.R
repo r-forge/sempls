@@ -21,16 +21,16 @@ parse_semspec <- function(object) {
 
 
 
-#' @S3method model.frame semspec
-model.frame.semspec <- function(formula, data) {
+#' @S3method model.matrix semspec
+model.matrix.semspec <- function(formula, data) {
   ## TODO: data from formula$data or overwritten by data
-  model.frame.semrep(parse_semspec(formula), data)
+  model.matrix.semrepr(parse_semspec(formula), data)
 }
 
 
 
-#' @S3method model.frame semrep
-model.frame.semrepr <- function(formula, data) {
+#' @S3method model.matrix semrep
+model.matrix.semrepr <- function(formula, data) {
   ## see semPLS/R/plsm.R
   ## see lavaan/R/05lavaanModel.R: MATRIX representation of the model
 }

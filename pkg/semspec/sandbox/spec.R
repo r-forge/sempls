@@ -49,10 +49,22 @@ latent(y ~ b1 * x1 + b2 * x2 + b3 * x3) +
 constraint(b1 == (b2 + b3)^2) +
 constraint(b1 > exp(b2 + b3))
 
+## New Model with constraints:
+
+latent(y ~  x1 + x2 + x3, name = "l1") +
+contraint("l1", x2 == (x2 + x3)^2)
+latent(y2 ~ x1 + x4 + x5, name="l2")
+constraint(l1::p::x1 == l2::p::x1)
+constraint(l1::p::x1 == (l1::p::x1:x2))
+#constraint(l1$p$x1 == (l1$p$x1:x2)
+
+constraint(l1(p(x1)) == (x2 + manuel)^2) +
+constraint(x1 > exp(x2 + x3))
+
 
 
 ### Reflective vs formative model:
 
 latent(MV1 + MV2 ~ LV)
 latent(LV ~ MV1 + MV2)
-
+ 

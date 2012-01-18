@@ -1,8 +1,5 @@
 
 
-
-### SEM specification object: ########################################
-
 SEMSPEC_CLASS <- "semspec"
 
 
@@ -76,42 +73,6 @@ semspec_constraint <- function(constraint) {
 
 
 
-has_formula <- function(object) {
-  stopifnot(is_semspec(object))
-  length(object$latent) > 0 |
-  length(object$regression) > 0 |
-  length(object$covariance) > 0
-}
-
-
-
-has_data <- function(object) {
-  stopifnot(is_semspec(object))
-  length(object$data) > 0
-}
-
-
-
-has_global_group <- function(object) {
-  stopifnot(is_semspec(object))
-  length(object$group) > 0
-}
-
-
-
-has_constraint <- function(object) {
-  stopifnot(is_semspec(object))
-  length(object$constraint) > 0
-}
-
-
-has_intercept <- function(object) {
-  stopifnot(is_semspec(object))
-  length(object$intercept) > 0
-}
-
-
-
 ### SEM specification syntax: ########################################
 
 
@@ -175,5 +136,4 @@ constraint <- function(constraint) {
 #print.semspec <- function(x, ...) {
 #  cat("SEM specification object\n")
 #}
-
 

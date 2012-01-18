@@ -1,7 +1,7 @@
 -*- mode: org; -*-
 
-* Design
-  - semspec -> semrepr -> model.frame (-> semfit)
+* Design idea
+  - semspec -> semrepr -> model.matrix (-> semfit)
 
 ** semspec
    - Is a list of raw R formulas describing the model; specified by
@@ -10,6 +10,7 @@
    - How to remove a part from a model?
      - Define '-' and assign each part a unique number which is seen
        in the print-output?
+     - Implement an ~update~ function?
 
 ** semrepr
    - The internal representation of the model.
@@ -18,13 +19,32 @@
      functionality, this function has to be extendend (i.e.,
      overwritten).
 
-** model.frame
+** model.matrix
    - Following the common R manner, a function model.frame takes the
      semspec and the data and returns the matrix representation
-     - Should it be actually model.matrix?
+     - Should it be actually model.matrix? *Yes*
 
 ** semfit
    - For demonstration purpose we write some fit-methods to show that
      the syntax can be easily used with the available packages.
    - The goal is, however, that the package developers import semspec.
 
+
+* Semantic
+  - ~regression~ and ~latent~ formulae define the edges of a graph
+    - Do ~intercept~ and ~covariance~ define edges as well?
+
+  - A ~group~ defines multiple edges, i.e., as many edges as there are
+    levels; this is now a multigraph.
+
+  - The edges represent the parameters to estimate.
+    - Each parameter has a ~name~ and a ~start~ value
+      - What are their default values?
+        - A concatenation of hte formula name, the group name, and the
+          parameter name creates a unique parameter name
+
+  - ~constraint~ formulae define constraints on the parameters; i.e.,
+    edge attributes.
+
+* Representation
+  - semrepr is an /edgelist/

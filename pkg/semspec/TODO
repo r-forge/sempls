@@ -33,6 +33,11 @@
 * Semantic
   - ~regression~ and ~latent~ formulae define the edges of a graph
     - Do ~intercept~ and ~covariance~ define edges as well?
+      - ~variance~ is a loop?
+      - ~covariance~ is an edges between the variables?
+      - ~intercept~ is a edge between a constant variable and the
+        defined variable?
+	- Similar to neural networks?
 
   - A ~group~ defines multiple edges, i.e., as many edges as there are
     levels; this is now a multigraph.
@@ -40,11 +45,30 @@
   - The edges represent the parameters to estimate.
     - Each parameter has a ~name~ and a ~start~ value
       - What are their default values?
-        - A concatenation of hte formula name, the group name, and the
+        - A concatenation of the formula name, the group name, and the
           parameter name creates a unique parameter name
 
   - ~constraint~ formulae define constraints on the parameters; i.e.,
     edge attributes.
 
+
 * Representation
-  - semrepr is an /edgelist/
+  1. An ~edgelist~ to collect all edges
+     - An edge has attributes
+       - the ~name~ and the ~start~ value
+       - the ~group~
+
+  2. Something to represent a ~constraint~
+     - Phantom variables, see "Using phantom and imaginary latent
+       variables to parameterize constraints in linear structural
+       models" by David Rindskopf (Psychometrika, 1984)
+       - via http://davidakenny.net/cm/constr.htm
+
+* Fitting
+  - As this is a multigraph, this can be seen as a flow network
+    - Can the parameter estimation seen as a /constraint flow
+      optimization problem/
+      - If yes, is there a benefit?
+	- Is this a non-parametric fitting method?
+    - How to define the flow? What is the source and what is the sink?
+  - Isn't it more similar to neural networks and backpropagation?

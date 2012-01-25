@@ -33,10 +33,10 @@
 * Semantic
   - ~regression~ and ~latent~ formulae define the edges of a graph
     - Do ~intercept~ and ~covariance~ define edges as well?
-      - ~variance~ is a loop?
-      - ~covariance~ is an edges between the variables?
+      - ~variance~ is a loop? *Yes*
+      - ~covariance~ is an edges between the variables? *Yes*
       - ~intercept~ is a edge between a constant variable and the
-        defined variable?
+        defined variable? *Yes*
 	- Similar to neural networks?
 
   - A ~group~ defines multiple edges, i.e., as many edges as there are
@@ -71,4 +71,22 @@
       - If yes, is there a benefit?
 	- Is this a non-parametric fitting method?
     - How to define the flow? What is the source and what is the sink?
+      - Sources are the manifest variables
+      - An artificial sink is created from all latent variables
+      - The flow of the errors according to a user-defined error
+        function is minimized.
+	- If the quadratic error is used, the same result as with PLS
+          fitting should be computed (according to Armin)
+	- The benefit ist, that an arbitrary error function can be
+          defined without having to change to estimating function.
+	  - absolut error, wheighted error, etc.
+    - Constraints can be handled using the /Phantom variables/ approach
+
   - Isn't it more similar to neural networks and backpropagation?
+
+** TODO semflow
+   - Evaluate the sensuousness of the "Flowing SEMs" idea after the
+     workshop
+     - Should be doable---if we create a sound representation of the
+       hypergraph in this project, we can use flow optimization
+       algorithms available in the igraph package

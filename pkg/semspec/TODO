@@ -3,6 +3,10 @@
 * Design idea
   - semspec -> semrepr -> model.matrix (-> semfit)
 
+  - The idea of computing on the formula (+ data and constraints) and
+    getting as much information as possible, really fits into the idea
+    of SEMs---because in fact they are a *one-shot confirmatory tool*.
+
 ** semspec
    - Is a list of raw R formulas describing the model; specified by
      the user with latent(formula), regression(formula), etc. combined
@@ -29,7 +33,6 @@
      the syntax can be easily used with the available packages.
    - The goal is, however, that the package developers import semspec.
 
-
 * Semantic
   - ~regression~ and ~latent~ formulae define the edges of a graph
     - Do ~intercept~ and ~covariance~ define edges as well?
@@ -47,10 +50,10 @@
       - What are their default values?
         - A concatenation of the formula name, the group name, and the
           parameter name creates a unique parameter name
+	  - We use the concept of *convention over configuration*
 
   - ~constraint~ formulae define constraints on the parameters; i.e.,
     edge attributes.
-
 
 * Representation
   1. An ~edgelist~ to collect all edges
@@ -80,7 +83,14 @@
 	- The benefit ist, that an arbitrary error function can be
           defined without having to change to estimating function.
 	  - absolut error, wheighted error, etc.
-    - Constraints can be handled using the /Phantom variables/ approach
+    - Constraints can be handled using the /Phantom variables/
+      approach
+    - "Parameter Identification in a Class of Linear Structural
+      Equation Models" by Jin Tian (2009) uses the idea of a flow
+      network
+      - http://www.cs.iastate.edu/~jtian/papers/ijcai-09.pdf
+      - Is this a similar idea?
+
 
   - Isn't it more similar to neural networks and backpropagation?
 

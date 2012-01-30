@@ -13,7 +13,6 @@ is_semrepr <- function(object) {
 
 #' @export
 semrepr <- function(object) {
-
   stopifnot(is_semspec(object))
 
   ret <- expand_semspec(object$model)
@@ -28,8 +27,10 @@ semrepr <- function(object) {
   }
 
   if ( !is.null(object$constraints) ) {
-
+    ret <- expand_semrepr_constraints(ret, object$constraints)
   }
+
+  ## TODO: return the data and the constraints as well.
 
   structure(ret, class = c(SEMREP_CLASS, class(ret)))
 }
@@ -231,11 +232,18 @@ expand_semrepr_data <- function(object, groups) {
   ret <- ret[-1, ]
   rownames(ret) <- NULL
 
+  ## ... and all parameters are at this point free:
+  ret$free <- TRUE
+
   ret
 }
 
 
 
 expand_semrepr_constraints <- function(object, constraints) {
+  ## We only allow constraints with one term on the left-hand side.
 
+  unfree <- as.character(sapply(constraints, "[[", 2))
+  object$free[object$param %in% unfree] <- FALSE
+  object
 }

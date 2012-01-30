@@ -136,26 +136,6 @@ group <- function(formula) {
 
 
 
-### Constraints definition language: #################################
-
-#' @export
-constraint <- function(expression) {
-  l <- list(list(substitute(expression)))
-  names(l) <- "constraints"
-  attr(l[[1]], "call") <- match.call()
-
-  structure(l, class = c("semspec_constraint", SEMSPEC_CLASS))
-}
-
-
-
-#' @S3method print semspec_data
-print.semspec_constraint <- function(x, ...) {
-  print(attr(x[[1]], "call"))
-}
-
-
-
 ### Data definition language: ########################################
 
 #' @export
@@ -174,3 +154,22 @@ print.semspec_dataset <- function(x, ...) {
   print(attr(x[[1]], "call"))
 }
 
+
+
+### Constraints definition language: #################################
+
+#' @export
+constraint <- function(expression) {
+  l <- list(list(substitute(expression)))
+  names(l) <- "constraints"
+  attr(l[[1]], "call") <- match.call()
+
+  structure(l, class = c("semspec_constraint", SEMSPEC_CLASS))
+}
+
+
+
+#' @S3method print semspec_data
+print.semspec_constraint <- function(x, ...) {
+  print(attr(x[[1]], "call"))
+}

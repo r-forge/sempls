@@ -10,16 +10,23 @@ m <- latent(ind60 ~ x1 + x2 + x3) +
      covariance(item1 ~ item2) # + group(bbb)
 m
 
+
 m <- m + dataset(data.frame(aaa = gl(2, 5), bbb = gl(5, 2), c = 3))
 m
 
-m <- m + constraint(demo65_z1 >= 100)
-str(m, 2)
+
+m <- m + constraint(dem65_z1 == 1)                        # Fixed parameter
+m
+
+m <- m + constraint(ind60_x2 == ind60_x1) +               # Equality
+         constraint(ind60_x3 == ind60_x1)
+m
 
 
+m <- m + constraint(dem60_y1 > (dem60_y2 + dem60_y3)^2)   # Inequality
+m
 
-a <- constraint(demo65_z1 >= 100)
-b <- constraint(b1 == (b2 + b3)^2)
+
 
 
 

@@ -33,10 +33,10 @@ summary.semspec <- function(object, ...) {
 
 
 #' @S3method print summary.semspec
-print.summary.semspec <- function(x, details = FALSE, ...) {
+print.summary.semspec <- function(x, ...) {
   cat("Structural equation model specification\n")
   for ( part in x ) {
-    print(part, details = details, ...)
+    print(part, ...)
     cat("\n")
   }
 }
@@ -68,7 +68,14 @@ model_df <- function(variables, parameters) {
   details <- data.frame(estimates = unname(t),
                         empiricals = unname(p))
 
-  summarized_result("Degrees of freedom", count, details)
+  summarized_result("df", count, details)
+}
+
+
+
+#' @S3method print summarized_df
+print.summarized_df <- function(x, ...) {
+  cat("Degrees of freedom:", x$count, "\n")
 }
 
 
@@ -91,7 +98,7 @@ summarize_variables <- function(spec, repr) {
   count <- c(Number = length(model_vars), table(type))
   details <- data.frame_str(Variable = model_vars, Type = type)
 
-  summarized_result("Variables", count, details)
+  summarized_result("variables", count, details)
 }
 
 
@@ -107,6 +114,29 @@ model_variables <- function(model) {
 
   model$group <- NULL
   unname(unlist(sapply(model, function(x) lapply(x, vars))))
+}
+
+
+
+#' @S3method print summarized_variables
+print.summarized_variables <- function(x, ...) {
+  vars <- split(x$details$Variable, x$details$Type)
+
+  out <- x$count
+  names(out)[1] <- "Variables:"
+  print(out)
+
+  for ( var in names(vars) ) {
+    out <- paste(vars[[var]], collapse = ", ")
+    out <- paste(strwrap(out, indent = 6, exdent = 6), collapse = "\n")
+
+    if ( out != "" )
+      out <- sprintf("%s\n", out)
+
+    cat("  ", var, ":\n", out, sep = "")
+  }
+
+  invisible(x)
 }
 
 
@@ -133,7 +163,7 @@ summarize_parameters <- function(spec, repr) {
   details <- data.frame_str(Parameter = value(repr$param, "character"),
                             Type = type)
 
-  summarized_result("Parameters", count, details)
+  summarized_result("parameters", count, details)
 }
 
 
@@ -166,6 +196,27 @@ is_fixed_constraint <- function(constraint) {
 
 
 
+#' @S3method print summarized_parameters
+print.summarized_parameters <- function(x, ...) {
+  params <- split(x$details$Parameter, x$details$Type)
+
+  out <- x$count
+  names(out)[1] <- "Parameters:"
+  print(out)
+
+  for ( param in names(params) ) {
+    out <- paste(params[[param]], collapse = ", ")
+    out <- paste(strwrap(out, indent = 6, exdent = 6), collapse = "\n")
+
+    if ( out != "" )
+      out <- sprintf("%s\n", out)
+
+    cat("  ", param, ":\n", out, sep = "")
+  }
+}
+
+
+
 ### Summarize constraints: ###########################################
 
 summarize_constraints <- function(spec, repr) {
@@ -176,16 +227,23 @@ summarize_constraints <- function(spec, repr) {
   data <- spec$dataset
 
   active <- sapply(constraints, is_active_constraint, repr$param)
+  type <- rep("Inactive", length(active))
 
-  count <- c(Number = length(constraints),
-             Active = if ( length(active) == 0 ) 0 else sum(active),
-             Inactive = if ( length(active) == 0 ) 0 else sum(!active))
+  if ( length(active) == 0 ) {
+    count <- c(Number = 0, Active = 0, Inactive = 0)
+  } else {
+    count <- c(Number = length(constraints),
+               Active = sum(active),
+               Inactive = sum(!active))
+    type[active] <- "Active"
+  }
+  type <- factor(type, levels = c("Active", "Inactive"))
 
   details <- data.frame_str(Constraint =
                               value(sapply(constraints, deparse), "character"),
-                            Active = value(active, "logical"))
+                            Type = type)
 
-  summarized_result("Constraints", count, details)
+  summarized_result("constraints", count, details)
 }
 
 
@@ -193,6 +251,26 @@ summarize_constraints <- function(spec, repr) {
 is_active_constraint <- function(constraint, parameters) {
   ## TODO: vectorize
   constrained_parameters(list(constraint)) %in% parameters
+}
+
+
+
+#' @S3method print summarized_constraints
+print.summarized_constraints <- function(x, ...) {
+  constrs <- split(x$details$Constraint, x$details$Type)
+
+  out <- x$count
+  names(out)[1] <- "Constraints:"
+  print(out)
+
+  for ( constr in names(constrs) ) {
+    out <- paste(constrs[[constr]], collapse = "\n")
+
+    if ( out != "" )
+      out <- sprintf("    %s\n", out)
+
+    cat("  ", constr, ":\n", out, sep = "")
+  }
 }
 
 
@@ -217,7 +295,7 @@ summarize_data <- function(spec, repr) {
                           Group = value(NULL, "character"),
                           Variable = value(NULL, "character"))
 
-    return(summarized_result("Data", count, details))
+    return(summarized_result("data", count, details))
   }
 
   ## Manifest variables:
@@ -272,7 +350,17 @@ summarize_data <- function(spec, repr) {
              Groups = length(unique(na.omit(manifest$group))))
   details <- do.call(rbind, apply(manifest, 1, s2))
 
-  summarized_result("Data", count, details)
+  summarized_result("data", count, details)
+}
+
+
+
+#' @S3method print summarized_data
+print.summarized_data <- function(x, ...) {
+  cat("Data:", x$count["Observations"], "obs. of",
+      x$count["Variables"], "variables,",
+      x$count["Variables"], "grouping variables\n")
+
 }
 
 
@@ -295,23 +383,9 @@ data.frame_str <- function(...) {
 
 summarized_result <- function(what, count, details) {
   ret <- list()
-  ret$counts <- count
+  ret$count <- count
   ret$details <- details
   rownames(ret$details) <- NULL
 
-  structure(ret, what = what,
-            class = c("summarized_result", class(ret)))
+  structure(ret, class = c(sprintf("summarized_%s", what), class(ret)))
 }
-
-
-
-#' @S3method print summarized_result
-print.summarized_result <- function(x, details = FALSE, ...) {
-  cat(attr(x, "what"), ":\n", sep = "")
-  print(x$count)
-  if ( details ) {
-    cat("\n")
-    print(x$details)
-  }
-}
-

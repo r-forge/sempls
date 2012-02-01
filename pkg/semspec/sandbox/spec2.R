@@ -5,7 +5,7 @@ m <- structural(ind60 ~ x1 + x2 + x3) +
      structural(dem65 ~ y5 + y6 + y7 + I(y8 * 2),
                 param = c("I(y8 * 2)" = "ppp")) +
      structural(dem65 ~ z1*z2) +
-     measurment(dem60 ~ ind60) +
+     measurement(dem60 ~ ind60) +
      intercept(item1 ~ 1) +
      covariance(item1 ~ item2) # + group(bbb)
 m

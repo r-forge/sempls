@@ -43,8 +43,6 @@ print.summary.semspec <- function(x, details = FALSE, ...) {
 
 
 
-
-
 ### Degrees of freedom: ##############################################
 
 summarize_df <- function(object, repr) {

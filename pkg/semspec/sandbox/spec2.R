@@ -1,11 +1,11 @@
 
-m <- latent(ind60 ~ x1 + x2 + x3) +
-     latent(dem60 ~ y1 + y2 + y3 + y4 | aaa,
-            param = c(dem60 = "manuel")) +
-     latent(dem65 ~ y5 + y6 + y7 + I(y8 * 2),
-            param = c("I(y8 * 2)" = "ppp")) +
-     latent(dem65 ~ z1*z2) +
-     regression(dem60 ~ ind60) +
+m <- structural(ind60 ~ x1 + x2 + x3) +
+     structural(dem60 ~ y1 + y2 + y3 + y4 | aaa,
+                param = c(dem60 = "manuel")) +
+     structural(dem65 ~ y5 + y6 + y7 + I(y8 * 2),
+                param = c("I(y8 * 2)" = "ppp")) +
+     structural(dem65 ~ z1*z2) +
+     measurment(dem60 ~ ind60) +
      intercept(item1 ~ 1) +
      covariance(item1 ~ item2) # + group(bbb)
 m

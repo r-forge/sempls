@@ -71,8 +71,8 @@ expand_semspec <- function(object) {
     x
   }
 
-  object$regression <- lapply(object$regression, expand)
-  object$latent <- lapply(object$latent, expand)
+  object$measurement <- lapply(object$measurement, expand)
+  object$structural <- lapply(object$structural, expand)
 
   object
 }

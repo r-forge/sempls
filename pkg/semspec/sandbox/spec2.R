@@ -11,7 +11,10 @@ m <- latent(ind60 ~ x1 + x2 + x3) +
 m
 
 
-m <- m + dataset(data.frame(aaa = gl(2, 5), bbb = gl(5, 2), c = 3))
+dat <- data.frame(aaa = gl(2, 5), bbb = gl(5, 2), c = 3)
+dat$y1 <- dat$y2 <- dat$y3 <- dat$y4 <- dat$y5 <- runif(10)
+
+m <- m + dataset(dat)
 m
 
 
@@ -22,19 +25,11 @@ m <- m + constraint(ind60_x2 == ind60_x1) +               # Equality
          constraint(ind60_x3 == ind60_x1)
 m
 
-
-m <- m + constraint(dem60_y1 > (dem60_y2 + dem60_y3)^2)   # Inequality
+m <- m + constraint(dem60_y1 > (dem60_y2 + dem60_y3)^2)   # Inequality (currently inactive)
 m
 
 
-
-
-
-### Another example:
-m <- latent(visual ~ x1 + x2 + x3) +
-     latent(textual ~ x4 + x5 + x6) +
-     latent(speed ~ x7 + x8 + x9)
-
-r <- semrepr(m)
+summary(m)
+print(summary(m), details = TRUE)
 
 

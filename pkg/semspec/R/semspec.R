@@ -1,5 +1,6 @@
 
 
+
 SEMSPEC_CLASS <- "semspec"
 
 
@@ -47,43 +48,6 @@ concatenate_model <- function(e1, e2) {
   names(l) <- names
   l
 }
-
-
-
-#' @S3method print semspec
-print.semspec <- function(x, ...) {
-  print(semrepr(x))
-}
-
-
-
-#' @S3method summary semspec
-summary.semspec <- function(object, ...) {
-  out <- list()
-  for ( n in names(object$model) ) {
-    out[[n]] <- lapply(object$model[[n]],
-                       function(y) {
-                         deparse(attr(y, "call"))
-                       })
-
-  }
-  out <- unlist(out)
-  #out <- lapply(out,
-  #              function(x)
-  #              paste(strwrap(x, exdent = 4), collapse = "\n"))
-  out <- paste(out, collapse = " +\n")
-
-  structure(out, class = c("summary.semspec", class(out)))
-}
-
-
-
-#' @S3method print summary.semspec
-print.summary.semspec <- function(x, ...) {
-  cat("SEM specification\n\n")
-  cat(x, "\n\n")
-}
-
 
 
 

@@ -2,11 +2,11 @@
 {}
 
 
-SEMREP_CLASS <- "semrepr"
+SEMREPR_CLASS <- "semrepr"
 
 
 is_semrepr <- function(object) {
-  class(object) %in% SEMREPR_CLASS
+  any(class(object) %in% SEMREPR_CLASS)
 }
 
 
@@ -30,9 +30,9 @@ semrepr <- function(object) {
     ret <- expand_semrepr_constraints(ret, object$constraints)
   }
 
-  ## TODO: return the data and the constraints as well.
+  ## TODO: return the data and the constraints as well?
 
-  structure(ret, class = c(SEMREP_CLASS, class(ret)))
+  structure(ret, class = c(SEMREPR_CLASS, class(ret)))
 }
 
 
@@ -49,6 +49,7 @@ plot.semrepr <- function(x, y = NULL, ...) {
 
   qgraph(el)  # TODO make layout = "tree" work
 }
+
 
 
 
@@ -156,7 +157,7 @@ flatten_semspec <- function(object) {
 
 
 
-flatten_formula <- function(term, what) {
+flatten_formula <- function(term, type) {
   param <- attr(term, "param")
 
   group <- find_group(term)
@@ -170,7 +171,7 @@ flatten_formula <- function(term, what) {
   lhs <- as.character(flatten_term(term[[2]]))
   rhs <- as.character(flatten_term(term[[3]]))
 
-  ret <- expand.grid(what = what, lhs = lhs,
+  ret <- expand.grid(type = type, lhs = lhs,
                      rhs = rhs, lhsparam = NA_character_,
                      rhsparam = NA_character_, group = group,
                      stringsAsFactors = FALSE)
@@ -243,7 +244,16 @@ expand_semrepr_data <- function(object, groups) {
 expand_semrepr_constraints <- function(object, constraints) {
   ## We only allow constraints with one term on the left-hand side.
 
-  unfree <- as.character(sapply(constraints, "[[", 2))
-  object$free[object$param %in% unfree] <- FALSE
+  if ( !is.null(object$param) ) {
+    unfree <- constrained_parameters(constraints)
+    object$free[object$param %in% unfree] <- FALSE
+  }
+
   object
+}
+
+
+
+constrained_parameters <- function(x) {
+  as.character(sapply(x, "[[", 2))
 }

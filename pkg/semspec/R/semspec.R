@@ -96,7 +96,7 @@ intercept <- function(formula) {
 
 #' @export
 group <- function(formula) {
-  semspec_base("group", substitute(formula), match.call())
+    semspec_base("group", substitute(formula), match.call())
 }
 
 
@@ -127,7 +127,7 @@ print.semspec_dataset <- function(x, ...) {
 constraint <- function(expression) {
   l <- list(list(substitute(expression)))
   names(l) <- "constraints"
-  attr(l[[1]], "call") <- match.call()
+  attr(l[[1]][[1]], "call") <- match.call()
 
   structure(l, class = c("semspec_constraint", SEMSPEC_CLASS))
 }

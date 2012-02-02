@@ -1,4 +1,8 @@
 
+sapply(list.files("../R", full = TRUE), source)
+library("e1071")
+library("formatR")
+
 m <- structural(ind60 ~ x1 + x2 + x3) +
      structural(dem60 ~ y1 + y2 + y3 + y4 | aaa,
                 param = c(dem60 = "manuel")) +
@@ -7,7 +11,7 @@ m <- structural(ind60 ~ x1 + x2 + x3) +
      structural(dem65 ~ z1*z2) +
      measurement(dem60 ~ ind60) +
      intercept(item1 ~ 1) +
-     covariance(item1 ~ item2) # + group(bbb)
+     covariance(item1 ~ item2) #+ group(bbb)
 m
 
 
@@ -28,8 +32,5 @@ m
 m <- m + constraint(dem60_y1 > (dem60_y2 + dem60_y3)^2)   # Inequality (currently inactive)
 m
 
-
 summary(m)
-print(summary(m), details = TRUE)
-
 

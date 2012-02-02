@@ -1,0 +1,102 @@
+-*- mode: org; -*-
+
+* Design idea
+  - semspec -> semrepr -> model.matrix (-> semfit)
+
+  - The idea of computing on the formula (+ data and constraints) and
+    getting as much information as possible, really fits into the idea
+    of SEMs---because in fact they are a *one-shot confirmatory tool*.
+
+** semspec
+   - Is a list of raw R formulas describing the model; specified by
+     the user with latent(formula), regression(formula), etc. combined
+     by the '+'.
+   - How to remove a part from a model?
+     - Define '-' and assign each part a unique number which is seen
+       in the print-output?
+     - Implement an ~update~ function?
+
+** semrepr
+   - The internal representation of the model.
+   - Function parse_semspec() creates this representation.
+   - If a developer wants to extend the syntax with unknown
+     functionality, this function has to be extendend (i.e.,
+     overwritten).
+
+** model.matrix
+   - Following the common R manner, a function model.frame takes the
+     semspec and the data and returns the matrix representation
+     - Should it be actually model.matrix? *Yes*
+
+** semfit
+   - For demonstration purpose we write some fit-methods to show that
+     the syntax can be easily used with the available packages.
+   - The goal is, however, that the package developers import semspec.
+
+* Semantic
+  - ~regression~ and ~latent~ formulae define the edges of a graph
+    - Do ~intercept~ and ~covariance~ define edges as well?
+      - ~variance~ is a loop? *Yes*
+      - ~covariance~ is an edges between the variables? *Yes*
+      - ~intercept~ is a edge between a constant variable and the
+        defined variable? *Yes*
+	- Similar to neural networks?
+
+  - A ~group~ defines multiple edges, i.e., as many edges as there are
+    levels; this is now a multigraph.
+
+  - The edges represent the parameters to estimate.
+    - Each parameter has a ~name~ and a ~start~ value
+      - What are their default values?
+        - A concatenation of the formula name, the group name, and the
+          parameter name creates a unique parameter name
+	  - We use the concept of *convention over configuration*
+
+  - ~constraint~ formulae define constraints on the parameters; i.e.,
+    edge attributes.
+
+* Representation
+  1. An ~edgelist~ to collect all edges
+     - An edge has attributes
+       - the ~name~ and the ~start~ value
+       - the ~group~
+
+  2. Something to represent a ~constraint~
+     - Phantom variables, see "Using phantom and imaginary latent
+       variables to parameterize constraints in linear structural
+       models" by David Rindskopf (Psychometrika, 1984)
+       - via http://davidakenny.net/cm/constr.htm
+
+* Fitting
+  - As this is a multigraph, this can be seen as a flow network
+    - Can the parameter estimation seen as a /constraint flow
+      optimization problem/
+      - If yes, is there a benefit?
+	- Is this a non-parametric fitting method?
+    - How to define the flow? What is the source and what is the sink?
+      - Sources are the manifest variables
+      - An artificial sink is created from all latent variables
+      - The flow of the errors according to a user-defined error
+        function is minimized.
+	- If the quadratic error is used, the same result as with PLS
+          fitting should be computed (according to Armin)
+	- The benefit ist, that an arbitrary error function can be
+          defined without having to change to estimating function.
+	  - absolut error, wheighted error, etc.
+    - Constraints can be handled using the /Phantom variables/
+      approach
+    - "Parameter Identification in a Class of Linear Structural
+      Equation Models" by Jin Tian (2009) uses the idea of a flow
+      network
+      - http://www.cs.iastate.edu/~jtian/papers/ijcai-09.pdf
+      - Is this a similar idea?
+
+
+  - Isn't it more similar to neural networks and backpropagation?
+
+** TODO semflow
+   - Evaluate the sensuousness of the "Flowing SEMs" idea after the
+     workshop
+     - Should be doable---if we create a sound representation of the
+       hypergraph in this project, we can use flow optimization
+       algorithms available in the igraph package

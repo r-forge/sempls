@@ -20,6 +20,7 @@ summary.semspec <- function(object, ...) {
   repr <- semrepr(object)
 
   ret <- list()
+  ret$formula <- deparse_semspec(object)
   ret$variables <- summarize_variables(object, repr)
   ret$parameters <- summarize_parameters(object, repr)
   ret$constraints <- summarize_constraints(object, repr)
@@ -35,22 +36,53 @@ summary.semspec <- function(object, ...) {
 #' @S3method print summary.semspec
 print.summary.semspec <- function(x, ...) {
   cat("Structural equation model specification\n")
-  for ( part in x ) {
-    print(part, ...)
-    cat("\n")
+
+  cat("\n", x$formula, "\n\n", sep = "")
+  x$formula <- NULL
+
+  n <- length(x)
+  for ( i in seq(length = n) ) {
+    print(x[[i]], ...)
+    if ( i < n )
+      cat("\n")
   }
+
+  invisible(x)
+}
+
+
+
+deparse_semspec <- function(spec) {
+  stopifnot(is_semspec(spec))
+
+  calls <- c(unlist(lapply(spec$model,
+                           function(x)
+                           lapply(x, attr, "call"))),
+             attr(spec$dataset, "call"),
+             lapply(spec$constraints, attr, "call"))
+
+  calls <- lapply(calls, deparse)
+  calls <- lapply(calls,
+                  function(x)
+                  tidy.source(text = x, output = FALSE)$text.tidy)
+  calls <- paste("  ", calls, sep = "", collapse = "\n")
+  calls
 }
 
 
 
 ### Degrees of freedom: ##############################################
 
-summarize_df <- function(object, repr) {
+#' @export
+summarize_df <- function(spec, repr = NULL) {
   stopifnot(is_semspec(spec))
-  stopifnot(is_semrepr(repr))
+  stopifnot(is.null(repr) | is_semrepr(repr))
 
-  vars <- summarize_variables(object, repr)
-  params <- summarize_parameters(object, repr)
+  if ( is.null(repr) )
+    repr <- semrepr(spec)
+
+  vars <- summarize_variables(spec, repr)
+  params <- summarize_parameters(spec, repr)
 
   model_df(vars$count, params$counts)
 }
@@ -76,17 +108,19 @@ model_df <- function(variables, parameters) {
 #' @S3method print summarized_df
 print.summarized_df <- function(x, ...) {
   cat("Degrees of freedom:", x$count, "\n")
+  invisible(x)
 }
 
 
 
 ### Summarize variables: #############################################
 
-summarize_variables <- function(spec, repr) {
+#' @export
+summarize_variables <- function(spec, repr = NULL) {
   stopifnot(is_semspec(spec))
-  stopifnot(is_semrepr(repr))
+  stopifnot(is.null(repr) | is_semrepr(repr))
 
-  model_vars <- model_variables(spec$model)
+  model_vars <- unique(model_variables(spec$model))
   data_vars <- colnames(spec$dataset)
 
   manifest <- model_vars %in% data_vars
@@ -126,14 +160,12 @@ print.summarized_variables <- function(x, ...) {
   names(out)[1] <- "Variables:"
   print(out)
 
-  for ( var in names(vars) ) {
-    out <- paste(vars[[var]], collapse = ", ")
-    out <- paste(strwrap(out, indent = 6, exdent = 6), collapse = "\n")
-
-    if ( out != "" )
-      out <- sprintf("%s\n", out)
-
-    cat("  ", var, ":\n", out, sep = "")
+  if ( x$count[1] > 0 ) {
+    for ( var in names(vars) ) {
+      out <- paste(vars[[var]], collapse = ", ")
+      out <- paste(strwrap(out, indent = 6, exdent = 6), collapse = "\n")
+      cat("  ", var, ":\n", out, "\n", sep = "")
+    }
   }
 
   invisible(x)
@@ -143,9 +175,13 @@ print.summarized_variables <- function(x, ...) {
 
 ### Summarize parameters: ############################################
 
-summarize_parameters <- function(spec, repr) {
+#' @export
+summarize_parameters <- function(spec, repr = NULL) {
   stopifnot(is_semspec(spec))
-  stopifnot(is_semrepr(repr))
+  stopifnot(is.null(repr) | is_semrepr(repr))
+
+  if ( is.null(repr) )
+    repr <- semrepr(spec)
 
   constraints <- spec$constraints
 
@@ -204,24 +240,28 @@ print.summarized_parameters <- function(x, ...) {
   names(out)[1] <- "Parameters:"
   print(out)
 
-  for ( param in names(params) ) {
-    out <- paste(params[[param]], collapse = ", ")
-    out <- paste(strwrap(out, indent = 6, exdent = 6), collapse = "\n")
-
-    if ( out != "" )
-      out <- sprintf("%s\n", out)
-
-    cat("  ", param, ":\n", out, sep = "")
+  if ( x$count[1] > 0 ) {
+    for ( param in names(params) ) {
+      out <- paste(params[[param]], collapse = ", ")
+      out <- paste(strwrap(out, indent = 6, exdent = 6), collapse = "\n")
+      cat("  ", param, ":\n", out, "\n", sep = "")
+    }
   }
+
+  invisible(x)
 }
 
 
 
 ### Summarize constraints: ###########################################
 
-summarize_constraints <- function(spec, repr) {
+#' @export
+summarize_constraints <- function(spec, repr = NULL) {
   stopifnot(is_semspec(spec))
-  stopifnot(is_semrepr(repr))
+  stopifnot(is.null(repr) | is_semrepr(repr))
+
+  if ( is.null(repr) )
+    repr <- semrepr(spec)
 
   constraints <- spec$constraints
   data <- spec$dataset
@@ -263,37 +303,41 @@ print.summarized_constraints <- function(x, ...) {
   names(out)[1] <- "Constraints:"
   print(out)
 
-  for ( constr in names(constrs) ) {
-    out <- paste(constrs[[constr]], collapse = "\n")
-
-    if ( out != "" )
-      out <- sprintf("    %s\n", out)
-
-    cat("  ", constr, ":\n", out, sep = "")
+  if ( x$count[1] > 0 ) {
+    for ( constr in names(constrs) ) {
+      out <- paste("    ", constrs[[constr]], collapse = "\n")
+      cat("  ", constr, ":\n", out, "\n", sep = "")
+    }
   }
+
+  invisible(x)
 }
 
 
 
 ### Summarize data: ##################################################
 
-summarize_data <- function(spec, repr) {
+summarize_data <- function(spec, repr = NULL) {
   stopifnot(is_semspec(spec))
-  stopifnot(is_semrepr(repr))
+  stopifnot(is.null(repr) | is_semrepr(repr))
+
+  if ( is.null(repr) )
+    repr <- semrepr(spec)
 
   data <- spec$dataset
 
   if ( is.null(data) ) {
     count <- c(Observations = 0, Variables = 0, Groups = 0)
-    details <- data.frame(Mean = value(NULL, "numeric"),
+    details <- data.frame(Variable = value(NULL, "character"),
+                          Group = value(NULL, "character"),
+                          Level = value(NULL, "character"),
+                          Mean = value(NULL, "numeric"),
                           Median = value(NULL, "numeric"),
                           SD = value(NULL, "numeric"),
                           Kurtosis = value(NULL, "numeric"),
                           Skewness = value(NULL, "numeric"),
                           N = value(NULL, "numeric"),
-                          "NA" = value(NULL, "numeric"),
-                          Group = value(NULL, "character"),
-                          Variable = value(NULL, "character"))
+                          "NAs" = value(NULL, "numeric"))
 
     return(summarized_result("data", count, details))
   }
@@ -324,7 +368,7 @@ summarize_data <- function(spec, repr) {
                Kurtosis = kurtosis(x, na.rm = TRUE),
                Skewness = skewness(x, na.rm = TRUE),
                N = length(x),
-               "NA" = sum(is.na(x)))
+               "NAs" = sum(is.na(x)))
   }
 
   s2 <- function(x) {
@@ -332,13 +376,15 @@ summarize_data <- function(spec, repr) {
     if ( is.na(x["group"]) ) {
       r <- s1(data[[x["variable"]]])
       r$Group <- NA
+      r$Level <- NA
       r$Variable <- x["variable"]
     } else {
       r <- aggregate(data[[x["variable"]]],
                      list(group = data[[x["group"]]]), s1,
                      simplify = FALSE)
       r <- cbind(do.call(rbind, r[["x"]]),
-                 Group = as.character(r[["group"]]),
+                 Level = as.character(r[["group"]]),
+                 Group = x["group"],
                  stringsAsFactors = FALSE)
       r$Variable <- x["variable"]
     }
@@ -349,6 +395,7 @@ summarize_data <- function(spec, repr) {
              Variables = nrow(manifest),
              Groups = length(unique(na.omit(manifest$group))))
   details <- do.call(rbind, apply(manifest, 1, s2))
+  details <- details[c(10, 9, 8, 1:7)]
 
   summarized_result("data", count, details)
 }
@@ -359,8 +406,13 @@ summarize_data <- function(spec, repr) {
 print.summarized_data <- function(x, ...) {
   cat("Data:", x$count["Observations"], "obs. of",
       x$count["Variables"], "variables,",
-      x$count["Variables"], "grouping variables\n")
+      x$count["Groups"], "grouping variables\n")
 
+  if ( x$count[1] > 0 ) {
+    iprint(x$details, indent = 1, na.print = "", digits = 2, row.names = FALSE)
+  }
+
+  invisible(x)
 }
 
 
@@ -388,4 +440,18 @@ summarized_result <- function(what, count, details) {
   rownames(ret$details) <- NULL
 
   structure(ret, class = c(sprintf("summarized_%s", what), class(ret)))
+}
+
+
+
+iprint <- function (object, indent = 4, ...) {
+  ## NOTE: shameless copied from package qvcalc!
+  zz <- ""
+  tc <- textConnection("zz", "w", local = TRUE)
+  sink(tc)
+  try(print(object, ...))
+  sink()
+  close(tc)
+  indent <- paste(rep(" ", indent), sep = "", collapse = "")
+  cat(paste(indent, zz, sep = ""), sep = "\n")
 }

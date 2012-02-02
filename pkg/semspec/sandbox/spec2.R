@@ -34,3 +34,29 @@ m
 
 summary(m)
 
+
+
+
+######################################################################
+
+library("lavaan")
+
+data("HolzingerSwineford1939")
+
+m2 <- structural(visual ~ x1 + x2 + x3) +
+    structural(textual ~ x4 + x5 + x6) +
+    structural(speed ~ x7 + x8 + x9)
+
+m2 <- m2 + dataset(HolzingerSwineford1939)
+
+m2
+summary(m2)
+plot(m2)
+
+
+
+
+
+
+
+

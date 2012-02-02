@@ -19,8 +19,12 @@ semfit_lavaan <- function(object, ...) {
 
 
 
-as_lavaan <- function(object, ...) {
-  stopifnot(is_semrepr(object))
+as_lavaan_syntax <- function(object) {
+  stopifnot(is_semspec(object))
+
+  repr <- semrepr(object)
+
+
 
 }
 
@@ -35,11 +39,18 @@ semfit_semPLS <- function(object, ...) {
 }
 
 
+as_semPLS_ayntax <- function(object) {
+  stopifnot(is_semspec(object))
+
+  repr <- semrepr(object)
+
+}
 
 
 
 ### sem: #############################################################
 
+#' @export
 semfit_sem <- function(object, ...) {
   stopifnot(require("sem"))
   stopifnot(is_semspec(object))
@@ -47,3 +58,26 @@ semfit_sem <- function(object, ...) {
 
 
 
+#' @export
+as_sem_syntax <- function(object, ...) {
+  stopifnot(is_semspec(object))
+
+  repr <- semrepr(object)
+
+  arrows <- ifelse(repr$type == "covariance", "<->", "->")
+  paths <- paste(repr$lhs, arrows, repr$rhs)
+
+  parameters <- repr$param
+  parameters[!repr$free] <- NA  # NOTE: only fixed
+
+  value <- rep(NA, length(parameters))
+
+  ret <- cbind(paths, parameters, value)
+  colnames(ret) <- NULL
+
+  structure(ret, class = c("semmod"))
+}
+
+
+
+######################################################################

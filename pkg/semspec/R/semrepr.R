@@ -30,26 +30,8 @@ semrepr <- function(object) {
     ret <- expand_semrepr_constraints(ret, object$constraints)
   }
 
-  ## TODO: return the data and the constraints as well?
-
   structure(ret, class = c(SEMREPR_CLASS, class(ret)))
 }
-
-
-
-#' @S3method plot semrepr
-plot.semrepr <- function(x, y = NULL, ...) {
-  stopifnot(require("qgraph"))
-
-  n <- unique(c(x$lhs, x$rhs))
-  n <- structure(seq(along = n), names = n)
-
-  el <- cbind(n[x$lhs], n[x$rhs])
-  dimnames(el) <- NULL
-
-  qgraph(el)  # TODO make layout = "tree" work
-}
-
 
 
 

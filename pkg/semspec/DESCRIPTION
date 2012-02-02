@@ -12,7 +12,7 @@ Description: Extensible domain specific language for the specification of
   the model specification (equal for all packages) from the model
   representation (partly similar for all packages) and model fitting
   (specific for each package).
-Depends: e1071, formatR
+Depends: e1071, formatR, qgraph
 Suggests: semPLS, sem, lavaan
 Build-dep: roxygen2
 URL: http://semPLS.r-forge.r-project.org/

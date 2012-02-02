@@ -138,3 +138,4 @@ constraint <- function(expression) {
 print.semspec_constraint <- function(x, ...) {
   print(attr(x[[1]], "call"))
 }
+

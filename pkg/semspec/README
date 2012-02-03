@@ -100,3 +100,8 @@
      - Should be doable---if we create a sound representation of the
        hypergraph in this project, we can use flow optimization
        algorithms available in the igraph package
+* Publication
+  - I think, this is a great example of using computing on the
+    language to satisfy statistical theory, i.e., to do real
+    confirmatory analysis.
+

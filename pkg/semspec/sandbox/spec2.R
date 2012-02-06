@@ -2,6 +2,7 @@
 sapply(list.files("../R", full = TRUE), source)
 library("e1071")
 library("formatR")
+library("qgraph")
 
 m <- structural(ind60 ~ x1 + x2 + x3) +
      structural(dem60 ~ y1 + y2 + y3 + y4 | aaa,

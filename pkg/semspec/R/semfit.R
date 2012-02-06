@@ -39,7 +39,7 @@ semfit_semPLS <- function(object, ...) {
 }
 
 
-as_semPLS_ayntax <- function(object) {
+as_semPLS_syntax <- function(object) {
   stopifnot(is_semspec(object))
 
   repr <- semrepr(object)
@@ -51,7 +51,7 @@ as_semPLS_ayntax <- function(object) {
 ### sem: #############################################################
 
 #' @export
-semfit_sem <- function(object, ...) {
+semfit_sem <- function(object, start = start_values(object), ...) {
   stopifnot(require("sem"))
   stopifnot(is_semspec(object))
 }
@@ -81,3 +81,10 @@ as_sem_syntax <- function(object, ...) {
 
 
 ######################################################################
+
+# TODO: Armin
+start_values <- function(object, ...) {
+  stopifnot(is_semspec(object))
+  repr <- semrepr(object)
+  # start values for repr$free repr$param
+}

@@ -36,14 +36,23 @@ as_lavaan_syntax <- function(object) {
 semfit_semPLS <- function(object, ...) {
   stopifnot(require("semPLS"))
   stopifnot(is_semspec(object))
+  
+  this_data <- object$dataset
+  this_model <- as_semPLS_syntax(object, ...)
+  sempls(model=this_model, data=this_data)
 }
 
-
-as_semPLS_syntax <- function(object) {
+#' @export
+as_semPLS_syntax <- function(object, ...) {
   stopifnot(is_semspec(object))
 
   repr <- semrepr(object)
+  sm <- as.matrix(with(repr, repr[type=="structural",
+                                  c("lhs", "rhs")]))
+  mm <- as.matrix(with(repr, repr[type=="measurement",
+                                  c("lhs", "rhs")]))
 
+  plsm(data=object$dataset, strucmod=sm, measuremod=mm, ...)
 }
 
 
@@ -73,14 +82,23 @@ as_sem_syntax <- function(object, ...) {
   value <- rep(NA, length(parameters))
 
   ret <- cbind(paths, parameters, value)
-  colnames(ret) <- NULL
+  #ret <- paste(paths, ", ", parameters, ", ", value, "\n", sep="")
+  #colnames(ret) <- NULL
 
+  #tmp <- file()
+  #cat(ret, file=tmp)
+  #sem_model <- specifyModel(file = tmp)
+  #close(tmp)
+  
+  ## Note: Variances for LVs are missing
   structure(ret, class = c("semmod"))
+  #return(sem_model)
 }
 
 
 
 ######################################################################
+
 
 # TODO: Armin
 start_values <- function(object, ...) {
@@ -88,3 +106,5 @@ start_values <- function(object, ...) {
   repr <- semrepr(object)
   # start values for repr$free repr$param
 }
+
+

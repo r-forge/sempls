@@ -4,13 +4,13 @@ library("e1071")
 library("formatR")
 library("qgraph")
 
-m <- structural(ind60 ~ x1 + x2 + x3) +
-     structural(dem60 ~ y1 + y2 + y3 + y4 | aaa,
+m <- measurement(ind60 ~ x1 + x2 + x3) +
+     measurement(dem60 ~ y1 + y2 + y3 + y4 | aaa,
                 param = c(dem60 = "manuel")) +
-     structural(dem65 ~ y5 + y6 + y7 + I(y8 * 2),
+     measurement(dem65 ~ y5 + y6 + y7 + I(y8 * 2),
                 param = c("I(y8 * 2)" = "ppp")) +
-     structural(dem65 ~ z1*z2) +
-     measurement(dem60 ~ ind60) +
+     measurement(dem65 ~ z1*z2) +
+     srtructural(dem60 ~ ind60) +
      intercept(item1 ~ 1) +
      covariance(item1 ~ item2) #+ group(bbb)
 m
@@ -44,9 +44,9 @@ library("lavaan")
 
 data("HolzingerSwineford1939")
 
-m2 <- structural(visual ~ x1 + x2 + x3) +
-    structural(textual ~ x4 + x5 + x6) +
-    structural(speed ~ x7 + x8 + x9)
+m2 <- measurement(visual ~ x1 + x2 + x3) +
+    measurement(textual ~ x4 + x5 + x6) +
+    measurement(speed ~ x7 + x8 + x9)
 
 m2 <- m2 + dataset(HolzingerSwineford1939)
 
@@ -54,6 +54,23 @@ m2
 summary(m2)
 plot(m2)
 
+######################################################################
+
+library("semPLS")
+
+## non-sense model
+m3 <- measurement(visual ~ x1 + x2 + x3) +
+    measurement(textual ~ x4 + x5 + x6) +
+    measurement(speed ~ x7 + x8 + x9) +
+    structural(speed ~ textual + visual)
+
+m3 <- m3 + dataset(HolzingerSwineford1939)
+
+m3
+summary(m3)
+plot(m3)   # does not work
+
+semfit_semPLS(m3)
 
 
 

@@ -37,9 +37,28 @@ semfit_semPLS <- function(object, ...) {
   stopifnot(require("semPLS"))
   stopifnot(is_semspec(object))
   
-  this_data <- object$dataset
-  this_model <- as_semPLS_syntax(object, ...)
-  sempls(model=this_model, data=this_data)
+  model_parts <- as_semPLS_syntax(object, ...)
+  
+  strucmod <- model_parts$strucmode
+  measuremod <- model_parts$measuremod
+  data <- model_parts$data
+
+  model <- plsm(data=data,
+                strucmod=strucmod,
+                measuremod=measuremod)
+  
+  fit <- sempls(model=model, data=data, ...)
+  object$fit <- fit
+  
+  repr <- semrepr(object)
+  namesrepr <- names(repr)
+  estimates <- coef(fit)
+  estimates$Parameter <- gsub(" -> ", "_", estimates$Path)
+  erg <- merge(x = repr, y = estimates,
+                by.x = "param", by.y = "Parameter", sort=FALSE)
+  erg <- erg[, c(namesrepr, "Estimate")]
+  names(erg) <- c(namesrepr, "semPLS_fit")
+  return(erg)             
 }
 
 #' @export
@@ -47,12 +66,18 @@ as_semPLS_syntax <- function(object, ...) {
   stopifnot(is_semspec(object))
 
   repr <- semrepr(object)
+
+  ### structural model
   sm <- as.matrix(with(repr, repr[type=="structural",
                                   c("lhs", "rhs")]))
+  colnames(sm) <- c("from", "to")
+
+  ### measurement model
   mm <- as.matrix(with(repr, repr[type=="measurement",
                                   c("lhs", "rhs")]))
-
-  plsm(data=object$dataset, strucmod=sm, measuremod=mm, ...)
+  colnames(mm) <- c("from", "to")
+  #plsm(data=object$dataset, strucmod=sm, measuremod=mm, ...)
+  return(list(data=object$dataset, strucmode=sm, measuremod=mm))
 }
 
 
@@ -63,6 +88,37 @@ as_semPLS_syntax <- function(object, ...) {
 semfit_sem <- function(object, start = start_values(object), ...) {
   stopifnot(require("sem"))
   stopifnot(is_semspec(object))
+
+  this_model <- as_sem_syntax(object, ...)
+  
+  ### seems to be nessecary
+  tmp <- file()
+  cat(this_model, file = tmp)
+  sem_model <- specifyEquations(file = tmp)
+  close(tmp)
+
+  ### startvalues
+  sem_model <- as.data.frame(unclass(sem_model))
+  sem_model <- merge(x=sem_model, y=start,
+                     by.x="V2", by.y="param", all.x=TRUE)
+  sem_model$start <- ifelse(!is.na(sem_model$val),
+                            sem_model$val,
+                            sem_model$V3)
+
+  
+  sem_model <- sem_model[, c("V1", "V2", "start")]
+  sem_model <- as.matrix(sem_model)
+  colnames(sem_model) <- NULL
+  sem_model <- structure(sem_model, class="semmod")
+
+  this_data <- object$dataset
+
+  fit <- sem(model = sem_model, data = this_data)
+  object$fit <- fit
+
+  erg <- semrepr(object)
+  erg$sem_fit <- coef(fit)[erg$param]
+  return(erg)
 }
 
 
@@ -73,27 +129,58 @@ as_sem_syntax <- function(object, ...) {
 
   repr <- semrepr(object)
 
-  arrows <- ifelse(repr$type == "covariance", "<->", "->")
-  paths <- paste(repr$lhs, arrows, repr$rhs)
-
+  ### which are fixed?
+  summr <- summary(object)
   parameters <- repr$param
-  parameters[!repr$free] <- NA  # NOTE: only fixed
+  fixed <- subset(summr$parameters$details,
+                     subset = (Type == "Fixed"),
+                     select = "Parameter")
+  fixed <- unclass(fixed)$Parameter   # to get the character vector
+  fixed_logical <- parameters %in% fixed   # logical
 
-  value <- rep(NA, length(parameters))
 
-  ret <- cbind(paths, parameters, value)
-  #ret <- paste(paths, ", ", parameters, ", ", value, "\n", sep="")
-  #colnames(ret) <- NULL
+  ### only not fixed parameters
+  ret <- with(repr[!fixed_logical & repr$type %in% c("measurement", "structure"),],
+           ifelse(type == "measurement",
+             paste(rhs, " = ", param, " * " , lhs, "\n", sep=""),
+             paste(lhs, " = ", param, " * " , rhs, "\n", sep="")))
 
-  #tmp <- file()
-  #cat(ret, file=tmp)
-  #sem_model <- specifyModel(file = tmp)
-  #close(tmp)
+  covs <- with(repr[!fixed_logical & repr$type %in% c("covariance"),],
+             paste("C(", rhs, ", ", lhs,") = ", param, "\n", sep=""))
+
+
+  if(length(fixed) != 0){
+  ### adding fixed parameters
   
-  ## Note: Variances for LVs are missing
-  structure(ret, class = c("semmod"))
-  #return(sem_model)
+  ## matrix with all constraints
+  mconstr <- t(sapply(object$constraints, function(x) c(op=paste(x[1]),
+                                               lhs=paste(x[2]),
+                                               rhs=paste(x[3]))))
+  
+  ## values for fixed parameters
+  values <- mconstr[mconstr[,"lhs"] %in% fixed, c("lhs", "rhs")]
+  reprfixed <- merge(x=repr[fixed_logical,], y=values,
+                     by.x="param", by.y="lhs", , suffixes = c(".name",".value"))
+
+  
+  ret2 <- with(reprfixed[reprfixed$type %in% c("measurement", "structure"),],
+            ifelse(type == "measurement",
+              paste(rhs.name, " = ", rhs.value," * " , lhs, "\n", sep=""),
+              paste(lhs, " = ", rhs.value," * " , rhs, "\n", sep="")))
+
+  covs2 <- with(reprfixed[reprfixed$type %in% c("covariance"),],
+             ifelse(type == "covariance",
+               paste("C(", rhs.name, ", ", lhs,") = ", rhs.value, "\n", sep="")))
+
+               
+  ret <- c(ret, ret2)
+  covs <- c(covs, covs2)
+  }
+
+
+  return(c(ret, covs))
 }
+
 
 
 
@@ -104,7 +191,21 @@ as_sem_syntax <- function(object, ...) {
 start_values <- function(object, ...) {
   stopifnot(is_semspec(object))
   repr <- semrepr(object)
+  ### which are fixed?
+  summr <- summary(object)
+  parameters <- repr$param
+  fixed <- subset(summr$parameters$details,
+                     subset = (Type == "Fixed"),
+                     select = "Parameter")
+  fixed <- unclass(fixed)$Parameter   # to get the character vector
+  fixed_logical <- parameters %in% fixed   # logical
   # start values for repr$free repr$param
+  start <- repr[!fixed_logical, "param", drop=FALSE]
+  start$val <- NA
+  #val <- data.frame(param=names(c(...)), val=c(...))
+  val <- c(...)
+  start[match(names(val), start$param), "val"] <- val
+  return(start)
 }
 
 

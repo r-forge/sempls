@@ -66,18 +66,19 @@ semspec_base <- function(what, formula, call, param = NULL) {
 
 
 #' @export
-structural <- function(formula, param = NULL) {
-  semspec_base("structural", substitute(formula), match.call(), param)
+regression <- function(formula, param = NULL) {
+  semspec_base("regression", substitute(formula), match.call(), param)
 }
-# lavaan: regression
+# structural model
 
 
 
 #' @export
-measurement <- function(formula, param = NULL) {
-  semspec_base("measurement", substitute(formula), match.call(), param)
+latent <- function(formula, param = NULL) {
+  semspec_base("latent", substitute(formula), match.call(), param)
 }
-# lavaan: latent
+# measurement model
+
 
 
 #' @export

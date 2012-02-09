@@ -8,7 +8,7 @@ Author: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>,
 Maintainer: Manuel J. A. Eugster
     <manuel.eugster@stat.uni-muenchen.de>
 Description: Extensible domain specific language for the specification of
-  structural equation models based on R formula objects. It encouples
+  structural equation models based on R formula objects. It decouples
   the model specification (equal for all packages) from the model
   representation (partly similar for all packages) and model fitting
   (specific for each package).

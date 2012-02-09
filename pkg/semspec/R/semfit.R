@@ -23,9 +23,6 @@ as_lavaan_syntax <- function(object) {
   stopifnot(is_semspec(object))
 
   repr <- semrepr(object)
-
-
-
 }
 
 
@@ -68,12 +65,12 @@ as_semPLS_syntax <- function(object, ...) {
   repr <- semrepr(object)
 
   ### structural model
-  sm <- as.matrix(with(repr, repr[type=="structural",
+  sm <- as.matrix(with(repr, repr[type=="regression",
                                   c("lhs", "rhs")]))
   colnames(sm) <- c("from", "to")
 
   ### measurement model
-  mm <- as.matrix(with(repr, repr[type=="measurement",
+  mm <- as.matrix(with(repr, repr[type=="latent",
                                   c("lhs", "rhs")]))
   colnames(mm) <- c("from", "to")
   #plsm(data=object$dataset, strucmod=sm, measuremod=mm, ...)
@@ -140,8 +137,8 @@ as_sem_syntax <- function(object, ...) {
 
 
   ### only not fixed parameters
-  ret <- with(repr[!fixed_logical & repr$type %in% c("measurement", "structure"),],
-           ifelse(type == "measurement",
+  ret <- with(repr[!fixed_logical & repr$type %in% c("latent", "regression"),],
+           ifelse(type == "latent",
              paste(rhs, " = ", param, " * " , lhs, "\n", sep=""),
              paste(lhs, " = ", param, " * " , rhs, "\n", sep="")))
   
@@ -163,8 +160,8 @@ as_sem_syntax <- function(object, ...) {
                      by.x="param", by.y="lhs", , suffixes = c(".name",".value"))
 
   
-  ret2 <- with(reprfixed[reprfixed$type %in% c("measurement", "structure"),],
-            ifelse(type == "measurement",
+  ret2 <- with(reprfixed[reprfixed$type %in% c("latent", "regression"),],
+            ifelse(type == "latent",
               paste(rhs.name, " = ", rhs.value," * " , lhs, "\n", sep=""),
               paste(lhs, " = ", rhs.value," * " , rhs, "\n", sep="")))
 

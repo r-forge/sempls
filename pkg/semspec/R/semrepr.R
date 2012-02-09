@@ -53,8 +53,8 @@ expand_semspec <- function(object) {
     x
   }
 
-  object$measurement <- lapply(object$measurement, expand)
-  object$structural <- lapply(object$structural, expand)
+  object$regression <- lapply(object$regression, expand)
+  object$latent <- lapply(object$latent, expand)
 
   object
 }
@@ -207,7 +207,7 @@ expand_semrepr_data <- function(object, groups) {
 
     d <- data.frame(x, level = level)
     d$param <- sprintf("%s_%s%s", d$lhsparam, d$rhsparam,
-                       ifelse(is.na(d$level), "", sprintf("@%s", d$level)))
+                       ifelse(is.na(d$level), "", sprintf(":%s", d$level)))
 
     ret <- rbind(ret, d)
   }

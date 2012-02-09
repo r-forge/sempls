@@ -84,7 +84,7 @@ summarize_df <- function(spec, repr = NULL) {
   vars <- summarize_variables(spec, repr)
   params <- summarize_parameters(spec, repr)
 
-  model_df(vars$count, params$counts)
+  model_df(vars$count, params$count)
 }
 
 
@@ -143,11 +143,11 @@ model_variables <- function(model) {
     if ( !is.null(group) ) {
       x <- remove_group(x)
     }
-    all.vars(x)
+    unique(all.vars(x))
   }
 
   model$group <- NULL
-  unname(unlist(sapply(model, function(x) lapply(x, vars))))
+  unique(unname(unlist(sapply(model, function(x) lapply(x, vars)))))
 }
 
 
@@ -356,7 +356,7 @@ summarize_data <- function(spec, repr = NULL) {
                    cbind(variable = repr$rhs, group = repr$group))
   grouped <- na.omit(grouped)
   grouped <- unique(grouped)
-  grouped <- grouped[grouped[, "variable"] %in% manifest$variable, ]
+  grouped <- grouped[grouped[, "variable"] %in% manifest$variable, , drop = FALSE]
 
   manifest$group[manifest$variable %in% grouped[, "variable"]] <- grouped[, "group"]
 

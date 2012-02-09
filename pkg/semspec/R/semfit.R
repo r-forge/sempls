@@ -144,7 +144,7 @@ as_sem_syntax <- function(object, ...) {
            ifelse(type == "measurement",
              paste(rhs, " = ", param, " * " , lhs, "\n", sep=""),
              paste(lhs, " = ", param, " * " , rhs, "\n", sep="")))
-
+  
   covs <- with(repr[!fixed_logical & repr$type %in% c("covariance"),],
              paste("C(", rhs, ", ", lhs,") = ", param, "\n", sep=""))
 
@@ -202,7 +202,6 @@ start_values <- function(object, ...) {
   # start values for repr$free repr$param
   start <- repr[!fixed_logical, "param", drop=FALSE]
   start$val <- NA
-  #val <- data.frame(param=names(c(...)), val=c(...))
   val <- c(...)
   start[match(names(val), start$param), "val"] <- val
   return(start)

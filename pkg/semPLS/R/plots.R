@@ -87,8 +87,8 @@ densityplot.bootsempls <- function(x, data, pattern="beta", subset=NULL, ...){
     densityplot(~value|name, data=Y, as.table=TRUE, ...)
  }
 
-## lattice:::parallel (Version < 0.20)
-## lattice:::parallelplot (Version >= 0.20)
+## lattice::parallel (Version < 0.20-5)
+## lattice::parallelplot (Version >= 0.20-5)
 parallelplot.bootsempls <- function(x, data, pattern="beta", subset=NULL, reflinesAt,
                                 col=c("grey", "darkred", "darkred", "black"),
                                 lty=c("solid", "solid", "dashed", "dotted"), ...)
@@ -109,16 +109,10 @@ parallelplot.bootsempls <- function(x, data, pattern="beta", subset=NULL, reflin
     else Y <- data.frame(Y, origin=c(rep("1resample", x$nboot),
                               "2sample", "3ci", "3ci"))
     
-    if(packageVersion("lattice") < 0.20){
-      parallel(~Y[ind], data=Y, groups=origin, common.scale=TRUE, col=col, lty=lty, ...)
-    }
-    else{
-      parallelplot(~Y[ind], data=Y, groups=origin,
+    parallelplot(~Y[ind], data=Y, groups=origin,
                    common.scale=TRUE, col=col, lty=lty, ...)
-    }
 }
 
-parallel.bootsempls <- parallelplot.bootsempls
 
 mvplot <- function(model, ...){
   UseMethod("mvplot", model)

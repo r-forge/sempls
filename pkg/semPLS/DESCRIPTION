@@ -13,6 +13,6 @@ Description: Fits structural equation models using partial least
   technique requiring no distributional assumptions on the observed
   data.  
 License: GPL-2
-Depends: lattice
+Depends: lattice (>= 0.20-5)
 Suggests: XML, boot, sem
 LazyLoad: yes

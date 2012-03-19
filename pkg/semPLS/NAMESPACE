@@ -1,14 +1,15 @@
 # last modified 16 March 2012 by Armin Monecke
 
 importFrom(lattice, densityplot, parallelplot, barchart)
+
 export(read.splsm, sempls, bootsempls, pathDiagram, plsm2sem, plsm, rSquared,
        densityplot.sempls, densityplot.bootsempls, 
        mvplot, mvpairs, pathCoeff, totalEffects, plsWeights, plsLoadings,
        plsmEdit, addPath, removePath, addMVs, removeMVs, invertLVs, addLV, removeLVs,
        exogenous, endogenous, reflective, formative, indicators, predecessors, successors,
        qSquared, dgrho, communality, redundancy, rSquared2, gof,
-       parallelplot.bootsempls,
-       parallel.bootsempls # deprecated
+       parallelplot.bootsempls
+       #parallel.bootsempls # deprecated
        )
 
 S3method(print, sempls)
@@ -58,7 +59,7 @@ S3method(gof, sempls)
 S3method(print, gof)
 
 ## deprecated
-S3method(parallel, bootsempls)
+#S3method(parallel, bootsempls)
 
 
 

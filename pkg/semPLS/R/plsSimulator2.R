@@ -122,16 +122,19 @@ plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall",
   return(result)
 }
 
-# function to computer signal to noise ratio from R squared
-# (determination coefficient)
+## function to computer signal to noise ratio from R squared
+## (determination coefficient)
 snr <- function(rSquared) sqrt(rSquared/(1-rSquared))
 
 
-# function for adding error
+## function for adding error
 addEps <- function(x, n){
   if(var(x) > 1) stop("MVs variance exceeds 1.\nIllegal parameter choices.")
   sigma <- sqrt(1- var(x))
   x <- x + rnorm(n=n, mean=0, sd=sigma)
   return(x)
 }
+
+## rescale() is missing
+# rescale <- function(){}
 

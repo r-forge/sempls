@@ -67,7 +67,7 @@ plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall",
     for(MV in blocks[[LV]]){
       tmp <- Latent[, predList[[LV]]] %*% object$path_coefficients[predList[[LV]], LV, drop=FALSE]
       tmp <- tmp * object$outer_loadings[MV, LV]
-      tmp <- addEps(tmp, n=n)
+      tmp <- apply(tmp, 2, addEps, n=n)
       colnames(tmp) <- MV
       simendData <- cbind(simendData, tmp)
     }
@@ -130,11 +130,50 @@ snr <- function(rSquared) sqrt(rSquared/(1-rSquared))
 ## function for adding error
 addEps <- function(x, n){
   if(var(x) > 1) stop("MVs variance exceeds 1.\nIllegal parameter choices.")
-  sigma <- sqrt(1- var(x))
+  sigma <- sqrt(1 - var(x))
   x <- x + rnorm(n=n, mean=0, sd=sigma)
   return(x)
 }
 
-## rescale() is missing
-# rescale <- function(){}
+addEps2 <- function(x, n){
+  if(sd(x) > 1) stop("MVs variance exceeds 1.\nIllegal parameter choices.")
+  sigma <- 1 - sd(x)
+  x <- x + rnorm(n=n, mean=0, sd=sigma)
+  return(x)
+}
+
+eps <- function(p, n){
+  if(p > 1 || p <= 0) stop("Illegal parameter choice.")
+  sigma <- 1 - p
+  eps <- rnorm(n=n, mean=0, sd=sigma)
+  return(eps)
+}
+
+## rescale() as inverse function of scale()
+rescale <- function(data, newdata){
+  if(!missing(newdata) && !all(colnames(data) %in% colnames(newdata))){
+    stop("MVs must be available from newdata.")
+  }
+  if(is.null(attr(data, "scaled:center"))){
+    message("No need to recenter, data is not centered.")
+    m <- 0
+  }
+  else{
+    m <- attr(data, "scaled:center")
+  }
+  if(is.null(attr(data, "scaled:scale"))){
+    message("No need to rescale, data is not scaled.")
+    s <- 1
+  }
+  else{
+    s <- attr(data, "scaled:scale")
+  }
+  if(missing(newdata)){
+    t(apply(data, 1, function(x) {x * s + m}))
+  }
+  else{
+    newdata <- newdata[, colnames(data)]
+    t(apply(newdata, 1, function(x) {x * s + m}))
+  }
+}
 

@@ -1,8 +1,8 @@
 Package: semPLS
 Type: Package
 Title: Structural Equation Modeling Using Partial Least Squares
-Version: 1.0-9
-Date: 2012-09-11
+Version: 1.0-10
+Date: 2012-11-05
 Authors@R: c(person("Armin", "Monecke", role=c("aut", "cph","cre"),
   email="armin.monecke@stat.uni-muenchen.de"), 
   person("Friedrich", "Leisch", role=c("aut", "ths")))

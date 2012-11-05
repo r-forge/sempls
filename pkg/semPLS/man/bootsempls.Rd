@@ -190,10 +190,6 @@ bootsempls(object, nboot=200, start=c("ones", "old"), method=
   }
 }
 
-\author{
-Armin Monecke \email{armin.monecke@stat.uni-muenchen.de}
-}
-
 \seealso{
   \code{\link[boot]{boot}}, \code{\link[sem]{boot.sem}}
 }

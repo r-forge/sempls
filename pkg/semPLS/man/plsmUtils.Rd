@@ -160,13 +160,10 @@ acyclic(model)
   thus represented by an acyclic graph.
 }
 
-\author{
-  Armin Monecke \email{armin.monecke@stat.uni-muenchen.de}
-}
-
 \seealso{
    \code{\link{plsm}}, \code{\link{read.splsm}}
 }
+ 
 \examples{
 data(mobi)
 data(ECSIsm)

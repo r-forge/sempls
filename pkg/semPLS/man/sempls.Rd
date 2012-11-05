@@ -220,16 +220,13 @@ plsLoadings(object)
   }
 }
 
-\author{
-  Armin Monecke \email{armin.monecke@stat.uni-muenchen.de}
-}
-
 \seealso{
    \code{\link{plsm}}, \code{\link{read.splsm}},
    \code{\link{rSquared}}, \code{\link{pathDiagram}},
    \code{\link{bootsempls}}, \code{\link{plsm2sem}},
    \code{\link[sem]{sem}}
 }
+
 \examples{
 data(ECSImobi)
 ecsi <- sempls(model=ECSImobi, data=mobi, wscheme="pathWeighting")
@@ -262,7 +259,7 @@ print(l, type="outer", digits=2)
 # outer loadings greater than 0.5
 print(l,type="outer", cutoff=0.5, digits=2)
 # cross loadings greater than 0.5
-print(ecsi, type="cross", cutoff=0.5, digits=2)
+print(l, type="cross", cutoff=0.5, digits=2)
 
 
 ### R-squared

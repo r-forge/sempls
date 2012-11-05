@@ -114,15 +114,12 @@ gof(object, \ldots)
 }
 
 \references{
-  Esposito Vinzi V., Trinchera L., Amato S. (2010). PLS Path Modeling: From Foundations to Recent
-  Developments and Open Issues for Model Assessment and Improvement. In
-  Esposito Vinzi V., Chin W.W., Henseler J., Wang H.F. (eds.), Handbook of Partial Least Squares: Concepts,
-  Methods and Applications in Marketing and Related Fields, chapter 2. Springer-Verlag
-  Berlin Heidelberg.
-}
-
-\author{
-  Armin Monecke \email{armin.monecke@stat.uni-muenchen.de}
+  Esposito Vinzi V., Trinchera L., Amato S. (2010). PLS Path Modeling:
+  From Foundations to Recent Developments and Open Issues for Model
+  Assessment and Improvement. In Esposito Vinzi V., Chin W.W., Henseler
+  J., Wang H.F. (eds.), Handbook of Partial Least Squares: Concepts,
+  Methods and Applications in Marketing and Related Fields, chapter
+  2. Springer-Verlag Berlin Heidelberg.
 }
 
 \seealso{

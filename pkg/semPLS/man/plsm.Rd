@@ -100,10 +100,6 @@ mvpairs(model, \ldots)
   }
 }
 
-\author{
-  Armin Monecke \email{armin.monecke@stat.uni-muenchen.de}
-}
-
 \seealso{
   \code{\link{sempls}}, \code{\link{read.splsm}}
 }

@@ -1,9 +1,9 @@
 Package: semPLS
 Type: Package
 Title: Structural Equation Modeling Using Partial Least Squares
-Version: 1.0-7
-Date: 2012-03-23
-Author@R: c(person("Armin", "Monecke", role=c("aut", "cph","cre"),
+Version: 1.0-9
+Date: 2012-09-11
+Authors@R: c(person("Armin", "Monecke", role=c("aut", "cph","cre"),
   email="armin.monecke@stat.uni-muenchen.de"), 
   person("Friedrich", "Leisch", role=c("aut", "ths")))
 Author: Armin Monecke <armin.monecke@stat.uni-muenchen.de>
@@ -14,5 +14,5 @@ Description: Fits structural equation models using partial least
   data.  
 License: GPL-2
 Depends: lattice (>= 0.20-5)
-Suggests: XML, boot, sem
+Suggests: XML, boot, sem, matrixcalc
 LazyLoad: yes

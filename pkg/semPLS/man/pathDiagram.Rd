@@ -70,11 +70,6 @@ pathDiagram(object, \ldots)
   \url{http://www.graphviz.org/Documentation/dotguide.pdf}.
 }
 
-\author{
-  Armin Monecke \email{armin.monecke@stat.uni-muenchen.de}
-}
-
-
 \seealso{
   \code{\link{sempls}}, \code{\link{rSquared}}
 }

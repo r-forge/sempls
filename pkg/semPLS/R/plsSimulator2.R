@@ -7,6 +7,8 @@ plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall",
   scale <- match.arg(scale)
   method <- match.arg(method)
   ifelse(pairwise, use <- "pairwise.complete.obs", use <- "everything")
+
+  # get information from 'object'
   model <- object$model
   blocks <- model$blocks
   data <- object$data
@@ -16,6 +18,7 @@ plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall",
   endMVs <- unlist(model$blocks[endLVs])
   factor_scores <- object$factor_scores
 
+  # create multivariate ordinal data for exogenous variables
   if(ordinal) {
     if(require(orddata)==FALSE){
       stop("If argument ordinal is set to TRUE the orddata package is required.")
@@ -31,6 +34,7 @@ plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall",
     simexData <- scale(simexData)
   }
 
+  # create multivariate normal data for exogenous variables
   if(!ordinal) {
     if(require(mvtnorm)==FALSE){
       stop("If argument ordinal is set to FALSE the mvtnorm package is required.")
@@ -51,7 +55,8 @@ plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall",
   for(LV in exLVs){
     if(dim(simexData[, blocks[[LV]]])[2] == 1) next
     l <- object$outer_loadings[blocks[[LV]], LV, drop=FALSE]
-    L <- l %*% t(l)
+    #L <- l %*% t(l)
+    L <- tcrossprod(l)
     S <- cov(simexData[, blocks[[LV]]])
     exLatent[, LV] <- exLatent[, LV] / sqrt(sum(L * S))
   }
@@ -65,51 +70,69 @@ plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall",
   #threeStep <- object$outer_loadings %*% object$path_coefficients %*% t(object$outer_loadings)
   for(LV in endLVs){
     for(MV in blocks[[LV]]){
-      tmp <- Latent[, predList[[LV]]] %*% object$path_coefficients[predList[[LV]], LV, drop=FALSE]
+      # create the next LV
+      tmp <- Latent[, predList[[LV]]] %*%
+        object$path_coefficients[predList[[LV]], LV, drop=FALSE]
+
+      # create MVs from LV: better to use weights?
       tmp <- tmp * object$outer_loadings[MV, LV]
+      # add normal Error
       tmp <- apply(tmp, 2, addEps, n=n)
       colnames(tmp) <- MV
       simendData <- cbind(simendData, tmp)
     }
+    # one variable block
     if(dim(simendData[, blocks[[LV]], drop=FALSE])[2] == 1){
       tmp <- simendData[, blocks[[LV]]] %*% object$outer_loadings[blocks[[LV]], LV, drop=FALSE]
       Latent <- cbind(Latent, tmp)
       next
     }
+
+    # loadings from one block
     l <- object$outer_loadings[blocks[[LV]], LV, drop=FALSE]
+    # path coefficients for one LV
     beta <- object$path_coefficients[predList[[LV]], LV, drop=FALSE]
-    L <- l %*% t(l)
+    #L <- l %*% t(l)
+    L <- tcrossprod(l)
+    
     S <- cor(simendData[, blocks[[LV]]])
     extra <- NULL
     res <- NULL
     for(i in rownames(beta)){
-        #print(beta)
+        # loading * path coefficient
         l2 <- l * beta[i,]
         extra[i] <- sum(l2)
-        L2 <- l2 %*% t(l2)
+        #L2 <- l2 %*% t(l2)
+        L2 <- tcrossprod(l2)
         if(is.null(res)) res <- L2
         else res <- res + L2
     }
     extraP <- prod(extra) * sum(object$path_coefficients[rownames(beta), rownames(beta)])
+
+    ###
     if(length(extra)>1){
-        prvCor <- cor(Latent[, rownames(beta)])
-        prvCor[!upper.tri(prvCor, diag=FALSE)] <- 0
+      prvCor <- cor(Latent[, rownames(beta)])
+      prvCor[!upper.tri(prvCor, diag=FALSE)] <- 0
+      extraC <- prod(extra) * sum(prvCor)
+      res <- res + extraC
+      res[as.logical(diag(1, dim(res)[1]))] <- 1
+    }
+    if(verbose){
+      if(length(extra)>1){
         cat("prvCor:\n")
         print(prvCor)
         cat("pc:\n")
         print(object$path_coefficients[rownames(beta), rownames(beta)])
-        extraC <- prod(extra) * sum(prvCor)
         cat("extraC:\n")
         print(extraC)
         cat("extraP:\n")
         print(extraP)
-        res <- res + extraC
+      }
+      cat("S:\n")
+      print(S)
+      cat("Lbeta:\n")
+      print(res)
     }
-    res[as.logical(diag(1, dim(res)[1]))] <- 1
-    cat("S:\n")
-    print(S)
-    cat("Lbeta:\n")
-    print(res)
     if(analytical) S <- res
     tmp <- simendData[, blocks[[LV]]] %*% object$outer_loadings[blocks[[LV]], LV, drop=FALSE]
     tmp <- tmp / sqrt(sum(L * S))
@@ -117,12 +140,13 @@ plsSimulator <- function(object, n, ordinal=TRUE, method=c("pearson", "kendall",
   }
 
   simData <- cbind(simexData, simendData)
+  if(scale=="original"){simData <- rescale(data, simData)}
   #colnames(simData) <- colnames(data)
   result <- list(dataMV=simData, dataLV=Latent)
   return(result)
 }
 
-## function to computer signal to noise ratio from R squared
+## function to compute signal to noise ratio from R squared
 ## (determination coefficient)
 snr <- function(rSquared) sqrt(rSquared/(1-rSquared))
 
@@ -144,7 +168,8 @@ addEps2 <- function(x, n){
 
 eps <- function(p, n){
   if(p > 1 || p <= 0) stop("Illegal parameter choice.")
-  sigma <- 1 - p
+  sigma <- sqrt(1 - p^2)
+  cat("sigma: ", sigma, "\n", sep="")
   eps <- rnorm(n=n, mean=0, sd=sigma)
   return(eps)
 }

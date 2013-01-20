@@ -201,6 +201,7 @@ bootsempls(object, nboot=200, start=c("ones", "old"), method=
 }
 
 \examples{
+\dontrun{
 data(ECSImobi)
 ecsi <- sempls(model=ECSImobi, data=mobi)
 
@@ -224,4 +225,5 @@ parallelplot(ecsiBoot, pattern="lam")
 # only inspecting the outer loadings for Loyalty
 parallelplot(ecsiBoot, pattern="lam7", type="perc", level=0.90,
          main="Loyalty\n 200 bootstrapped outer loadings")
+}
 }

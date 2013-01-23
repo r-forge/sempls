@@ -1,5 +1,8 @@
 # last modified 23 January 2013 by Armin Monecke
 
-export(ic)
+export(ic, ic_exhaustive, print.ic_exhaustive)
 
 S3method(ic, sempls)
+S3method(ic_exhaustive, sempls)
+S3method(print, ic_exhaustive)
+

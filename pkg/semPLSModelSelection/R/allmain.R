@@ -8,7 +8,7 @@ allmain <- function(model, LV, ...)
 allmain.plsm <- function(model, LV, ...){
   LVs <- model$latent
   Dn <- semPLS:::reorder(model$D)$Dn[, LV]
-  allpred <- names(Dn)[Dn > 1]
+  allpred <- names(Dn)[Dn > 0]
   model <- semPLS:::addPath.plsm(model, from = allpred, to = LV)
   return(model)
 }

@@ -13,6 +13,12 @@ ic(object, LV, criteria, ...)
 
 \method{ic}{sempls}(object, LV, criteria, \ldots)
 }
+
+
+ic_exhaustive(object, LV, criteria, ...)
+
+\method{ic_exhaustive}{sempls}(object, LV, criteria, \ldots)
+}
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
@@ -51,7 +57,7 @@ variable).
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[semPLS]{sempls}}
+\code{\link{ic_exhaustive}}, \code{\link[semPLS]{sempls}}
 }
 \examples{
 library("semPLS")

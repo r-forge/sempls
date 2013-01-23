@@ -18,6 +18,31 @@ ic.sempls <- function(object, LV, criteria, ...){
          do.call(criteria, list(N, pk, SSerrk, object, LV)))
 }
 
+ic_exhaustive <- function(object, LV, criteria, ...){
+  UseMethod("ic_exhaustive", object)
+}
+
+ic_exhaustive.sempls <- function(object, LV, criteria, ...){
+  object <- fitexhaustive(object, LV)
+  criteriaOpt <- c("FPE", "AdjRsq", "AIC", "AICu", "AICc", "BIC",
+                   "HQ", "HQc", "AIC2", "BIC2", "Cp", "GM")
+  if(missing(criteria)) criteria <- criteriaOpt
+  stopifnot(criteria %in% criteriaOpt)
+  crit <- t(sapply(object, ic, LV = LV, criteria = criteria))
+  ret <- list(ic = crit, all_fits = object)
+  class(ret) <- "ic_exhaustive"
+  return(ret)
+}
+
+print.ic_exhaustive <- function(x, minlength = 1, digits = 5, ...){
+  rn <- abbreviate(rownames(tmp$ic), minlength = minlength)
+  rownames(x$ic) <- rn
+  l <- length(rn)
+  indx <- seq_len(log(l + 1, base = 2))
+  print(x$ic, digits = digits, ...)
+  cat("\n", paste(rn[indx], ": ", names(rn[indx]), "\n", sep = ""), "\n", sep = "")
+}
+
 ## Final Prediction Error
 FPE <- function (N, pk, SSerrk, object, LV){
   SSerrk/N*(1 + (2*pk)/(N-pk))

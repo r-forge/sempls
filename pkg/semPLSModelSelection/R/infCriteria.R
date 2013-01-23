@@ -35,7 +35,7 @@ ic_exhaustive.sempls <- function(object, LV, criteria, ...){
 }
 
 print.ic_exhaustive <- function(x, minlength = 1, digits = 5, ...){
-  rn <- abbreviate(rownames(tmp$ic), minlength = minlength)
+  rn <- abbreviate(rownames(x$ic), minlength = minlength)
   rownames(x$ic) <- rn
   l <- length(rn)
   indx <- seq_len(log(l + 1, base = 2))

@@ -1,7 +1,7 @@
-\name{ic_exhaustiv}
-\alias{ic_exhaustiv}
-\alias{ic_exhaustiv.sempls}
-\alias{print.ic_exhaustiv}
+\name{ic_exhaustive}
+\alias{ic_exhaustive}
+\alias{ic_exhaustive.sempls}
+\alias{print.ic_exhaustive}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Exhaustive Information Criteria for PLS Path Models
@@ -10,11 +10,11 @@ Exhaustive Information Criteria for PLS Path Models
 The function computes a variety of information criteria for exhaustive PLS path models.
 }
 \usage{
-ic_exhaustiv(object, LV, criteria, ...)
+ic_exhaustive(object, LV, criteria, ...)
 
-\method{ic_exhaustiv}{sempls}(object, LV, criteria, \ldots)
+\method{ic_exhaustive}{sempls}(object, LV, criteria, \ldots)
 
-\method{print}{ic_exhaustiv}(x, minlength, digits, \ldots)
+\method{print}{ic_exhaustive}(x, minlength, digits, \ldots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,6 +30,9 @@ ic_exhaustiv(object, LV, criteria, ...)
     %%     ~~Describe \code{criteria} here~~
 }
 
+\item{x}{
+  object of class \code{ic_exhaustive}
+}
 \item{minlength}{
   the minimum length of the abbreviations
 }

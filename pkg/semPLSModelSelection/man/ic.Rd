@@ -13,12 +13,6 @@ ic(object, LV, criteria, ...)
 
 \method{ic}{sempls}(object, LV, criteria, \ldots)
 }
-
-
-ic_exhaustive(object, LV, criteria, ...)
-
-\method{ic_exhaustive}{sempls}(object, LV, criteria, \ldots)
-}
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
@@ -33,7 +27,7 @@ ic_exhaustive(object, LV, criteria, ...)
     %%     ~~Describe \code{criteria} here~~
 }
   \item{\dots}{
-    currently unused
+    Argument to pass down to other methods. Currently not used.
 }
 }
 %% \details{

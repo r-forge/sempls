@@ -1,0 +1,17 @@
+Package: semPLSModelSelection
+Type: Package
+Title: Structural Equation Modeling Using Partial Least Squares
+Version: 0.1-0
+Date: 2013-01-23
+Authors@R: c(person("Armin", "Monecke", role=c("aut", "cph","cre"),
+  email="armin.monecke@stat.uni-muenchen.de"), 
+  person("Pratyush", "Nidhi Sharma", role=c("aut"),
+  email="psharma@katz.pitt.edu"),
+  person("Kevin Hyunkyung", "Kim", role=c("aut"), 
+  email="khkim@pitt.edu"))
+Description: This package contains various Information Theoretic model
+  selection criteria that can be used to compare and select models
+  using PLS based SEM.   
+License: GPL-2
+Depends: semPLS (>= 1.0-09)
+LazyLoad: yes

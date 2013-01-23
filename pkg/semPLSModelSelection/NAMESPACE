@@ -1,0 +1,5 @@
+# last modified 23 January 2013 by Armin Monecke
+
+export(ic)
+
+S3method(ic, sempls)

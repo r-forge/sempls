@@ -1,6 +1,6 @@
 Package: semPLSModelSelection
 Type: Package
-Title: Structural Equation Modeling Using Partial Least Squares
+Title: Information Criteria for PLS based SEM
 Version: 0.1-0
 Date: 2013-01-23
 Authors@R: c(person("Armin", "Monecke", role=c("aut", "cph","cre"),

@@ -1,3 +1,9 @@
+Changes in semPLS version 1.0-11
+
+ o now it is possible to specify cross loadings in the measurement 
+   model
+
+
 Changes in semPLS version 1.0-10
 
  o fixed code in vignette 'semPLS-intro' due to changes in sem 3.1-0

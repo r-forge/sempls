@@ -67,6 +67,7 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, wscheme="cent
       Wold <- stp1$outerW / sdYs
   }
   else Wold <- stp1$outerW
+  Wold <- Wold[unique(model$manifest), ] # FixMe (Armin, 2013-04-22)
   weights_evolution <- reshape(as.data.frame(Wold),
                                v.names="weights",
                                ids=rownames(Wold),
@@ -165,6 +166,7 @@ plsLoop <- expression({
                   each=length(model$manifest))
       Wnew <- Wnew / sdYs
     }
+    Wnew <- Wnew[unique(model$manifest), ] # FixMe (Armin, 2013-04-22)
     weights_evolution_tmp <- reshape(as.data.frame(Wnew),
                                      v.names="weights",
                                      ids=rownames(Wnew),
@@ -184,6 +186,7 @@ plsLoop <- expression({
     # step 5
     st5 <- step5(Wold, Wnew, tol, converged, convCrit)
     Wold <- st5$Wold
+    Wold <- Wold[unique(model$manifest), ] # FixMe (Armin, 2013-04-22)
     converged <- st5$converged
 
     #############################################

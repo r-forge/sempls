@@ -28,8 +28,12 @@ bootsempls <- function(object, nboot=200, start=c("ones", "old"),
     coefs <- matrix(numeric(0), nrow=nboot, ncol=length(coefficients))
     attr(coefs, "path") <- object$coefficients[,1]
     colnames(coefs) <- coef_names
-    outer_weights <- matrix(NA, nrow=nboot, ncol=ncol(data))
-    colnames(outer_weights) <- rownames(object$outer_weights)
+    ## outer_weights <- matrix(NA, nrow=nboot, ncol=ncol(data)) # FixMe (Armin, 2013-04-22)
+    outer_weights <- matrix(NA, nrow=nboot, ncol=sum(object$outer_weights!=0)) # FixMe (Armin, 2013-04-22)
+    ## colnames(outer_weights) <- rownames(object$outer_weights) # FixMe (Armin, 2013-04-22)
+    ## colnames(outer_weights) <- rownames(object$outer_weights) # FixMe (Armin, 2013-04-22)
+    colnames(outer_weights) <- as.vector(apply(object$outer_weights, 2,
+                                               function(X) names(X[X!=0]))) # FixMe (Armin, 2013-04-22)
     clcIndices <- NULL
     tryErrorIndices <- NULL
     bootIndices <- matrix(NA, nrow=nboot, ncol=nrow(data))

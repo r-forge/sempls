@@ -43,7 +43,8 @@ plsm <- function(data, strucmod, measuremod, order=c("generic", "alphabetical"),
   latent <- unique(as.vector(strucmod))
   if(any(latent %in% colnames(data)))
      stop("The latent variables are not allowed to coincide with names of observed variables.")
-  manifest <- sort(setdiff(as.vector(measuremod), latent))
+  ## manifest <- sort(setdiff(as.vector(measuremod), latent)) # FixMe (Armin, 2013-04-22)
+  manifest <- unique(sort(setdiff(as.vector(measuremod), latent))) # FixMe (Armin, 2013-04-22)
 
   if(!all(manifest %in% colnames(data)))
      stop("The manifest variables must be contained in the data.")
@@ -85,7 +86,8 @@ plsm <- function(data, strucmod, measuremod, order=c("generic", "alphabetical"),
 
   result <- list()
   result$latent <- latent
-  result$manifest <- MVs
+  ## result$manifest <- MVs       # FixMe (Armin, 2013-04-22)
+  result$manifest <- unique(MVs)  # FixMe (Armin, 2013-04-22)
   result$strucmod <- strucmod
   result$measuremod <- measuremod
   result$D <- D

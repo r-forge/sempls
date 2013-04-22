@@ -1,23 +1,23 @@
 ### Method to import a SmartPLS XML  model specification file: .splsm
-# Uses: 'path', 'order', 'innerW', 'initM1', 'block'
+## Uses: 'path', 'order', 'innerW', 'initM1', 'block'
 read.splsm <-
 function(file=character(), order=c("generic", "alphabetical")){
   if(require(XML)==FALSE) stop("Package 'XML' is required.")
   order <- match.arg(order)
   model <- xmlInternalTreeParse(file)
 
-  # latents
+  ## latents
   name1 <- unlist(xpathApply(model, "/model/latent", xmlGetAttr, "name"))
   id1  <- as.numeric(unlist(xpathApply(model, "/model/latent", xmlGetAttr, "id")))
   xPos1 <- as.numeric(unlist(xpathApply(model, "/model/latent", xmlGetAttr, "x")))
   yPos1 <- as.numeric(unlist(xpathApply(model, "/model/latent", xmlGetAttr, "y")))
-  # manifests
+  ## manifests
   name2 <- unlist(xpathApply(model, "/model/manifest", xmlGetAttr, "datacolumn"))
   id2  <- as.numeric(unlist(xpathApply(model, "/model/manifest", xmlGetAttr, "id")))
   xPos2 <- as.numeric(unlist(xpathApply(model, "/model/manifest", xmlGetAttr, "x")))
   yPos2 <- as.numeric(unlist(xpathApply(model, "/model/manifest", xmlGetAttr, "y")))
 
-  # all variables with id and postition as built in SmartPLS
+  ## all variables with id and postition as built in SmartPLS
   variables <- data.frame(name=c(name1, name2), id=c(id1, id2),
                           xPos=c(xPos1, xPos2), yPos=c(yPos1, yPos2))
 
@@ -26,25 +26,25 @@ function(file=character(), order=c("generic", "alphabetical")){
 
   connections <- data.frame(sourceID=as.numeric(sources), targetID=as.numeric(targets))
 
-  # structural model IDs
+  ## structural model IDs
   smID <- with(connections, connections[sourceID %in% id1 & targetID %in% id1,])
 
-  # pathes with names only for the structural model
+  ## pathes with names only for the structural model
   strucmod <-  path(variables, smID)
 
-  # measurement model IDs
+  ## measurement model IDs
   mmID <- with(connections, connections[(sourceID %in% id1 & targetID %in% id2)
                                           |(sourceID %in% id2 & targetID %in% id1),])
-  # pathes with names only for the measurement model
+  ## pathes with names only for the measurement model
   measuremod <-  path(variables, mmID)
 
-  # all the pathes with names instead of IDs
+  ## all the pathes with names instead of IDs
   ret <- path(variables, connections)
 
-  # Adjacency matrix D for the structural model
+  ## Adjacency matrix D for the structural model
   D <- innerW(strucmod=strucmod, latent=name1)
 
-  # Ordering of LVs
+  ## Ordering of LVs
   if (order=="generic"){
     tmp <- reorder(D)
     latent <- tmp$chain
@@ -54,14 +54,14 @@ function(file=character(), order=c("generic", "alphabetical")){
     latent <- sort(name1)
   }
 
-  # Arranging the rows and columns according to the order of the LVs
+  ## Arranging the rows and columns according to the order of the LVs
   D <- D[latent, latent]
 
-  # build blocks of manifest variables (including 'measurement mode')
+  ## build blocks of manifest variables (including 'measurement mode')
   manifest <- sort(name2)
   blocks <- block(latent, manifest, measuremod=measuremod)
 
-  # Ordering of MVs and measuremod
+  ## Ordering of MVs and measuremod
   MVs <- NULL
   mm <- NULL
   for(i in names(blocks)){
@@ -76,12 +76,13 @@ function(file=character(), order=c("generic", "alphabetical")){
   dimnames(mm) <- dimnames(measuremod)
   measuremod <- mm
 
-  # Result
+  ## Result
   result <- list()
   result$connectionIDs <- connections
   result$variables <- variables
   result$latent <- latent
-  result$manifest <- MVs
+  ## result$manifest <- MVs       # FixMe (Armin, 2013-04-22)
+  result$manifest <- unique(MVs)  # FixMe (Armin, 2013-04-22)
   result$path <- ret
   result$strucmod <- strucmod
   result$measuremod <- measuremod

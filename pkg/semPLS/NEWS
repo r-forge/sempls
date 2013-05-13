@@ -3,6 +3,9 @@ Changes in semPLS version 1.0-11
  o now it is possible to specify cross loadings in the measurement 
    model
 
+ o fixed another bug in bootsempls() occuring wtith 
+   method = 'ConstructLevelChanges'.
+
 
 Changes in semPLS version 1.0-10
 

@@ -31,10 +31,9 @@ bootsempls <- function(object, nboot=200, start=c("ones", "old"),
     ## outer_weights <- matrix(NA, nrow=nboot, ncol=ncol(data)) # FixMe (Armin, 2013-04-22)
     outer_weights <- matrix(NA, nrow=nboot, ncol=sum(object$outer_weights!=0)) # FixMe (Armin, 2013-04-22)
     ## colnames(outer_weights) <- rownames(object$outer_weights) # FixMe (Armin, 2013-04-22)
-    ## colnames(outer_weights) <- rownames(object$outer_weights) # FixMe (Armin, 2013-04-22)
-    colnames(outer_weights) <- as.vector(apply(object$outer_weights, 2,
-                                               function(X) names(X[X!=0]))) # FixMe (Armin, 2013-04-22)
-    clcIndices <- NULL
+    colnames(outer_weights) <- unlist(apply(object$outer_weights, 2,
+                                            function(X) names(X[X!=0]))) # FixMe (Armin, 2013-05-13)
+    clcIndices <- vector("list", length = nboot) # Fixed (Armin, 2013-05-08)
     tryErrorIndices <- NULL
     bootIndices <- matrix(NA, nrow=nboot, ncol=nrow(data))
     if (verbose) cat("Resample: ")
@@ -122,7 +121,10 @@ summary.bootsempls <- function(object,
             ci <- try(as.vector(boot.ci(object, type=type, index=i,
                       conf=level)[[type, exact=FALSE]]))
             if(inherits(ci, "try-error") && type=="bca"){
-                stop("Try to set 'nboot' to the number of observations!\n")
+                ## stop("Try to set 'nboot' to the number of observations!\n")
+                message("Bca failed. Try to increase 'nboot'!\n")
+                lower[i] <- upper[i] <- NA
+                noCi <- append(noCi, i)
             }
             lower[i] <- ci[low]
             upper[i] <- ci[up]

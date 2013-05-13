@@ -66,9 +66,9 @@ function(sempls, data, start=c("ones", "old"), method, ...){
                     abs(colSums(sempls$outer_loadings + result$outer_loadings)))
     # change the signs of the weights
     if(sum1){
-      Wnew[, clcIndex] <- -1*apply(as.matrix(Wnew[, clcIndex]), 2, sum1)
+      Wnew[, clcIndex] <- -1 * apply(as.matrix(Wnew[, clcIndex]), 2, sum1)
     }
-    else {Wnew[, clcIndex] <- -1* Wnew[, clcIndex]}
+    else {Wnew[, clcIndex] <- -1 * Wnew[, clcIndex]}
     
     # repeat step4
     factor_scores <- step4(data, outerW=Wnew, model, pairwise)

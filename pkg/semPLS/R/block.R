@@ -15,12 +15,14 @@ function(latent, manifest, measuremod){
                           measuremod[c(which(measuremod[,2]==latent[i], which(measuremod[,1]==latent[i]))),])
     blocks[[i]] <- sort(blocks[[i]][blocks[[i]] %in% manifest])
         
-    # determine the mode ("A"=reflective, "B"=formative)
-    if (all(blocks[[i]] %in% measuremod[,2])){
-      attr(blocks[[i]], "mode") <- "A"
+    ## determine the mode ("A"=reflective, "B"=formative)
+    if (all(blocks[[i]] %in%
+            measuremod[measuremod[, 1] == latent[i], 2])) {
+        attr(blocks[[i]], "mode") <- "A"
     }
-    else if (all(blocks[[i]] %in% measuremod[,1])) {
-      attr(blocks[[i]], "mode") <- "B"
+    else if (all(blocks[[i]] %in%
+                 measuremod[measuremod[, 2] == latent[i], 1])) {
+        attr(blocks[[i]], "mode") <- "B"
     }
     else stop("A block must be either formative or reflective, not both!")
   }

@@ -74,7 +74,7 @@ as_semPLS_syntax <- function(object, ...) {
                                   c("lhs", "rhs")]))
   colnames(mm) <- c("from", "to")
   #plsm(data=object$dataset, strucmod=sm, measuremod=mm, ...)
-  return(list(data=object$dataset, strucmode=sm, measuremod=mm))
+  return(list(data=object$dataset, strucmod=sm, measuremod=mm))
 }
 
 

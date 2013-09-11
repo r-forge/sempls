@@ -36,21 +36,16 @@ semfit_semPLS <- function(object, ...) {
   
   model_parts <- as_semPLS_syntax(object, ...)
   
-  strucmod <- model_parts$strucmod
-  measuremod <- model_parts$measuremod
-  data <- model_parts$data
-
-  model <- plsm(data=data,
-                strucmod=strucmod,
-                measuremod=measuremod)
+  model <- do.call(plsm, model_parts)
   
-  fit <- sempls(model=model, data=data, ...)
+  fit <- sempls(model=model, data=model_parts$data, ...)
   object$fit <- fit
   
   repr <- semrepr(object)
   namesrepr <- names(repr)
   estimates <- coef(fit)
-  estimates$Parameter <- gsub(" -> ", "_", estimates$Path)
+  Parameter <- strsplit(as.character(coef(fit)$Path), " -> ")
+  estimates$Parameter <- sapply(Parameter, function(x) paste(x[2:1], collapse = "_"))
   erg <- merge(x = repr, y = estimates,
                 by.x = "param", by.y = "Parameter", sort=FALSE)
   erg <- erg[, c(namesrepr, "Estimate")]
@@ -73,7 +68,6 @@ as_semPLS_syntax <- function(object, ...) {
   mm <- as.matrix(with(repr, repr[type=="latent",
                                   c("rhs", "lhs")]))
   colnames(mm) <- c("from", "to")
-  #plsm(data=object$dataset, strucmod=sm, measuremod=mm, ...)
   return(list(data=object$dataset, strucmod=sm, measuremod=mm))
 }
 
@@ -184,7 +178,7 @@ as_sem_syntax <- function(object, ...) {
 ######################################################################
 
 
-# TODO: Armin
+## TODO: Armin
 start_values <- function(object, ...) {
   stopifnot(is_semspec(object))
   repr <- semrepr(object)
@@ -196,7 +190,7 @@ start_values <- function(object, ...) {
                      select = "Parameter")
   fixed <- unclass(fixed)$Parameter   # to get the character vector
   fixed_logical <- parameters %in% fixed   # logical
-  # start values for repr$free repr$param
+  ### start values for repr$free repr$param
   start <- repr[!fixed_logical, "param", drop=FALSE]
   start$val <- NA
   val <- c(...)

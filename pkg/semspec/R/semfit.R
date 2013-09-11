@@ -66,12 +66,12 @@ as_semPLS_syntax <- function(object, ...) {
 
   ### structural model
   sm <- as.matrix(with(repr, repr[type=="regression",
-                                  c("lhs", "rhs")]))
+                                  c("rhs", "lhs")]))
   colnames(sm) <- c("from", "to")
 
   ### measurement model
   mm <- as.matrix(with(repr, repr[type=="latent",
-                                  c("lhs", "rhs")]))
+                                  c("rhs", "lhs")]))
   colnames(mm) <- c("from", "to")
   #plsm(data=object$dataset, strucmod=sm, measuremod=mm, ...)
   return(list(data=object$dataset, strucmod=sm, measuremod=mm))

@@ -36,7 +36,7 @@ semfit_semPLS <- function(object, ...) {
   
   model_parts <- as_semPLS_syntax(object, ...)
   
-  strucmod <- model_parts$strucmode
+  strucmod <- model_parts$strucmod
   measuremod <- model_parts$measuremod
   data <- model_parts$data
 

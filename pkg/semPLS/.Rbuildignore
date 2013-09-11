@@ -5,3 +5,5 @@ plsSimulator.R
 meanModel.R
 sandbox
 demo
+^.*\.Rproj$
+^\.Rproj\.user$

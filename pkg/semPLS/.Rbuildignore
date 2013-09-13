@@ -7,4 +7,3 @@ sandbox
 demo
 ^.*\.Rproj$
 ^\.Rproj\.user$
-semspec2plsm.R

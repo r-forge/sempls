@@ -1,4 +1,4 @@
-# Estimates factor scores and parameters for PLS path models
+### Estimates factor scores and parameters for PLS path models
 sempls <- function(model, ...){
   UseMethod("sempls", model)
 }
@@ -19,7 +19,7 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, wscheme="cent
                  incomplete=NULL, Hanafi=NULL)
   class(result) <- "sempls"
 
-  # checking the data
+  ## checking the data
   data <- data[, model$manifest]
   N <- nrow(data)
   missings <- which(complete.cases(data)==FALSE)
@@ -31,7 +31,7 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, wscheme="cent
     }
   }
   else if(length(missings)!=0 & !pairwise & verbose){
-    # Just keeping the observations, that are complete.
+    ## Just keeping the observations, that are complete.
     data <- na.omit(data[, model$manifest])
     cat("Data rows:", paste(missings, collapse=", "),
         "\nare not taken into acount, due to missings in the manifest variables.\n",
@@ -51,17 +51,17 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, wscheme="cent
   }
 
   ## scale data?
-  # Note: scale() changes class(data) to 'matrix'
+  ## Note: scale() changes class(data) to 'matrix'
   if(scaled) data <- scale(data)
 
-  ## compute PLS approximation of LV scores
+  ### compute PLS approximation of LV scores
 
   #############################################
-  # step 1: Initialisation
+  ## step 1: Initialisation
   stp1 <- step1(model, data, sum1=sum1, pairwise, method)
   factor_scores <- stp1$latent
   if(!sum1){
-      # to ensure: w'Sw=1
+      ## to ensure: w'Sw=1
       sdYs <- rep(attr(factor_scores, "scaled:scale"),
                   each=length(model$manifest))
       Wold <- stp1$outerW / sdYs
@@ -84,7 +84,7 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, wscheme="cent
 
 
   #############################################
-  # Select the function according to the weighting scheme
+  ## Select the function according to the weighting scheme
   if(wscheme %in% c("A", "centroid")) {
     innerWe <- centroid
     result$weighting_scheme <- "centroid"
@@ -105,7 +105,7 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, wscheme="cent
   innerWeights <- c()
   eval(plsLoop)
 
-  ## print
+  ### print
   if(converged & verbose){
       cat(paste("Converged after ", (i-1), " iterations.\n",
                 "Tolerance: ", tol ,"\n", sep=""))
@@ -120,7 +120,7 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, wscheme="cent
 
   weights_evolution <- weights_evolution[weights_evolution!=0,]
   weights_evolution$LVs <- factor(weights_evolution$LVs,  levels=model$latent)
-  # create result list
+  ### create result list
   ifelse(pairwise, use <- "pairwise.complete.obs", use <- "everything")
   result$path_coefficients <- pathCoeff(model=model, factor_scores, method, pairwise)
   result$cross_loadings <- cor(data, factor_scores, use, method)
@@ -142,13 +142,13 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, wscheme="cent
 
 plsLoop <- expression({
   #######################################################################
-  # Iterate over step 2 to step 5
+  ## Iterate over step 2 to step 5
   i <- 1
   converged <- FALSE
   while(!converged){
 
     #############################################
-    # step 2
+    ## step 2
     innerWeights <- innerWe(model, fscores=factor_scores, pairwise, method)
     factor_scores <- step2(Latent=factor_scores, innerWeights, model, pairwise)
 
@@ -161,7 +161,7 @@ plsLoop <- expression({
     # step 4
     factor_scores <- step4(data, outerW=Wnew, model, pairwise)
     if(!sum1){
-      # to ensure: w'Sw=1
+      ## to ensure: w'Sw=1
       sdYs <- rep(attr(factor_scores, "scaled:scale"),
                   each=length(model$manifest))
       Wnew <- Wnew / sdYs
@@ -183,7 +183,7 @@ plsLoop <- expression({
     Hanafi <- rbind(Hanafi, Hanafi_tmp)
 
     #############################################
-    # step 5
+    ## step 5
     st5 <- step5(Wold, Wnew, tol, converged, convCrit)
     Wold <- st5$Wold
     Wold <- Wold[unique(model$manifest), ] # FixMe (Armin, 2013-04-22)
@@ -193,7 +193,7 @@ plsLoop <- expression({
 
 
     if(i == maxit && !converged){
-      # 'try-error' especially for resempls.R
+      ## 'try-error' especially for resempls.R
       class(result) <- c(class(result), "try-error")
       i <- i+1
       break
@@ -203,7 +203,7 @@ plsLoop <- expression({
   }
 })
 
-# print method
+### print method
 print.sempls <- function(x, digits=2, ...){
   print(x$coefficients, digits=digits, ...)
   invisible(x)

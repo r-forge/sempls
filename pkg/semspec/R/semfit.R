@@ -137,7 +137,9 @@ as_sem_syntax <- function(object, ...) {
              paste(lhs, " = ", param, " * " , rhs, "\n", sep="")))
   
   covs <- with(repr[!fixed_logical & repr$type %in% c("covariance"),],
-             paste("C(", rhs, ", ", lhs,") = ", param, "\n", sep=""))
+           ifelse(type == "covariance"),
+             paste("C(", rhs, ", ", lhs,") = ", param, "\n", sep=""),
+             NULL)
 
 
   if(length(fixed) != 0){

@@ -1,4 +1,4 @@
-# last modified 16 March 2012 by Armin Monecke
+### last modified 16 March 2012 by Armin Monecke
 
 importFrom(lattice, densityplot, parallelplot, barchart)
 
@@ -9,7 +9,7 @@ export(read.splsm, sempls, bootsempls, pathDiagram, plsm2sem, plsm, rSquared,
        exogenous, endogenous, reflective, formative, indicators, predecessors, successors,
        qSquared, dgrho, communality, redundancy, rSquared2, gof,
        parallelplot.bootsempls
-       #parallel.bootsempls # deprecated
+       ## parallel.bootsempls # deprecated
        )
 
 S3method(print, sempls)

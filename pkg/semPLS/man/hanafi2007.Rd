@@ -42,7 +42,7 @@ Ex1sm <- cbind(source=Ex1sfrom, target=Ex1sto)
 library(semPLS)
 EX1 <- plsm(data=hanafi2007, strucmod=Ex1sm, measuremod=Ex1mm)
 
-ex1A <- sempls(model=EX1, data=hanafi2007, E="A", maxit=100, tol=1e-7)
+ex1A <- sempls(model=EX1, data=hanafi2007, wscheme="A", maxit=100, tol=1e-7)
 
 # for the centroid scheme criterion f is used:
 matplot(ex1A$Hanafi[,"iteration"], 2*ex1A$Hanafi[,"f"],
@@ -58,7 +58,7 @@ plot(ex1A, xlim=c(0, 30))
 
 
 # Now the same using factorial scheme:
-ex1B <- sempls(model=EX1, data=hanafi2007, E="B", maxit=100, tol=1e-7)
+ex1B <- sempls(model=EX1, data=hanafi2007, wscheme="B", maxit=100, tol=1e-7)
 
 # for the factorial scheme criterion g is used:
 matplot(ex1B$Hanafi[,"iteration"], 2*ex1B$Hanafi[,"g"],
@@ -84,7 +84,7 @@ Ex2sm <- cbind(source=Ex2sfrom, target=Ex2sto)
 EX2 <- plsm(data=hanafi2007, strucmod=Ex2sm, measuremod=Ex2mm)
 
 # this time only for the centroid scheme with criterion f:
-ex2A <- sempls(model=EX2, data=hanafi2007, E="A", maxit=100, tol=1e-7)
+ex2A <- sempls(model=EX2, data=hanafi2007, wscheme="A", maxit=100, tol=1e-7)
 matplot(ex2A$Hanafi[,"iteration"], 2*ex2A$Hanafi[,"f"],
         type="b", lty=1, pch=3,
         xlim=c(0, 10), ylim=c(0, 12),

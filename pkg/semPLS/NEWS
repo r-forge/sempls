@@ -1,10 +1,24 @@
+Changes in semPLS version 1.1-0
+
+ o use smooth weighting and fit via mgcv
+
+ o plot.sempls has an additional argument 'LVs' to specify the latent
+   variables to inspect
+
+ o qSquared now uses random sets of blindfolds with argument 'dlines =
+   TRUE' instead of consecutive blindfolding of observations. As from
+   now, results may vary from run to run. Furtermore the sempls
+   objetc's parameters are now passed on; this was not handled
+   accurately before.
+
+
 Changes in semPLS version 1.0-11
 
- o now it is possible to specify cross loadings in the measurement 
-   model
+ o Now it is possible to specify cross loadings in the measurement 
+   model.
 
  o fixed another bug in bootsempls() occuring wtith 
-   method = 'ConstructLevelChanges'.
+   method = 'ConstructLevelChanges'
 
 
 Changes in semPLS version 1.0-10

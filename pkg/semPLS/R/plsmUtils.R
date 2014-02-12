@@ -1,5 +1,5 @@
-### Method to update a PLS path model of class 'plsm'
-### Note: .Rd-files -> pls utils
+# Method to update a PLS path model of class 'plsm'
+# Note: .Rd-files -> pls utils
 plsmEdit <- function(model, ...){
   UseMethod("plsmEdit", model)
 }
@@ -61,9 +61,9 @@ addMVs.plsm <- function(model, data, LV=character(), MVs=character(), ...){
                "  Try to use the method 'addLV'.", sep=""))
   }
   mm <- model$measuremod
-  ## mode A (reflective)
+  # mode A (reflective)
   if(LV %in% mm[, 1]) mm <- rbind(mm, cbind(LV, MVs))
-  ## mode B (formative)
+  # mode B (formative)
   else mm <- rbind(mm, cbind(MVs, LV))
   model <- plsm(data, strucmod=model$strucmod, measuremod=mm, order=model$order)
   return(model)
@@ -130,7 +130,7 @@ addLV <- function(model, ...){
 
 addLV.plsm <- function(model, data,  LV=character(), mode=c("A", "B"), MVs=character(),
                   pred=character(), succ=character(), ...){
-  ## if(missing(data)) stop("Argument 'data' must be specified.")
+  #if(missing(data)) stop("Argument 'data' must be specified.")
   if(length(LV) != 1) stop("LV must be a character vector of length 1.")
   if(length(MVs) == 0) stop("A LV must have at least one MV.")
   if(length(pred) == 0 & length(succ)== 0) stop("A LV must have at least one predecessor or successor.")
@@ -162,7 +162,7 @@ removeLVs.plsm <- function(model, which, ...){
   ind1 <- which(sm[,1] %in% which)
   ind2 <- which(sm[,2] %in% which)
   ind <- unique(c(ind1, ind2))
-  ## remove LVs in structural model
+  # remove LVs in structural model
   smv1 <- unique(sm[1:(2*nrow(sm))])
   sm <- sm[-ind,]
   smv2 <- unique(sm[1:(2*nrow(sm))])
@@ -178,7 +178,7 @@ removeLVs.plsm <- function(model, which, ...){
   ind1 <- which(mm[,1] %in% which)
   ind2 <- which(mm[,2] %in% which)
   ind <- unique(c(ind1, ind2))
-  ## remove LVs in measurement model
+  # remove LVs in measurement model
   mm <- mm[-ind, ]
   dummy <- as.data.frame(matrix(NA, nrow=1, ncol=length(model$manifest)))
   attr(dummy, "names") <- model$manifest
@@ -219,9 +219,8 @@ indicators <- function(model, LV){
     return(ret)
 }
 
-
+# used in 'pathWeighting'
 predecessors <- function(model){
-    ## used in 'pathWeighting'
     if(!inherits(model, "plsm")) stop("Model must inherit from class 'plsm'!")
     D <- model$D
     foo <- function(x) names(which(x==1))
@@ -238,9 +237,6 @@ successors <- function(model){
 }
 
 connected <- function(model){
-    ## This should be renamed to something more meaningfull,
-    ## since it only detects whether or not each LV is connected
-    ## to at least one other LV.
     pred <- predecessors(model)
     succ <- successors(model)
     for(i in model$latent){

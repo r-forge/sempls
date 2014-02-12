@@ -1,5 +1,6 @@
-### last modified 16 March 2012 by Armin Monecke
+### last modified 17 October 2013 by Armin Monecke
 
+## importFrom(mgcv, gam) # try mgcv 2013-10-17
 importFrom(lattice, densityplot, parallelplot, barchart)
 
 export(read.splsm, sempls, bootsempls, pathDiagram, plsm2sem, plsm, rSquared,

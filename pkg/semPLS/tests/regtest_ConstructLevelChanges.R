@@ -11,3 +11,5 @@ clc <- sempls(model=CLC, data=clcData, maxit=100, wscheme="pathWeighting")
 set.seed(1390544442) # Resulted in an error in bootstrap sample b=7
 clcBoot <- bootsempls(clc, nboot=7, method="ConstructLevelChanges", verbose=FALSE)
 
+## trace(bootsempls, browser)
+## untrace(bootsempls)

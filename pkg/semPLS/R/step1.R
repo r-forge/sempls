@@ -1,6 +1,6 @@
 # Initial estimation of factor scores
 step1 <-
-function(model, data, sum1, pairwise, method, ...){
+function(model, data, sum1, pairwise, method, Wold, ...){
   ifelse(pairwise, use <- "pairwise.complete.obs", use <- "everything")
   M <- model$M
   if(sum1) M <- apply(M, 2, sum1)

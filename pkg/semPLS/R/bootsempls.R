@@ -36,6 +36,7 @@ bootsempls <- function(object, nboot=200, start=c("ones", "old"),
     clcIndices <- vector("list", length = nboot) # Fixed (Armin, 2013-05-08)
     tryErrorIndices <- NULL
     bootIndices <- matrix(NA, nrow=nboot, ncol=nrow(data))
+    gamboot <- vector(mode = "list", length = nboot)
     if (verbose) cat("Resample: ")
     for (b in 1:nboot){
       if (verbose){
@@ -62,7 +63,8 @@ bootsempls <- function(object, nboot=200, start=c("ones", "old"),
           # Standard
           coefs[b,] <- res$coefficients[,2]
           outer_weights[b,] <- res$outer_weights[res$outer_weights!=0]
-          break()
+          gamboot[[b]] <- res$gam
+          break
         }
       }
     }
@@ -75,7 +77,8 @@ bootsempls <- function(object, nboot=200, start=c("ones", "old"),
                 statistic=refit, sim="ordinary", stype="i", call=match.call(),
                 tryErrorIndices=tryErrorIndices,  clcIndices= clcIndices,
                 bootIndices=bootIndices, outer_weights=outer_weights,
-                fitted_model=object, strata=strata)
+                fitted_model=object, strata=strata, gam = object$gam,
+                gamboot = gamboot)
     class(res) <- c("bootsempls", "boot")
     res
 }
@@ -105,6 +108,11 @@ summary.bootsempls <- function(object,
     result <- data.frame("Estimate"=t0, "Bias"=colMeans(t) - t0,
         "Std.Error"=apply(t, 2, sd))
     if (type != "none"){
+        ### from boot:::const (see line 123)
+        const <- function (w, eps = 1e-08){
+            all(abs(w - mean(w, na.rm = TRUE)) < eps)
+        }
+        ### end
         p <- length(t0)
         lower <- upper <- rep(0, p)
         low <- if (type == "norm") 2 else 4
@@ -112,8 +120,8 @@ summary.bootsempls <- function(object,
         noCi <- NULL
         for (i in 1:p){
           ti <- t[!is.na(t[,i]),i] # 14.10.2010
-          #if (boot:::const(t[,i], min(1e-08, mean(t[,i], na.rm = TRUE)/1e+06))){
-          if (boot:::const(ti, min(1e-08, mean(ti, na.rm = TRUE)/1e+06))){
+          ## if (boot:::const(ti, min(1e-08, mean(ti, na.rm = TRUE)/1e+06))){
+          if (const(ti, min(1e-08, mean(ti, na.rm = TRUE)/1e+06))){
             lower[i] <- upper[i] <- NA
             noCi <- append(noCi, i)
           }

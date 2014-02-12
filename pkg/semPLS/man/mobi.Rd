@@ -72,7 +72,7 @@ data(ECSIsm)
 \examples{
 data(mobi)
 data(ECSImobi)
-ecsi <- sempls(model=ECSImobi, data=mobi, E="C")
+ecsi <- sempls(model=ECSImobi, data=mobi, wscheme="C")
 ecsi
 }
 

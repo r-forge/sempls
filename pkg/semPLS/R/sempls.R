@@ -4,9 +4,11 @@ sempls <- function(model, ...){
 }
 
 sempls.plsm <-
-function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, wscheme="centroid", pairwise=FALSE,
+function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE,
+         wscheme="centroid", pairwise=FALSE,
          method=c("pearson", "kendall", "spearman"),
-         convCrit=c("relative", "square"), verbose=TRUE, ...){
+         convCrit=c("relative", "square"), verbose=TRUE,
+         smoothControl = NULL, ...){
   method <- match.arg(method)
   convCrit <- match.arg(convCrit)
   result <- list(coefficients=NULL, path_coefficients=NULL,
@@ -97,7 +99,13 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, wscheme="cent
     innerWe <- pathWeighting
     result$weighting_scheme <- "path weighting"
   }
-  else {stop("The argument E can only take the values 'A', 'B' or 'C'.\n See ?sempls")}
+  else if(wscheme %in% c("D", "spw", "smoothPathWeighting")) {
+    innerWe <- smoothPathWeighting
+    result$weighting_scheme <- "smooth path weighting"
+  }
+  ## Argument 'wscheme' was 'E'
+  ## added scheme 'D'
+  else {stop("The argument wscheme can only take the values 'A', 'B', 'C' or 'D'.\n See ?sempls")}
 
   converged <- c()
   i <- c()
@@ -109,12 +117,17 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, wscheme="cent
   if(converged & verbose){
       cat(paste("Converged after ", (i-1), " iterations.\n",
                 "Tolerance: ", tol ,"\n", sep=""))
-      if (wscheme %in% c("A", "centroid")) cat("Scheme: centroid\n")
-      if (wscheme %in% c("B", "factorial")) cat("Scheme: factorial\n")
-      if (wscheme %in% c("C", "pw", "pathWeighting")) cat("Scheme: path weighting\n")
+      if (wscheme %in% c("A", "centroid"))
+        cat("Scheme: centroid\n")
+      if (wscheme %in% c("B", "factorial"))
+        cat("Scheme: factorial\n")
+      if (wscheme %in% c("C", "pw", "pathWeighting"))
+        cat("Scheme: path weighting\n")
+      if (wscheme %in% c("C", "pw", "smoothPathWeighting"))
+        cat("Scheme: smooth path weighting\n")
   }
   else if(!converged){
-      stop("Result did not converge after ", result$maxit, " iterations.\n",
+      warning("Result did not converge after ", result$maxit, " iterations.\n",
            "\nIncrease 'maxit' and rerun.", sep="")
   }
 
@@ -122,6 +135,7 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, wscheme="cent
   weights_evolution$LVs <- factor(weights_evolution$LVs,  levels=model$latent)
   ### create result list
   ifelse(pairwise, use <- "pairwise.complete.obs", use <- "everything")
+  result$pairwise <- pairwise
   result$path_coefficients <- pathCoeff(model=model, factor_scores, method, pairwise)
   result$cross_loadings <- cor(data, factor_scores, use, method)
   result$outer_loadings <- result$cross_loadings
@@ -137,6 +151,10 @@ function(model, data, maxit=20, tol=1e-7, scaled=TRUE, sum1=FALSE, wscheme="cent
   result$incomplete <- missings
   result$iterations <- (i-1)
   result$coefficients <- coefficients(result)
+  if(wscheme %in% c("D", "spw", "smoothPathWeighting"))
+      result$gam <- gamFUN(model, fscores = factor_scores, smoothControl)
+  else result$gam <- NULL
+  result$smoothControl <- smoothControl
   return(result)
 }
 
@@ -146,11 +164,18 @@ plsLoop <- expression({
   i <- 1
   converged <- FALSE
   while(!converged){
+    ## factor_scores_old <- factor_scores
 
     #############################################
     ## step 2
-    innerWeights <- innerWe(model, fscores=factor_scores, pairwise, method)
-    factor_scores <- step2(Latent=factor_scores, innerWeights, model, pairwise)
+    innerWeights <- innerWe(model, fscores=factor_scores,
+                            pairwise, method, smoothControl)
+    ## 2013-10-17 added step2gam switch
+    if(!wscheme %in% c("D", "spw", "smoothPathWeighting", "smoothpathweighting"))
+      factor_scores <- step2(Latent=factor_scores, innerWeights, model, pairwise)
+    else
+      factor_scores <- step2gam(Latent=factor_scores,
+                                innerWeights)
 
     #############################################
     # step 3
@@ -160,6 +185,10 @@ plsLoop <- expression({
     #############################################
     # step 4
     factor_scores <- step4(data, outerW=Wnew, model, pairwise)
+
+    ## factor_scores_absdiff <- abs(factor_scores_old - factor_scores)
+    ## print(apply(apply(factor_scores_absdiff, 2, `<`, e2 = tol), 2, all))
+
     if(!sum1){
       ## to ensure: w'Sw=1
       sdYs <- rep(attr(factor_scores, "scaled:scale"),
@@ -199,7 +228,7 @@ plsLoop <- expression({
       break
     }
 
-    i <- i+1
+    i <- i + 1
   }
 })
 

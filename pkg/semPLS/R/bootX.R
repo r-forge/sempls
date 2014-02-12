@@ -1,5 +1,5 @@
-# core function for bootstrap of gof measures.
-# if factor scores are required
+### core function for bootstrap of gof measures.
+### if factor scores are required
 
 bootX <- function(object, measure)
 {
@@ -11,31 +11,34 @@ bootX <- function(object, measure)
     FSboot <- vector("list", length=nboot)
     # boot object has to supply the model
     model <- object$fitted_model$model
-    pairwise <- object$pairwise
+    ## pairwise <- object$pairwise
+    pairwise <- object$fitted_model$pairwise
     bootIndices <- object$bootIndices
     for(i in 1:nboot){
         Wboot[[i]] <- matrix(ifelse(model$M, object$outer_weights[i,], 0), dim(model$M))
         dimnames(Wboot[[i]]) <- dimnames(model$M)
         FSboot[[i]] <- step4(data[bootIndices[i,],], outerW=Wboot[[i]], model, pairwise)
     }
-    return(FSboot)
+    return(FSboot) # list of length 'nboot' with factor scores
 }
 
-
+### here we do not need 'bootX'
 dgrho.bootsempls <- function(object)
 {
     t0 <- dgrho(object$fitted_model)[,1]
     model <- object$fitted_model$model
     nboot <- object$nboot
-    #bootIndices <- object$bootIndices
-    #FSboot <- bootX(object)
+    ## initialisation
     t <- matrix(NA, nrow=nboot, ncol=length(model$latent))
     colnames(t) <- model$latent
     for(i in 1:length(model$latent)){
         if(attr(model$blocks[[i]], "mode")=="B"){
             next
         }
-        x <- object$t[, paste("lam", i, 1:length(model$blocks[[i]]), sep=""), drop=FALSE]
+        
+        x <- object$t[, paste("lam_", i, "_", 1:length(model$blocks[[i]]), sep=""),
+                      drop=FALSE]
+        
         if(ncol(x)==1){
             next
         }

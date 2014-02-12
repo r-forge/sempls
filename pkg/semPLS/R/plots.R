@@ -1,4 +1,5 @@
-plot.sempls <- function(x, ...){
+## plot.sempls <- function(x, ...){
+plot.sempls <- function(x, LVs, ...){
     col <- list(...)$col
     #if(is.null(col) && require(colorspace)){
     #    for(i in 0:(length(x$model$latent)-1)){
@@ -12,7 +13,13 @@ plot.sempls <- function(x, ...){
         trellis.par.set(superpose.line=list(col=col))
     }
     MVs <- NULL
-    wghtev <- x$weights_evolution[!x$weights_evolution$weights %in% c(0, NA),]
+    if(!missing(LVs)){
+      wghtev <- x$weights_evolution[!x$weights_evolution$weights %in% c(0, NA) &
+                                    x$weights_evolution$LVs %in% LVs, ]
+    }
+    else {
+      wghtev <- x$weights_evolution[!x$weights_evolution$weights %in% c(0, NA),]
+    }
     #ymin <- min(x$weights_evolution$iteration)
     #ymax <- max(x$weights_evolution$iteration)
     print(xyplot(weights ~ iteration | LVs,

@@ -37,7 +37,7 @@ sempls(model, \ldots)
          verbose=TRUE, \ldots)
 
 \method{print}{sempls}(x, digits=2, \ldots)
-\method{plot}{sempls}(x, \ldots)
+\method{plot}{sempls}(x, LVs, \ldots)
 \method{densityplot}{sempls}(x, data, use=c("fscores", "prediction",
             "residuals"), \ldots)
 
@@ -100,7 +100,10 @@ plsLoadings(object)
     \itemize{
       \item \code{"A"} or \code{"centroid"} for the centroid scheme, the default,
       \item \code{"B"} or \code{"factorial"}for the factorial scheme and
-      \item \code{"C"}, \code{"pw"} or \code{"pathWeighting"} for the path weighting scheme.
+      \item \code{"C"}, \code{"pw"} or \code{"pathWeighting"} for the
+      path weighting scheme.
+      \item \code{"D"}, \code{"spw"} or \code{"SmoothPathWeighting"} for
+      the path weighting scheme.
     }
   }
 
@@ -135,6 +138,10 @@ plsLoadings(object)
     }
   \item{x}{
     An object of the according class.
+  }
+
+  \item{LVs}{
+    Which LVs (latent variables) to use for the plot.
   }
   \item{type}{
     If the argument \code{what="loadings"}, \code{type} describes the

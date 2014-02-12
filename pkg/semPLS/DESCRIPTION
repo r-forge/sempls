@@ -1,8 +1,8 @@
 Package: semPLS
 Type: Package
 Title: Structural Equation Modeling Using Partial Least Squares
-Version: 1.0-11
-Date: 2013-04-22
+Version: 1.0-12
+Date: 2013-10-17
 Authors@R: c(person("Armin", "Monecke", role=c("aut", "cph","cre"),
   email="armin.monecke@stat.uni-muenchen.de"), 
   person("Friedrich", "Leisch", role=c("aut", "ths")))
@@ -13,6 +13,6 @@ Description: Fits structural equation models using partial least
   technique requiring no distributional assumptions on the observed
   data.  
 License: GPL-2
-Depends: lattice (>= 0.20-5)
+Depends: lattice (>= 0.20-5), mgcv
 Suggests: XML, boot, sem, matrixcalc
 LazyLoad: yes

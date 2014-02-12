@@ -10,6 +10,12 @@ function(sempls, data, start=c("ones", "old"), method, ...){
   pairwise <- sempls$pairwise
   method <- sempls$method
   convCrit <- sempls$convCrit
+  smoothControl <- sempls$smoothControl
+  wscheme <- switch(eval(sempls$weighting_scheme),
+                    centroid = "centroid",
+                    factorial = "factorial",
+                    `path weighting` = "pathWeighting",
+                    `smooth path weighting` = "smoothPathWeighting")
   result <- sempls
 
   ## scale data?
@@ -46,7 +52,11 @@ function(sempls, data, start=c("ones", "old"), method, ...){
 
   #############################################
   # weighting scheme
-  innerWe <- eval(parse(text=sub(" w", "W", sempls$weighting_scheme)))
+  innerWe <- if(sempls$weighting_scheme == "smooth path weighting")
+      {
+          eval(parse(text="smoothPathWeighting"))
+      } else eval(parse(text=sub(" w", "W", sempls$weighting_scheme)))
+  ## innerWe <- smoothPathWeighting
 
 
   #############################################
@@ -93,5 +103,8 @@ function(sempls, data, start=c("ones", "old"), method, ...){
   result$iterations <- (i-1)
   result$coefficients <- coefficients(result)
   result$clcIndex <- clcIndex
+  if(wscheme %in% c("D", "spw", "smoothPathWeighting"))
+    result$gam <- gamFUN(model, fscores = factor_scores, smoothControl)
+  else result$gam <- NULL
   return(result)
 }

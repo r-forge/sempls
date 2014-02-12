@@ -127,7 +127,7 @@ gof(object, \ldots)
 }
 \examples{
 data(ECSImobi)
-ecsi <- sempls(model=ECSImobi, data=mobi, E="C")
+ecsi <- sempls(model=ECSImobi, data=mobi, wscheme="C")
 
 ### R-squared
 rSquared(ecsi)

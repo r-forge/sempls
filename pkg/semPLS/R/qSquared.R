@@ -6,7 +6,17 @@ qSquared <- function(object, ...){
 # dlines: TRUE => leaving out the same observation for the MV-Blocks
 # Note: if total=TRUE, total_effects are used, else the path_coefficients
 qSquared.sempls <- function(object, d=NULL, impfun, dlines=TRUE, total=FALSE, ...){
-    if(missing(impfun)) impfun <- function(data) return(data)
+    if(missing(impfun)){
+      if(!object$pairwise & object$weighting_scheme != "smooth path weighting"){
+        object$pairwise <- !object$pairwise
+        message("Set 'pairwise' to TRUE.")
+        impfun <- function(data) return(data)
+      }
+      else{
+        impfun <- meanrep
+        message("Set 'impfun' to mean replacement.")
+      }
+    }
     data <- object$data
     model <- object$model
     endrefl<- intersect(reflective(model), endogenous(model))
@@ -14,7 +24,9 @@ qSquared.sempls <- function(object, d=NULL, impfun, dlines=TRUE, total=FALSE, ..
     colnames(qSquared) <- "Q-Squared"
     rownames(qSquared) <- model$latent
     sse <- function(model, data, dblind, i, impfun, total, ...){
-        plsm <- sempls(model, impfun(dblind), pairwise=TRUE, verbose=FALSE, ...)
+        ## plsm <- sempls(model, impfun(dblind), pairwise=TRUE, verbose=FALSE, ...)
+        plsm <- resempls(object, impfun(dblind), start = "ones",
+                         method="ConstructLevelChanges", ...)
         #m <- length(model$blocks[[i]])
         #sse <- vector("numeric", length=m)
         m <- attr(plsm$data, "scaled:center")[model$blocks[[i]]]
@@ -58,21 +70,26 @@ qSquared.sempls <- function(object, d=NULL, impfun, dlines=TRUE, total=FALSE, ..
         }
         return(sum(sso))
     }
-    for(i in endrefl){
-        if(dlines | is.null(d)) n <- nrow(data)
-        if(is.null(d)){
-            d <- n + 1
-            if(!dlines){
-                dlines <- TRUE
-                message("Set argument 'dlines' to:", dlines, "\n")
-            }
+    if(dlines | is.null(d)) n <- nrow(data)
+    if(is.null(d)){
+        ## d <- n + 1   ## fixme
+        d <- n - 1
+        if(!dlines){
+            dlines <- TRUE
+            message("Set argument 'dlines' to: ", dlines, "\n")
         }
+        message("Set argument 'd' to: ", d, "\n")
+    }
+    if(dlines) blindL <- split(sample(1:n), rep(1:d, length = n))
+    for(i in endrefl){
         E <- vector("numeric", length=d)
         O <- vector("numeric", length=d)
         for(j in 1:d){
             dblind <- object$data
             if(dlines){
-                blind <- seq(j, n, by=d)
+                ## fixme: [Mi 12. Feb 18:30:56 CET 2014]
+                ## blind <- seq(j, n, by=d)
+                blind <- blindL[[j]]
                 dblind[blind,object$model$blocks[[i]]] <- NA
             }
             else{
